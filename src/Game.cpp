@@ -20,7 +20,10 @@ bool Game::Init(int width, int height, bool fullscreen, const char* title)
 
     Uint32 windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
     if (fullscreen)
-        windowFlags |= SDL_WINDOW_FULLSCREEN;
+    {
+        //windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+        windowFlags |= SDL_WINDOW_BORDERLESS;
+    }
 
     m_window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, m_windowWidth, m_windowHeight, windowFlags);
     if (!m_window)
@@ -126,11 +129,11 @@ void Game::Create()
     m_player = new Player(m_renderer);
     m_player->SetWorldPosition(glm::vec3(300.0f, 300.0f, 0.0f));
     // Create some sprites
-    //for (int i = 0; i < 1000; i++) {
-    //    SpriteEntity* spriteEntity = new SpriteEntity(m_renderer);
-    //    spriteEntity->SetWorldPosition(glm::vec3(rand() % m_viewportWidth, rand() % m_viewportHeight, 0.0f));
-    //    m_spriteEntities.push_back(std::unique_ptr<SpriteEntity>(spriteEntity));
-    //}
+    for (int i = 0; i < 1000; i++) {
+        SpriteEntity* spriteEntity = new SpriteEntity(m_renderer);
+        spriteEntity->SetWorldPosition(glm::vec3(rand() % m_viewportWidth, rand() % m_viewportHeight, 0.0f));
+        m_spriteEntities.push_back(std::unique_ptr<SpriteEntity>(spriteEntity));
+    }
 }
 
 void Game::HandleInput()

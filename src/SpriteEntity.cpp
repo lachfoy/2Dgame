@@ -43,5 +43,5 @@ SpriteEntity::~SpriteEntity()
 void SpriteEntity::Render()
 {
 	m_renderer->AddVerticesToBatch(m_vertices, m_worldPosition);
-	m_renderer->AddIndicesToBatch(m_indices);
+	m_renderer->AddIndicesToBatch(m_indices, m_vertices.size());
 }

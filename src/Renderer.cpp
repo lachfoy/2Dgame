@@ -52,6 +52,7 @@ void Renderer::Render()
 
     m_vertexBuffer.clear();
     m_indexBuffer.clear();
+    m_indicesToAdd = 0;
 }
 
 void Renderer::Dispose()
@@ -66,7 +67,7 @@ void Renderer::Dispose()
     glDeleteProgram(m_shaderProgram);
 }
 
-void Renderer::AddVerticesToBatch(const std::vector<Vertex>& vertices, const glm::vec3& worldPosition)
+void Renderer::AddVerticesToBatch(const std::vector<Vertex> vertices, const glm::vec3& worldPosition)
 {
     for (const auto& vertex : vertices)
     {
@@ -76,13 +77,13 @@ void Renderer::AddVerticesToBatch(const std::vector<Vertex>& vertices, const glm
     }
 }
 
-void Renderer::AddIndicesToBatch(const std::vector<unsigned int>& indices)
+void Renderer::AddIndicesToBatch(const std::vector<unsigned int> indices, const int indicesToAdd)
 {
-    int offset = m_vertexBuffer.size();
     for (const auto& index : indices)
     {
-        m_indexBuffer.push_back(offset + index);
+        m_indexBuffer.push_back(index + m_indicesToAdd);
     }
+    m_indicesToAdd += indicesToAdd;
 }
 
 void Renderer::CreateShaderProgram()

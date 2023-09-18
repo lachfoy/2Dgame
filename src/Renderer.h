@@ -19,8 +19,8 @@ public:
 	void Dispose();
 
 	// TODO dont use a vector for this. waste when we can just allocate however much memory we need into a buffer
-	void AddVerticesToBatch(const std::vector<Vertex>& vertices, const glm::vec3& worldPosition);
-	void AddIndicesToBatch(const std::vector<unsigned int>& indices);
+	void AddVerticesToBatch(const std::vector<Vertex> vertices, const glm::vec3& worldPosition);
+	void AddIndicesToBatch(const std::vector<unsigned int> indices, const int indicesToAdd);
 
 private:
 	void CreateShaderProgram();
@@ -32,7 +32,7 @@ private:
 
 	std::vector<Vertex> m_vertexBuffer;
 	std::vector<unsigned int> m_indexBuffer;
-	int m_indicesToAdd;
+	int m_indicesToAdd = 0;
 	GLuint m_vao;
 	GLuint m_vbo;
 	GLuint m_ebo;
