@@ -2,7 +2,7 @@
 
 #include "Renderer.h"
 
-SpriteEntity::SpriteEntity(Renderer* renderer, const glm::vec2& size)
+SpriteEntity::SpriteEntity(Renderer* renderer, const glm::ivec2& size)
 {
 	m_renderer = renderer;
 
@@ -19,24 +19,20 @@ SpriteEntity::SpriteEntity(Renderer* renderer, const glm::vec2& size)
 		m_vertices.push_back(vertex);
 	}
 
-	unsigned int indices[] = {
+	m_indices = new unsigned int[] {
 		0, 1, 2,
 		1, 3, 2
 	};
-
-	for (const auto& index : indices) {
-		m_indices.push_back(index);
-	}
 }
 
 SpriteEntity::~SpriteEntity()
 {
+	delete m_indices;
 	m_vertices.clear();
-	m_indices.clear();
 }
 
 void SpriteEntity::Render()
 {
 	m_renderer->AddVerticesToBatch(m_vertices, m_worldPosition);
-	m_renderer->AddIndicesToBatch(m_indices, m_vertices.size());
+	m_renderer->AddIndicesToBatch(m_indices, 6, m_vertices.size());
 }

@@ -14,7 +14,7 @@ class Renderer;
 class SpriteEntity : public Entity
 {
 public:
-	SpriteEntity(Renderer* renderer, const glm::vec2& size = glm::vec2(64.0f, 64.0f));
+	SpriteEntity(Renderer* renderer, const glm::ivec2& size = glm::ivec2(64, 64));
 	~SpriteEntity();
 
 	// Adds this sprites vertices to the batch
@@ -23,6 +23,6 @@ public:
 private:
 	Renderer* m_renderer;
 	std::vector<Vertex> m_vertices;
-	std::vector<unsigned int> m_indices;
+	unsigned int* m_indices;
 
 };

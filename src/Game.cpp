@@ -128,6 +128,7 @@ void Game::Create()
 {
     m_player = new Player(m_renderer);
     m_player->SetWorldPosition(glm::vec3(300.0f, 300.0f, 0.0f));
+    
     // Create some sprites
     for (int i = 0; i < 1000; i++) {
         SpriteEntity* spriteEntity = new SpriteEntity(m_renderer);

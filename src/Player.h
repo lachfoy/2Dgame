@@ -10,7 +10,7 @@ class Input;
 class Player : public SpriteEntity
 {
 public:
-	Player(Renderer* renderer) : SpriteEntity(renderer) {}
+	Player(Renderer* renderer) : SpriteEntity(renderer, glm::ivec2(34, 54)) {}
 	~Player() {}
 
 	void HandleInput(Input* input);

@@ -36,11 +36,6 @@ void Renderer::Init()
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
     glBindTexture(GL_TEXTURE_2D, 0);
     stbi_image_free(imageData);
-
-    // TODO move this to somewhere sensible
-    glUseProgram(m_shaderProgram);
-    GLint textureUniformLocation = glGetUniformLocation(m_shaderProgram, "u_sampler");
-    glUniform1i(textureUniformLocation, 0);
 }
 
 void Renderer::SetProjection(unsigned int screenWidth, unsigned int screenHeight)
@@ -97,7 +92,7 @@ void Renderer::Dispose()
     glDeleteProgram(m_shaderProgram);
 }
 
-void Renderer::AddVerticesToBatch(const std::vector<Vertex> vertices, const glm::vec3& worldPosition)
+void Renderer::AddVerticesToBatch(const std::vector<Vertex>& vertices, const glm::vec3& worldPosition)
 {
     for (const auto& vertex : vertices)
     {
@@ -107,11 +102,10 @@ void Renderer::AddVerticesToBatch(const std::vector<Vertex> vertices, const glm:
     }
 }
 
-void Renderer::AddIndicesToBatch(const std::vector<unsigned int> indices, const int indicesToAdd)
+void Renderer::AddIndicesToBatch(const unsigned int* indices, const int indexCount, const int indicesToAdd)
 {
-    for (const auto& index : indices)
-    {
-        m_indexBuffer.push_back(index + m_indicesToAdd);
+    for (int i = 0; i < indexCount; i++) {
+        m_indexBuffer.push_back(indices[i] + m_indicesToAdd);
     }
     m_indicesToAdd += indicesToAdd;
 }
@@ -198,6 +192,12 @@ void Renderer::CreateShaderProgram()
     // No longer need these
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+
+    // Set up sampler ...just one for now
+    glUseProgram(m_shaderProgram);
+    GLint textureUniformLocation = glGetUniformLocation(m_shaderProgram, "u_sampler");
+    assert(textureUniformLocation >= 0 && "Sampler does not exist");
+    glUniform1i(textureUniformLocation, 0);
 }
 
 void Renderer::CreateRenderData()
