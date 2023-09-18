@@ -3,6 +3,7 @@
 #include "Renderer.h"
 #include "Input.h"
 #include <iostream>
+#include "Player.h"
 
 bool Game::Init(int width, int height, bool fullscreen, const char* title)
 {
@@ -122,37 +123,48 @@ void Game::SetupGL()
 
 void Game::Create()
 {
+    m_player = new Player(m_renderer);
+    m_player->SetWorldPosition(glm::vec3(300.0f, 300.0f, 0.0f));
     // Create some sprites
-    
-    for (int i = 0; i < 1000; i++) {
-        SpriteEntity* spriteEntity = new SpriteEntity(m_renderer);
-        spriteEntity->SetWorldPosition(glm::vec3(rand() % m_viewportWidth, rand() % m_viewportHeight, 0.0f));
-        m_spriteEntities.push_back(std::unique_ptr<SpriteEntity>(spriteEntity));
-    }
+    //for (int i = 0; i < 1000; i++) {
+    //    SpriteEntity* spriteEntity = new SpriteEntity(m_renderer);
+    //    spriteEntity->SetWorldPosition(glm::vec3(rand() % m_viewportWidth, rand() % m_viewportHeight, 0.0f));
+    //    m_spriteEntities.push_back(std::unique_ptr<SpriteEntity>(spriteEntity));
+    //}
 }
 
 void Game::HandleInput()
 {
+    m_player->HandleInput(m_input);
 }
 
 void Game::Update(float dt)
 {
+    m_player->Update(dt);
 }
 
 void Game::Render()
 {
+    m_player->Render();
+
     //glBindTexture(GL_TEXTURE_2D, textureID);
-    for (const auto& spriteEntity : m_spriteEntities) spriteEntity->Render();
+    //for (const auto& spriteEntity : m_spriteEntities) spriteEntity->Render();
 }
 
 void Game::Destroy()
 {
+    delete m_player;
+    m_player = nullptr;
+
 }
 
 void Game::Cleanup()
 {
     delete m_renderer;
+    m_renderer = nullptr;
+    
     delete m_input;
+    m_input = nullptr;
 
     SDL_GL_DeleteContext(m_context);
     SDL_DestroyWindow(m_window);

@@ -5,11 +5,12 @@
 #include <SDL_opengl.h>
 
 #include <memory>
-
+#include <vector>
 #include "SpriteEntity.h"
 
 class Renderer;
 class Input;
+class Player;
 
 class Game
 {
@@ -37,6 +38,7 @@ private:
     Input* m_input;
 
 private:
+    Player* m_player;
     std::vector<std::unique_ptr<SpriteEntity>> m_spriteEntities;
 
 };
