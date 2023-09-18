@@ -6,18 +6,13 @@ SpriteEntity::SpriteEntity(Renderer* renderer, const glm::vec2& size)
 {
 	m_renderer = renderer;
 
-	// hardcode coords
-	float spriteSize = 1.0f / 6.0f;
-	float rowCoord = rand() % 3 * (1.0f / 6.0f);
-	float colCoord = rand() % 6 * (1.0f / 6.0f);
-
 	// Create the mesh data
-	// This should be handled by a different class though. OR something
+	// This should be handled by a different class though
 	Vertex vertices[] = {
-		{ glm::vec3(-size.x / 2.0f, size.y / 2.0f, 0.0f), glm::vec2(colCoord, rowCoord + spriteSize) },
-		{ glm::vec3(size.x / 2.0f, size.y / 2.0f, 0.0f), glm::vec2(colCoord + spriteSize, rowCoord + spriteSize) },
-		{ glm::vec3(-size.x / 2.0f, -size.y / 2.0f, 0.0f), glm::vec2(colCoord, rowCoord) },
-		{ glm::vec3(size.x / 2.0f, -size.y / 2.0f, 0.0f), glm::vec2(colCoord + spriteSize, rowCoord) }
+		{ glm::vec3(-size.x / 2.0f, size.y / 2.0f, 0.0f), glm::vec2(0.0f, 1.0f) },
+		{ glm::vec3(size.x / 2.0f, size.y / 2.0f, 0.0f), glm::vec2(1.0f, 1.0f) },
+		{ glm::vec3(-size.x / 2.0f, -size.y / 2.0f, 0.0f), glm::vec2(0.0f, 0.0f) },
+		{ glm::vec3(size.x / 2.0f, -size.y / 2.0f, 0.0f), glm::vec2(1.0f, 0.0f) }
 	};
 
 	for (const auto& vertex : vertices) {

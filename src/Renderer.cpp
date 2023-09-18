@@ -6,12 +6,36 @@
 #include <iostream>
 #include <cassert>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 static const unsigned int kMaxSprites = 2000;
 
 void Renderer::Init()
 {
     CreateShaderProgram();
     CreateRenderData();
+
+    // Load texture
+    int imageWidth, imageHeight, nChannels;
+    unsigned char* imageData = stbi_load("data/images/Wizard.png", &imageWidth, &imageHeight, &nChannels, 0); // IDK how to handle different paths ...
+    const char* failureReason = stbi_failure_reason();
+    if (failureReason)
+    {
+        std::cout << failureReason << "\n";
+    }
+
+    glGenTextures(1, &m_tempTexture);
+    glBindTexture(GL_TEXTURE_2D, m_tempTexture);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); // Minification filter
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // Magnification filter
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // Wrapping mode for S coordinate
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // Wrapping mode for T coordinate
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    stbi_image_free(imageData);
 
     // TODO move this to somewhere sensible
     glUseProgram(m_shaderProgram);
@@ -43,12 +67,16 @@ void Renderer::Render()
     glUseProgram(m_shaderProgram);
     glBindVertexArray(m_vao);
 
+    // bind texture
+    glBindTexture(GL_TEXTURE_2D, m_tempTexture);
+
     // Use glDrawElements to render the elements
     glDrawElements(GL_TRIANGLES, m_indexBuffer.size(), GL_UNSIGNED_INT, NULL);
 
     // Unbind the EBO and VBO (optional but recommended)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     m_vertexBuffer.clear();
     m_indexBuffer.clear();
@@ -59,6 +87,8 @@ void Renderer::Dispose()
 {
     m_vertexBuffer.clear();
     m_indexBuffer.clear();
+
+    glDeleteTextures(1, &m_tempTexture);
 
     glDeleteBuffers(1, &m_ebo);
     glDeleteBuffers(1, &m_vbo);

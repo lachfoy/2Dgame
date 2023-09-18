@@ -150,7 +150,6 @@ void Game::Render()
 {
     m_player->Render();
 
-    //glBindTexture(GL_TEXTURE_2D, textureID);
     //for (const auto& spriteEntity : m_spriteEntities) spriteEntity->Render();
 }
 
@@ -158,7 +157,6 @@ void Game::Destroy()
 {
     delete m_player;
     m_player = nullptr;
-
 }
 
 void Game::Cleanup()

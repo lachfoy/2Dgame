@@ -37,4 +37,6 @@ private:
 	GLuint m_vbo;
 	GLuint m_ebo;
 
+	GLuint m_tempTexture;
+
 };
