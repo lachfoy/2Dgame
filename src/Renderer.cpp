@@ -137,14 +137,14 @@ void Renderer::AddIndicesToBatch(const unsigned int* indices, const int indexCou
 	m_indicesToAdd += indicesToAdd;
 }
 
-void Renderer::AddRenderObjectToBatch(std::vector<Vertex> vertices, std::vector<unsigned int> indices, GLuint texture)
+void Renderer::AddRenderObject(const RenderObject& renderObject)
 {
-	m_renderObjectBatch.push_back({ vertices, indices, texture });
+	m_renderObjects.push_back(renderObject);
 }
 
 void Renderer::SubmitRenderObjects()
 {
-	//std::sort(m_renderObjectBatch.begin(), m_renderObjectBatch.end(), RenderObjectCompare());
+	//std::sort(m_renderObjects.begin(), m_renderObjects.end(), RenderObjectCompare());
 
 	std::vector<Vertex> currentVertexBatch; // Current vertex batch
 	std::vector<unsigned int> currentIndexBatch; // Current index batch
@@ -152,15 +152,17 @@ void Renderer::SubmitRenderObjects()
 
 	glUseProgram(m_shaderProgram);
 	glBindVertexArray(m_vao);
-	for (const RenderObject& obj : m_renderObjectBatch)
+
+	for (const RenderObject& obj : m_renderObjects)
 	{
-		if (obj.texture != currentTexture)
+		if (obj.Texture() != currentTexture)
 		{
 			// If a different texture is encountered, start a new batch
 			if (!currentVertexBatch.empty())
 			{
 				glBindTexture(GL_TEXTURE_2D, currentTexture);
 
+				// Flush
 				glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 				glBufferSubData(GL_ARRAY_BUFFER, 0, currentVertexBatch.size() * sizeof(Vertex), currentVertexBatch.data());
 				
@@ -173,19 +175,19 @@ void Renderer::SubmitRenderObjects()
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 				glBindTexture(GL_TEXTURE_2D, 0);
 
+				// Clear
 				currentVertexBatch.clear();
 				currentIndexBatch.clear();
 			}
-			currentTexture = obj.texture;
+			currentTexture = obj.Texture();
 		}
 
-		// Append the vertices from the current RenderObject to the current vertex batch
-		currentVertexBatch.insert(currentVertexBatch.end(), obj.vertices.begin(), obj.vertices.end());
+		// Append the m_vertexVec from the current RenderObject to the current vertex batch
+		currentVertexBatch.insert(currentVertexBatch.end(), obj.VertexVec()->begin(), obj.VertexVec()->end());
 
 		// Append the indices from the current RenderObject to the current index batch
-		// Assuming indices are associated with vertices one-to-one
-		unsigned int vertexOffset = currentVertexBatch.size() - obj.vertices.size();
-		for (unsigned int index : obj.indicies)
+		unsigned int vertexOffset = currentVertexBatch.size() - obj.VertexVec()->size();
+		for (unsigned int index : *obj.IndexVec())
 		{
 			currentIndexBatch.push_back(index + vertexOffset);
 		}
@@ -196,6 +198,7 @@ void Renderer::SubmitRenderObjects()
 	{
 		glBindTexture(GL_TEXTURE_2D, currentTexture);
 
+		// Flush
 		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, currentVertexBatch.size() * sizeof(Vertex), currentVertexBatch.data());
 
@@ -207,10 +210,31 @@ void Renderer::SubmitRenderObjects()
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
+
+		// Clear
+		currentVertexBatch.clear();
+		currentIndexBatch.clear();
 	}
 
 	glBindVertexArray(0);
-	m_renderObjectBatch.clear();
+	m_renderObjects.clear();
+}
+
+void Renderer::FlushBatch()
+{
+	//glBindTexture(GL_TEXTURE_2D, currentTexture);
+	//
+	//glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+	//glBufferSubData(GL_ARRAY_BUFFER, 0, currentVertexBatch.size() * sizeof(Vertex), currentVertexBatch.data());
+	//
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+	//glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, currentIndexBatch.size() * sizeof(unsigned int), currentIndexBatch.data());
+	//
+	//glDrawElements(GL_TRIANGLES, currentIndexBatch.size(), GL_UNSIGNED_INT, 0);
+	//
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Renderer::CreateShaderProgram()

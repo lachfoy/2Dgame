@@ -9,12 +9,24 @@
 
 class SpriteEntity;
 
+typedef std::vector<Vertex> tVertexVec;
+typedef std::vector<unsigned int> tIndexVec;
+
 class RenderObject
 {
 public:
-	std::vector<Vertex> vertices;
-	std::vector<unsigned int> indicies;
-	GLuint texture;
+	RenderObject(tVertexVec* vertexVec, tIndexVec* indexVec, GLuint texture)
+		: m_vertexVec(vertexVec), m_indexVec(indexVec), m_texture(texture) {}
+
+	tVertexVec* VertexVec() const { return m_vertexVec; }
+	tIndexVec* IndexVec() const { return m_indexVec; }
+	GLuint Texture() const { return m_texture; }
+
+private:
+	tVertexVec* m_vertexVec;
+	tIndexVec* m_indexVec;
+	GLuint m_texture;
+
 };
 
 class RenderObjectCompare
@@ -22,7 +34,7 @@ class RenderObjectCompare
 public:
 	bool operator()(const RenderObject& obj1, const RenderObject& obj2) const
 	{
-		return obj1.texture < obj2.texture;
+		return obj1.Texture() < obj2.Texture();
 	}
 };
 
@@ -41,8 +53,11 @@ public:
 	// TODO dont use a vector for this. waste when we can just allocate however much memory we need into a buffer
 	void AddVerticesToBatch(const std::vector<Vertex>& vertices, const glm::vec3& worldPosition);
 	void AddIndicesToBatch(const unsigned int* indices, const int indexCount, const int indicesToAdd);
-	void AddRenderObjectToBatch(std::vector<Vertex> vertices, std::vector<unsigned int> indices, GLuint texture);
+
+	void AddRenderObject(const RenderObject& renderObject);
+	
 	void SubmitRenderObjects();
+	void FlushBatch();
 
 private:
 	void CreateShaderProgram();
@@ -61,8 +76,7 @@ private:
 	GLuint m_vbo;
 	GLuint m_ebo;
 
-	std::vector<RenderObject> m_renderObjectBatch;
+	std::vector<RenderObject> m_renderObjects;
 
 	GLuint m_tempTexture;
-
 };

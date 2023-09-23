@@ -16,39 +16,34 @@ SpriteEntity::SpriteEntity(Renderer* renderer, const glm::ivec2& size, GLuint te
 	};
 
 	for (const auto& vertex : vertices) {
-		m_vertices.push_back(vertex);
+		m_vertexVec.push_back(vertex);
 	}
 
-	m_indices = new unsigned int[] {
+	unsigned int indices[] = {
 		0, 1, 2,
 		1, 3, 2
 	};
+
+	for (const auto& index : indices) {
+		m_indexVec.push_back(index);
+	}
 
 	m_texture = texture;
 }
 
 SpriteEntity::~SpriteEntity()
 {
-	delete m_indices;
-	m_vertices.clear();
+	m_indexVec.clear();
+	m_vertexVec.clear();
 }
 
 void SpriteEntity::AddToBatch()
 {
-	std::vector<unsigned int> ind;
-	for (int i = 0; i < 6; i++) {
-		ind.push_back(m_indices[i]);
-	}
+	RenderObject renderObject = RenderObject(
+		&m_vertexVec,
+		&m_indexVec,
+		m_texture
+	);
 
-	std::vector<Vertex> verts;
-	for (const auto& vertex : m_vertices) {
-		Vertex v = vertex;
-		v.position += m_worldPosition;
-		verts.push_back(v);
-	}
-
-	m_renderer->AddRenderObjectToBatch(verts, ind, m_texture);
-
-	m_renderer->AddVerticesToBatch(m_vertices, m_worldPosition);
-	m_renderer->AddIndicesToBatch(m_indices, 6, m_vertices.size());
+	m_renderer->AddRenderObject(renderObject);
 }
