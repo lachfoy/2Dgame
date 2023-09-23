@@ -14,15 +14,16 @@ class Renderer;
 class SpriteEntity : public Entity
 {
 public:
-	SpriteEntity(Renderer* renderer, const glm::ivec2& size = glm::ivec2(64, 64));
+	SpriteEntity(Renderer* renderer, const glm::ivec2& size = glm::ivec2(64, 64), GLuint texture = 1);
 	~SpriteEntity();
 
 	// Adds this sprites vertices to the batch
-	void Render();
+	void AddToBatch();
 	
 private:
 	Renderer* m_renderer;
 	std::vector<Vertex> m_vertices;
 	unsigned int* m_indices;
+	GLuint m_texture;
 
 };

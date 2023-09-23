@@ -21,11 +21,6 @@ public:
 
 private:
     void SetupGL();
-    void Create(); // scene related
-    void HandleInput();
-    void Update(float dt);
-    void Render(); // scene related
-    void Destroy(); // scene related
     void Cleanup();
 
     SDL_Window* m_window;
@@ -38,6 +33,11 @@ private:
     Input* m_input;
 
 private:
+    void HandleInput();
+    void Update(float dt);
+    void Create(); // scene related
+    void Render(); // scene related
+    void Destroy(); // scene related
     Player* m_player;
     std::vector<std::unique_ptr<SpriteEntity>> m_spriteEntities;
 

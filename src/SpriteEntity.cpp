@@ -2,7 +2,7 @@
 
 #include "Renderer.h"
 
-SpriteEntity::SpriteEntity(Renderer* renderer, const glm::ivec2& size)
+SpriteEntity::SpriteEntity(Renderer* renderer, const glm::ivec2& size, GLuint texture)
 {
 	m_renderer = renderer;
 
@@ -23,6 +23,8 @@ SpriteEntity::SpriteEntity(Renderer* renderer, const glm::ivec2& size)
 		0, 1, 2,
 		1, 3, 2
 	};
+
+	m_texture = texture;
 }
 
 SpriteEntity::~SpriteEntity()
@@ -31,8 +33,22 @@ SpriteEntity::~SpriteEntity()
 	m_vertices.clear();
 }
 
-void SpriteEntity::Render()
+void SpriteEntity::AddToBatch()
 {
+	std::vector<unsigned int> ind;
+	for (int i = 0; i < 6; i++) {
+		ind.push_back(m_indices[i]);
+	}
+
+	std::vector<Vertex> verts;
+	for (const auto& vertex : m_vertices) {
+		Vertex v = vertex;
+		v.position += m_worldPosition;
+		verts.push_back(v);
+	}
+
+	m_renderer->AddRenderObjectToBatch(verts, ind, m_texture);
+
 	m_renderer->AddVerticesToBatch(m_vertices, m_worldPosition);
 	m_renderer->AddIndicesToBatch(m_indices, 6, m_vertices.size());
 }

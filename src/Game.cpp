@@ -105,8 +105,10 @@ void Game::Run()
         Update(dt);
 
         // render
+        glClear(GL_COLOR_BUFFER_BIT);
         Render();
-        m_renderer->Render();
+        m_renderer->RenderBackground();
+        m_renderer->SubmitRenderObjects();
 
         // swap buffers
         SDL_GL_SwapWindow(m_window);
@@ -121,7 +123,7 @@ void Game::SetupGL()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClearColor(0.4627f, 0.7569f, 0.9412f, 1.0f);
 }
 
 void Game::Create()
@@ -130,11 +132,15 @@ void Game::Create()
     m_player->SetWorldPosition(glm::vec3(300.0f, 300.0f, 0.0f));
     
     // Create some sprites
-    for (int i = 0; i < 1000; i++) {
+    /*for (int i = 0; i < 1000; i++) {
         SpriteEntity* spriteEntity = new SpriteEntity(m_renderer);
         spriteEntity->SetWorldPosition(glm::vec3(rand() % m_viewportWidth, rand() % m_viewportHeight, 0.0f));
         m_spriteEntities.push_back(std::unique_ptr<SpriteEntity>(spriteEntity));
-    }
+    }*/
+
+	SpriteEntity* spriteEntity = new SpriteEntity(m_renderer, glm::ivec2(64, 64), 2);
+	spriteEntity->SetWorldPosition(glm::vec3(400.0f, 400.0f, 0.0f));
+    m_spriteEntities.push_back(std::unique_ptr<SpriteEntity>(spriteEntity));
 }
 
 void Game::HandleInput()
@@ -149,9 +155,9 @@ void Game::Update(float dt)
 
 void Game::Render()
 {
-    m_player->Render();
+    m_player->AddToBatch();
 
-    //for (const auto& spriteEntity : m_spriteEntities) spriteEntity->Render();
+    for (const auto& spriteEntity : m_spriteEntities) spriteEntity->AddToBatch();
 }
 
 void Game::Destroy()
