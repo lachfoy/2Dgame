@@ -108,7 +108,7 @@ void Game::Run()
         glClear(GL_COLOR_BUFFER_BIT);
         Render();
         m_renderer->RenderBackground();
-        m_renderer->SubmitRenderObjects();
+        m_renderer->RenderObjects();
 
         // swap buffers
         SDL_GL_SwapWindow(m_window);
@@ -129,17 +129,17 @@ void Game::SetupGL()
 void Game::Create()
 {
     m_player = new Player(m_renderer);
-    m_player->SetWorldPosition(glm::vec3(300.0f, 300.0f, 0.0f));
+    m_player->SetWorldPosition(glm::vec2(300.0f, 300.0f));
     
     // Create some sprites
     /*for (int i = 0; i < 1000; i++) {
         SpriteEntity* spriteEntity = new SpriteEntity(m_renderer);
-        spriteEntity->SetWorldPosition(glm::vec3(rand() % m_viewportWidth, rand() % m_viewportHeight, 0.0f));
+        spriteEntity->SetWorldPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight, 0.0f));
         m_spriteEntities.push_back(std::unique_ptr<SpriteEntity>(spriteEntity));
     }*/
 
 	SpriteEntity* spriteEntity = new SpriteEntity(m_renderer, glm::ivec2(64, 64), 2);
-	spriteEntity->SetWorldPosition(glm::vec3(400.0f, 400.0f, 0.0f));
+	spriteEntity->SetWorldPosition(glm::vec2(400.0f, 400.0f));
     m_spriteEntities.push_back(std::unique_ptr<SpriteEntity>(spriteEntity));
 }
 

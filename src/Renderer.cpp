@@ -26,8 +26,9 @@ void Renderer::Init()
 		std::cout << failureReason << "\n";
 	}
 
-	glGenTextures(1, &m_tempTexture);
-	glBindTexture(GL_TEXTURE_2D, m_tempTexture);
+	GLuint tex;
+	glGenTextures(1, &tex);
+	glBindTexture(GL_TEXTURE_2D, tex);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -90,7 +91,7 @@ void Renderer::RenderSprites()
 	glBindVertexArray(m_vao);
 
 	// bind texture
-	glBindTexture(GL_TEXTURE_2D, m_tempTexture);
+	//glBindTexture(GL_TEXTURE_2D, m_tempTexture);
 
 	// Use glDrawElements to render the elements
 	glDrawElements(GL_TRIANGLES, m_indexBuffer.size(), GL_UNSIGNED_INT, NULL);
@@ -110,8 +111,6 @@ void Renderer::Dispose()
 	m_vertexBuffer.clear();
 	m_indexBuffer.clear();
 
-	glDeleteTextures(1, &m_tempTexture);
-
 	glDeleteBuffers(1, &m_ebo);
 	glDeleteBuffers(1, &m_vbo);
 	glDeleteVertexArrays(1, &m_vao);
@@ -119,7 +118,7 @@ void Renderer::Dispose()
 	glDeleteProgram(m_shaderProgram);
 }
 
-void Renderer::AddVerticesToBatch(const std::vector<Vertex>& vertices, const glm::vec3& worldPosition)
+void Renderer::AddVerticesToBatch(const std::vector<Vertex>& vertices, const glm::vec2& worldPosition)
 {
 	for (const auto& vertex : vertices)
 	{
@@ -142,7 +141,7 @@ void Renderer::AddRenderObject(const RenderObject& renderObject)
 	m_renderObjects.push_back(renderObject);
 }
 
-void Renderer::SubmitRenderObjects()
+void Renderer::RenderObjects()
 {
 	//std::sort(m_renderObjects.begin(), m_renderObjects.end(), RenderObjectCompare());
 
@@ -245,7 +244,7 @@ void Renderer::CreateShaderProgram()
 		const GLchar* vertexSource = R"(
 			#version 330 core
 
-			layout (location = 0) in vec3 a_position;
+			layout (location = 0) in vec2 a_position;
 			layout (location = 1) in vec2 a_texcoord;
 
 			varying vec2 v_texcoord;
@@ -254,7 +253,7 @@ void Renderer::CreateShaderProgram()
 
 			void main()
 			{
-				gl_Position = u_projection * vec4(a_position, 1.0);
+				gl_Position = u_projection * vec4(a_position, 0.0, 1.0);
 				v_texcoord = a_texcoord;
 			}
 		)";
@@ -345,7 +344,7 @@ void Renderer::CreateRenderData()
 
 	// Enable the vertex attribute arrays for position and texcoords
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
 

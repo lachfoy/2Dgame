@@ -15,8 +15,8 @@ typedef std::vector<unsigned int> tIndexVec;
 class RenderObject
 {
 public:
-	RenderObject(tVertexVec* vertexVec, tIndexVec* indexVec, GLuint texture)
-		: m_vertexVec(vertexVec), m_indexVec(indexVec), m_texture(texture) {}
+	RenderObject(tVertexVec* vertexVec, tIndexVec* indexVec, glm::vec2* worldPosition, GLuint texture)
+		: m_vertexVec(vertexVec), m_indexVec(indexVec), m_worldPosition(worldPosition), m_texture(texture) {}
 
 	tVertexVec* VertexVec() const { return m_vertexVec; }
 	tIndexVec* IndexVec() const { return m_indexVec; }
@@ -26,6 +26,7 @@ private:
 	tVertexVec* m_vertexVec;
 	tIndexVec* m_indexVec;
 	GLuint m_texture;
+	glm::vec2* m_worldPosition;
 
 };
 
@@ -51,12 +52,13 @@ public:
 	void Dispose();
 
 	// TODO dont use a vector for this. waste when we can just allocate however much memory we need into a buffer
-	void AddVerticesToBatch(const std::vector<Vertex>& vertices, const glm::vec3& worldPosition);
+	void AddVerticesToBatch(const std::vector<Vertex>& vertices, const glm::vec2& worldPosition);
 	void AddIndicesToBatch(const unsigned int* indices, const int indexCount, const int indicesToAdd);
 
 	void AddRenderObject(const RenderObject& renderObject);
 	
-	void SubmitRenderObjects();
+	void RenderObjects();
+
 	void FlushBatch();
 
 private:
@@ -78,5 +80,4 @@ private:
 
 	std::vector<RenderObject> m_renderObjects;
 
-	GLuint m_tempTexture;
 };

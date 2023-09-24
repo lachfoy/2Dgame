@@ -9,10 +9,10 @@ SpriteEntity::SpriteEntity(Renderer* renderer, const glm::ivec2& size, GLuint te
 	// Create the mesh data
 	// This should be handled by a different class though
 	Vertex vertices[] = {
-		{ glm::vec3(-size.x / 2.0f, size.y / 2.0f, 0.0f), glm::vec2(0.0f, 1.0f) },
-		{ glm::vec3(size.x / 2.0f, size.y / 2.0f, 0.0f), glm::vec2(1.0f, 1.0f) },
-		{ glm::vec3(-size.x / 2.0f, -size.y / 2.0f, 0.0f), glm::vec2(0.0f, 0.0f) },
-		{ glm::vec3(size.x / 2.0f, -size.y / 2.0f, 0.0f), glm::vec2(1.0f, 0.0f) }
+		{ glm::vec2(-size.x / 2.0f, size.y / 2.0f), glm::vec2(0.0f, 1.0f) },
+		{ glm::vec2(size.x / 2.0f, size.y / 2.0f), glm::vec2(1.0f, 1.0f) },
+		{ glm::vec2(-size.x / 2.0f, -size.y / 2.0f), glm::vec2(0.0f, 0.0f) },
+		{ glm::vec2(size.x / 2.0f, -size.y / 2.0f), glm::vec2(1.0f, 0.0f) }
 	};
 
 	for (const auto& vertex : vertices) {
@@ -42,6 +42,7 @@ void SpriteEntity::AddToBatch()
 	RenderObject renderObject = RenderObject(
 		&m_vertexVec,
 		&m_indexVec,
+		&m_worldPosition,
 		m_texture
 	);
 
