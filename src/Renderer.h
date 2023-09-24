@@ -21,6 +21,7 @@ public:
 	tVertexVec* VertexVec() const { return m_vertexVec; }
 	tIndexVec* IndexVec() const { return m_indexVec; }
 	GLuint Texture() const { return m_texture; }
+	glm::vec2* WorldPosition() const { return m_worldPosition; }
 
 private:
 	tVertexVec* m_vertexVec;
@@ -48,18 +49,14 @@ public:
 	void Init();
 	void SetProjection(unsigned int screenWidth, unsigned int screenHeight);
 	void RenderBackground();
-	void RenderSprites();
 	void Dispose();
-
-	// TODO dont use a vector for this. waste when we can just allocate however much memory we need into a buffer
-	void AddVerticesToBatch(const std::vector<Vertex>& vertices, const glm::vec2& worldPosition);
-	void AddIndicesToBatch(const unsigned int* indices, const int indexCount, const int indicesToAdd);
 
 	void AddRenderObject(const RenderObject& renderObject);
 	
 	void RenderObjects();
 
 	void FlushBatch();
+	void ClearBatch();
 
 private:
 	void CreateShaderProgram();
@@ -69,11 +66,9 @@ private:
 
 	GLuint m_shaderProgram;
 
-	// keep this in the actual "render sprites" call. dont hold onto it 
-	std::vector<Vertex> m_vertexBuffer;
-	std::vector<unsigned int> m_indexBuffer;
-	int m_indicesToAdd = 0;
-	//
+	tVertexVec m_vertexBuffer;
+	tIndexVec m_indexBuffer;
+
 	GLuint m_vao;
 	GLuint m_vbo;
 	GLuint m_ebo;

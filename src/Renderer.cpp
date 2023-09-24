@@ -76,64 +76,13 @@ void Renderer::RenderBackground()
 
 }
 
-void Renderer::RenderSprites()
-{
-	// Update the VBO with the new vertex data
-	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, m_vertexBuffer.size() * sizeof(Vertex), m_vertexBuffer.data());
-
-	// Update the EBO with the new index data
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_indexBuffer.size() * sizeof(unsigned int), m_indexBuffer.data());
-
-	// Bind the shader and VAO
-	glUseProgram(m_shaderProgram);
-	glBindVertexArray(m_vao);
-
-	// bind texture
-	//glBindTexture(GL_TEXTURE_2D, m_tempTexture);
-
-	// Use glDrawElements to render the elements
-	glDrawElements(GL_TRIANGLES, m_indexBuffer.size(), GL_UNSIGNED_INT, NULL);
-
-	// Unbind the EBO and VBO (optional but recommended)
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	m_vertexBuffer.clear();
-	m_indexBuffer.clear();
-	m_indicesToAdd = 0;
-}
-
 void Renderer::Dispose()
 {
-	m_vertexBuffer.clear();
-	m_indexBuffer.clear();
-
 	glDeleteBuffers(1, &m_ebo);
 	glDeleteBuffers(1, &m_vbo);
 	glDeleteVertexArrays(1, &m_vao);
 	
 	glDeleteProgram(m_shaderProgram);
-}
-
-void Renderer::AddVerticesToBatch(const std::vector<Vertex>& vertices, const glm::vec2& worldPosition)
-{
-	for (const auto& vertex : vertices)
-	{
-		Vertex v = vertex;
-		v.position += worldPosition;
-		m_vertexBuffer.push_back(v);
-	}
-}
-
-void Renderer::AddIndicesToBatch(const unsigned int* indices, const int indexCount, const int indicesToAdd)
-{
-	for (int i = 0; i < indexCount; i++) {
-		m_indexBuffer.push_back(indices[i] + m_indicesToAdd);
-	}
-	m_indicesToAdd += indicesToAdd;
 }
 
 void Renderer::AddRenderObject(const RenderObject& renderObject)
@@ -145,74 +94,44 @@ void Renderer::RenderObjects()
 {
 	//std::sort(m_renderObjects.begin(), m_renderObjects.end(), RenderObjectCompare());
 
-	std::vector<Vertex> currentVertexBatch; // Current vertex batch
-	std::vector<unsigned int> currentIndexBatch; // Current index batch
-	GLuint currentTexture = 0; // Initialize with a default texture value (assumes GLuint cannot be negative)
-
 	glUseProgram(m_shaderProgram);
 	glBindVertexArray(m_vao);
+
+	GLuint currentTexture = 0;
 
 	for (const RenderObject& obj : m_renderObjects)
 	{
 		if (obj.Texture() != currentTexture)
 		{
 			// If a different texture is encountered, start a new batch
-			if (!currentVertexBatch.empty())
+			if (!m_vertexBuffer.empty())
 			{
 				glBindTexture(GL_TEXTURE_2D, currentTexture);
-
-				// Flush
-				glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, currentVertexBatch.size() * sizeof(Vertex), currentVertexBatch.data());
-				
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-				glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, currentIndexBatch.size() * sizeof(unsigned int), currentIndexBatch.data());
-
-				glDrawElements(GL_TRIANGLES, currentIndexBatch.size(), GL_UNSIGNED_INT, 0);
-
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-				glBindTexture(GL_TEXTURE_2D, 0);
-
-				// Clear
-				currentVertexBatch.clear();
-				currentIndexBatch.clear();
+				FlushBatch();
+				ClearBatch();
 			}
 			currentTexture = obj.Texture();
 		}
 
-		// Append the m_vertexVec from the current RenderObject to the current vertex batch
-		currentVertexBatch.insert(currentVertexBatch.end(), obj.VertexVec()->begin(), obj.VertexVec()->end());
+		for (Vertex vertex : *(obj.VertexVec())) {
+			vertex.position += *(obj.WorldPosition());
+			m_vertexBuffer.push_back(vertex);
+		}
 
 		// Append the indices from the current RenderObject to the current index batch
-		unsigned int vertexOffset = currentVertexBatch.size() - obj.VertexVec()->size();
-		for (unsigned int index : *obj.IndexVec())
+		unsigned int vertexOffset = m_vertexBuffer.size() - obj.VertexVec()->size();
+		for (unsigned int index : *(obj.IndexVec()))
 		{
-			currentIndexBatch.push_back(index + vertexOffset);
+			m_indexBuffer.push_back(index + vertexOffset);
 		}
 	}
 
 	// Add the last batch (if any) to the result
-	if (!currentVertexBatch.empty())
+	if (!m_vertexBuffer.empty())
 	{
 		glBindTexture(GL_TEXTURE_2D, currentTexture);
-
-		// Flush
-		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, currentVertexBatch.size() * sizeof(Vertex), currentVertexBatch.data());
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, currentIndexBatch.size() * sizeof(unsigned int), currentIndexBatch.data());
-
-		glDrawElements(GL_TRIANGLES, currentIndexBatch.size(), GL_UNSIGNED_INT, 0);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-		// Clear
-		currentVertexBatch.clear();
-		currentIndexBatch.clear();
+		FlushBatch();
+		ClearBatch();
 	}
 
 	glBindVertexArray(0);
@@ -221,19 +140,23 @@ void Renderer::RenderObjects()
 
 void Renderer::FlushBatch()
 {
-	//glBindTexture(GL_TEXTURE_2D, currentTexture);
-	//
-	//glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-	//glBufferSubData(GL_ARRAY_BUFFER, 0, currentVertexBatch.size() * sizeof(Vertex), currentVertexBatch.data());
-	//
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-	//glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, currentIndexBatch.size() * sizeof(unsigned int), currentIndexBatch.data());
-	//
-	//glDrawElements(GL_TRIANGLES, currentIndexBatch.size(), GL_UNSIGNED_INT, 0);
-	//
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-	//glBindTexture(GL_TEXTURE_2D, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, m_vertexBuffer.size() * sizeof(Vertex), m_vertexBuffer.data());
+	
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_indexBuffer.size() * sizeof(unsigned int), m_indexBuffer.data());
+	
+	glDrawElements(GL_TRIANGLES, m_indexBuffer.size(), GL_UNSIGNED_INT, 0);
+	
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Renderer::ClearBatch()
+{
+	m_vertexBuffer.clear();
+	m_indexBuffer.clear();
 }
 
 void Renderer::CreateShaderProgram()
