@@ -65,7 +65,9 @@ void Renderer::RenderObjects()
 		}
 
 		for (Vertex vertex : *(obj.GetVertexVec())) {
-			vertex.position += *(obj.GetPosition());
+			if (obj.GetPosition() != nullptr)
+				vertex.position += *(obj.GetPosition());
+
 			m_vertexBuffer.push_back(vertex);
 		}
 

@@ -10,6 +10,7 @@
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\SpriteEntity.cpp" />
     <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\BackgroundImage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Entity.h" />
@@ -21,5 +22,6 @@
     <ClInclude Include="src\stb_image.h" />
     <ClInclude Include="src\Vertex.h" />
     <ClInclude Include="src\Texture.h" />
+    <ClInclude Include="src\BackgroundImage.h" />
   </ItemGroup>
 </Project>

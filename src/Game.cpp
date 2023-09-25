@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Player.h"
 #include "Texture.h"
+#include "BackgroundImage.h"
 
 bool Game::Init(int width, int height, bool fullscreen, const char* title)
 {
@@ -131,13 +132,19 @@ void Game::Create()
 {
 	m_wizardTexture = new Texture("data/images/Wizard.png");
 	m_blackMageTexture = new Texture("data/images/BlackMage.png");
+	m_backgroundTexture = new Texture("data/images/Sky.png");
+
+	m_backgroundImage = new BackgroundImage(m_renderer, m_backgroundTexture, m_viewportWidth, m_viewportHeight);
 
 	m_player = new Player(m_renderer, m_wizardTexture);
 	m_player->SetPosition(glm::vec2(300.0f, 300.0f));
 
-	SpriteEntity* spriteEntity = new SpriteEntity(m_renderer, m_blackMageTexture, glm::ivec2(64, 64));
-	spriteEntity->SetPosition(glm::vec2(400.0f, 400.0f));
-	m_spriteEntities.push_back(std::unique_ptr<SpriteEntity>(spriteEntity));
+	for (int i = 0; i < 50; i++)
+	{
+		SpriteEntity* spriteEntity = new SpriteEntity(m_renderer, m_blackMageTexture, glm::ivec2(36, 52));
+		spriteEntity->SetPosition(glm::vec2(rand() % 800, rand() % 600));
+		m_spriteEntities.push_back(std::unique_ptr<SpriteEntity>(spriteEntity));
+	}
 }
 
 void Game::HandleInput()
@@ -152,9 +159,9 @@ void Game::Update(float dt)
 
 void Game::Render()
 {
-	m_player->AddToBatch();
-
+	m_backgroundImage->AddToBatch();
 	for (const auto& spriteEntity : m_spriteEntities) spriteEntity->AddToBatch();
+	m_player->AddToBatch();
 }
 
 void Game::Destroy()

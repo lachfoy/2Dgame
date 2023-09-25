@@ -11,6 +11,7 @@
 class Renderer;
 class Input;
 class Player;
+class BackgroundImage;
 
 class Game
 {
@@ -43,5 +44,8 @@ private:
 
 	Texture* m_wizardTexture;
 	Texture* m_blackMageTexture;
+	Texture* m_backgroundTexture;
+
+	BackgroundImage* m_backgroundImage;
 
 };

@@ -1,18 +1,18 @@
-#include "SpriteEntity.h"
+#include "BackgroundImage.h"
 
 #include "Renderer.h"
 
-SpriteEntity::SpriteEntity(Renderer* renderer, Texture* texture, const glm::ivec2& size)
+BackgroundImage::BackgroundImage(Renderer* renderer, Texture* texture, int width, int height)
 {
 	m_renderer = renderer;
 
 	// Create the mesh data
 	// This should be handled by a different class though
 	Vertex vertices[] = {
-		{ glm::vec2(-size.x / 2.0f, size.y / 2.0f), glm::vec2(0.0f, 1.0f) },
-		{ glm::vec2(size.x / 2.0f, size.y / 2.0f), glm::vec2(1.0f, 1.0f) },
-		{ glm::vec2(-size.x / 2.0f, -size.y / 2.0f), glm::vec2(0.0f, 0.0f) },
-		{ glm::vec2(size.x / 2.0f, -size.y / 2.0f), glm::vec2(1.0f, 0.0f) }
+		{ glm::vec2(0.0f, height), glm::vec2(0.0f, 1.0f) },
+		{ glm::vec2(width, height), glm::vec2(1.0f, 1.0f) },
+		{ glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 0.0f) },
+		{ glm::vec2(width, 0.0f), glm::vec2(1.0f, 0.0f) }
 	};
 
 	for (const auto& vertex : vertices) {
@@ -31,12 +31,12 @@ SpriteEntity::SpriteEntity(Renderer* renderer, Texture* texture, const glm::ivec
 	m_texture = texture;
 }
 
-void SpriteEntity::Render()
+void BackgroundImage::AddToBatch()
 {
 	RenderObject renderObject = RenderObject(
 		&m_vertexVec,
 		&m_indexVec,
-		&m_position,
+		nullptr,
 		m_texture
 	);
 

@@ -15,11 +15,11 @@ class Renderer;
 typedef std::vector<Vertex> tVertexVec;
 typedef std::vector<unsigned int> tIndexVec;
 
-class SpriteEntity : public Entity
+class BackgroundImage
 {
 public:
-	SpriteEntity(Renderer* renderer, Texture* texture, const glm::ivec2& size = glm::ivec2(64, 64));
-	~SpriteEntity() {}
+	BackgroundImage(Renderer* renderer, Texture* texture, int width, int height);
+	~BackgroundImage() {}
 
 	void Render();
 	
