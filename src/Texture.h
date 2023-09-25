@@ -5,13 +5,14 @@
 class Texture
 {
 public:
-    Texture() = default;
-    ~Texture();
+	Texture() = default;
+	Texture(const char* path, bool useMipMaps = false);
+	~Texture();
 
-    bool LoadFromFile(const char* path, bool useMipMaps = false);
-    void Bind() const;
+	bool LoadFromFile(const char* path, bool useMipMaps = false);
+	void Bind() const;
 
 private:
-    GLuint m_textureId;
+	GLuint m_texture;
 
 };
