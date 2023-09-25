@@ -4,7 +4,7 @@
 
 Entity::Entity()
 {
-    m_position = glm::vec2(0.0f, 0.0f);
+	m_position = glm::vec2(0.0f, 0.0f);
 }
 
 void Entity::SetPosition(const glm::vec2& position)
