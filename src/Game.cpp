@@ -4,6 +4,7 @@
 #include "Input.h"
 #include <iostream>
 #include "Player.h"
+#include "Texture.h"
 
 bool Game::Init(int width, int height, bool fullscreen, const char* title)
 {
@@ -128,8 +129,14 @@ void Game::SetupGL()
 
 void Game::Create()
 {
-    m_player = new Player(m_renderer);
-    m_player->SetWorldPosition(glm::vec2(300.0f, 300.0f));
+    m_wizardTexture = new Texture();
+    m_wizardTexture->LoadFromFile("data/images/Wizard.png");
+
+	m_blackMageTexture = new Texture();
+	m_blackMageTexture->LoadFromFile("data/images/BlackMage.png");
+
+    m_player = new Player(m_renderer, m_wizardTexture);
+    m_player->SetPosition(glm::vec2(300.0f, 300.0f));
     
     // Create some sprites
     /*for (int i = 0; i < 1000; i++) {
@@ -138,8 +145,8 @@ void Game::Create()
         m_spriteEntities.push_back(std::unique_ptr<SpriteEntity>(spriteEntity));
     }*/
 
-	SpriteEntity* spriteEntity = new SpriteEntity(m_renderer, glm::ivec2(64, 64), 2);
-	spriteEntity->SetWorldPosition(glm::vec2(400.0f, 400.0f));
+	SpriteEntity* spriteEntity = new SpriteEntity(m_renderer, m_blackMageTexture, glm::ivec2(64, 64));
+	spriteEntity->SetPosition(glm::vec2(400.0f, 400.0f));
     m_spriteEntities.push_back(std::unique_ptr<SpriteEntity>(spriteEntity));
 }
 
@@ -162,6 +169,9 @@ void Game::Render()
 
 void Game::Destroy()
 {
+    delete m_wizardTexture;
+    delete m_blackMageTexture;
+
     delete m_player;
     m_player = nullptr;
 }

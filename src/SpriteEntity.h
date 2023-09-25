@@ -18,7 +18,7 @@ typedef std::vector<unsigned int> tIndexVec;
 class SpriteEntity : public Entity
 {
 public:
-	SpriteEntity(Renderer* renderer, const glm::ivec2& size = glm::ivec2(64, 64), GLuint texture = 1);
+	SpriteEntity(Renderer* renderer, Texture* texture, const glm::ivec2& size = glm::ivec2(64, 64));
 	~SpriteEntity();
 
 	// Adds this sprites m_vertexVec to the batch
@@ -28,6 +28,6 @@ private:
 	Renderer* m_renderer;
 	tVertexVec m_vertexVec;
 	tIndexVec m_indexVec;
-	GLuint m_texture;
+	Texture* m_texture;
 
 };

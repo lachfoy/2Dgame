@@ -4,10 +4,10 @@
 
 Entity::Entity()
 {
-    m_worldPosition = glm::vec2(0.0f, 0.0f);
+    m_position = glm::vec2(0.0f, 0.0f);
 }
 
-void Entity::SetWorldPosition(const glm::vec2& worldPosition)
+void Entity::SetPosition(const glm::vec2& position)
 {
-	m_worldPosition = worldPosition;
+	m_position = position;
 }

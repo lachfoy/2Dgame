@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 
 #include "Vertex.h"
+#include "Texture.h"
 
 #include <vector>
 
@@ -15,19 +16,19 @@ typedef std::vector<unsigned int> tIndexVec;
 class RenderObject
 {
 public:
-	RenderObject(tVertexVec* vertexVec, tIndexVec* indexVec, glm::vec2* worldPosition, GLuint texture)
-		: m_vertexVec(vertexVec), m_indexVec(indexVec), m_worldPosition(worldPosition), m_texture(texture) {}
+	RenderObject(tVertexVec* vertexVec, tIndexVec* indexVec, glm::vec2* position, Texture* texture)
+		: m_vertexVec(vertexVec), m_indexVec(indexVec), m_position(position), m_texture(texture) {}
 
-	tVertexVec* VertexVec() const { return m_vertexVec; }
-	tIndexVec* IndexVec() const { return m_indexVec; }
-	GLuint Texture() const { return m_texture; }
-	glm::vec2* WorldPosition() const { return m_worldPosition; }
+	tVertexVec* GetVertexVec() const { return m_vertexVec; }
+	tIndexVec* GetIndexVec() const { return m_indexVec; }
+	Texture* GetTexture() const { return m_texture; }
+	glm::vec2* GetPosition() const { return m_position; }
 
 private:
 	tVertexVec* m_vertexVec;
 	tIndexVec* m_indexVec;
-	GLuint m_texture;
-	glm::vec2* m_worldPosition;
+	Texture* m_texture;
+	glm::vec2* m_position;
 
 };
 
@@ -36,7 +37,7 @@ class RenderObjectCompare
 public:
 	bool operator()(const RenderObject& obj1, const RenderObject& obj2) const
 	{
-		return obj1.Texture() < obj2.Texture();
+		return obj1.GetTexture() < obj2.GetTexture();
 	}
 };
 

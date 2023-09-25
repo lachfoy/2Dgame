@@ -41,4 +41,7 @@ private:
     Player* m_player;
     std::vector<std::unique_ptr<SpriteEntity>> m_spriteEntities;
 
+	Texture* m_wizardTexture;
+	Texture* m_blackMageTexture;
+
 };

@@ -9,9 +9,9 @@ public:
 	Entity();
 	~Entity() {}
 
-	void SetWorldPosition(const glm::vec2& worldPosition);
+	void SetPosition(const glm::vec2& position);
 
 protected:
-	glm::vec2 m_worldPosition;
+	glm::vec2 m_position;
 
 };

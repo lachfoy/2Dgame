@@ -2,7 +2,7 @@
 
 #include "Renderer.h"
 
-SpriteEntity::SpriteEntity(Renderer* renderer, const glm::ivec2& size, GLuint texture)
+SpriteEntity::SpriteEntity(Renderer* renderer, Texture* texture, const glm::ivec2& size)
 {
 	m_renderer = renderer;
 
@@ -42,7 +42,7 @@ void SpriteEntity::AddToBatch()
 	RenderObject renderObject = RenderObject(
 		&m_vertexVec,
 		&m_indexVec,
-		&m_worldPosition,
+		&m_position,
 		m_texture
 	);
 

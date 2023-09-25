@@ -7,61 +7,12 @@
 #include <cassert>
 #include <algorithm>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
 static const unsigned int kMaxSprites = 2000;
 
 void Renderer::Init()
 {
 	CreateShaderProgram();
 	CreateRenderData();
-
-	// Load texture
-	int imageWidth, imageHeight, nChannels;
-	unsigned char* imageData = stbi_load("data/images/Wizard.png", &imageWidth, &imageHeight, &nChannels, 0); // IDK how to handle different paths ...
-	const char* failureReason = stbi_failure_reason();
-	if (failureReason)
-	{
-		std::cout << failureReason << "\n";
-	}
-
-	GLuint tex;
-	glGenTextures(1, &tex);
-	glBindTexture(GL_TEXTURE_2D, tex);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	stbi_image_free(imageData);
-
-	{
-		// Load texture
-		int imageWidth, imageHeight, nChannels;
-		unsigned char* imageData = stbi_load("data/images/BlackMage.png", &imageWidth, &imageHeight, &nChannels, 0); // IDK how to handle different paths ...
-		const char* failureReason = stbi_failure_reason();
-		if (failureReason)
-		{
-			std::cout << failureReason << "\n";
-		}
-
-		GLuint tex;
-		glGenTextures(1, &tex);
-		glBindTexture(GL_TEXTURE_2D, tex);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		stbi_image_free(imageData);
-	}
 }
 
 void Renderer::SetProjection(unsigned int screenWidth, unsigned int screenHeight)
@@ -97,30 +48,30 @@ void Renderer::RenderObjects()
 	glUseProgram(m_shaderProgram);
 	glBindVertexArray(m_vao);
 
-	GLuint currentTexture = 0;
+	Texture* currentTexture = nullptr;
 
 	for (const RenderObject& obj : m_renderObjects)
 	{
-		if (obj.Texture() != currentTexture)
+		if (obj.GetTexture() != currentTexture)
 		{
 			// If a different texture is encountered, start a new batch
 			if (!m_vertexBuffer.empty())
 			{
-				glBindTexture(GL_TEXTURE_2D, currentTexture);
+				currentTexture->Bind();
 				FlushBatch();
 				ClearBatch();
 			}
-			currentTexture = obj.Texture();
+			currentTexture = obj.GetTexture();
 		}
 
-		for (Vertex vertex : *(obj.VertexVec())) {
-			vertex.position += *(obj.WorldPosition());
+		for (Vertex vertex : *(obj.GetVertexVec())) {
+			vertex.position += *(obj.GetPosition());
 			m_vertexBuffer.push_back(vertex);
 		}
 
 		// Append the indices from the current RenderObject to the current index batch
-		unsigned int vertexOffset = m_vertexBuffer.size() - obj.VertexVec()->size();
-		for (unsigned int index : *(obj.IndexVec()))
+		unsigned int vertexOffset = m_vertexBuffer.size() - obj.GetVertexVec()->size();
+		for (unsigned int index : *(obj.GetIndexVec()))
 		{
 			m_indexBuffer.push_back(index + vertexOffset);
 		}
@@ -129,7 +80,7 @@ void Renderer::RenderObjects()
 	// Add the last batch (if any) to the result
 	if (!m_vertexBuffer.empty())
 	{
-		glBindTexture(GL_TEXTURE_2D, currentTexture);
+		currentTexture->Bind();
 		FlushBatch();
 		ClearBatch();
 	}
