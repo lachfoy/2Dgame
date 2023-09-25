@@ -24,7 +24,7 @@ public:
 	// Adds this sprites m_vertexVec to the batch
 	void AddToBatch();
 	
-private:
+protected:
 	Renderer* m_renderer;
 	tVertexVec m_vertexVec;
 	tIndexVec m_indexVec;
