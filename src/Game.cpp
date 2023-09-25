@@ -159,9 +159,9 @@ void Game::Update(float dt)
 
 void Game::Render()
 {
-	m_backgroundImage->AddToBatch();
-	for (const auto& spriteEntity : m_spriteEntities) spriteEntity->AddToBatch();
-	m_player->AddToBatch();
+	m_backgroundImage->Render();
+	for (const auto& spriteEntity : m_spriteEntities) spriteEntity->Render();
+	m_player->Render();
 }
 
 void Game::Destroy()

@@ -31,7 +31,7 @@ BackgroundImage::BackgroundImage(Renderer* renderer, Texture* texture, int width
 	m_texture = texture;
 }
 
-void BackgroundImage::AddToBatch()
+void BackgroundImage::Render()
 {
 	RenderObject renderObject = RenderObject(
 		&m_vertexVec,
