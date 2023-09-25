@@ -25,7 +25,10 @@ void Player::Update(float dt)
 		m_moveDir = glm::normalize(m_moveDir);
 	}
 
-	m_position.x += m_moveDir.x * m_moveSpeed * dt;
-	m_position.y += m_moveDir.y * m_moveSpeed * dt;
+	m_velocity += m_acceleration * m_moveDir * dt;
+	m_velocity -= m_velocity * kFrictionCoef;
+
+	m_position += m_velocity * dt;
+
 	m_moveDir = glm::vec2(0.0f, 0.0f);
 }

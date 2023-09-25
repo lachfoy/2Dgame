@@ -17,7 +17,11 @@ public:
 	void Update(float dt);
 
 private:
-	glm::vec2 m_moveDir{ 0 };
-	float m_moveSpeed = 300.0f;
+	glm::vec2 m_moveDir{ 0.0f };
+	float m_acceleration = 20000.0f;
+
+	glm::vec2 m_velocity{ 0.0f };
+	float kFrictionCoef = 0.5f;
+	float kMaxSpeed = 400.0f;
 
 };
