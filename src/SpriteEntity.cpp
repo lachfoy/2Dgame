@@ -2,17 +2,18 @@
 
 #include "Renderer.h"
 
-SpriteEntity::SpriteEntity(Renderer* renderer, Texture* texture, const glm::ivec2& size)
+SpriteEntity::SpriteEntity(Renderer* renderer, Texture* texture, const glm::vec2& size)
 {
 	m_renderer = renderer;
+	m_size = size;
 
 	// Create the mesh data
 	// This should be handled by a different class though
 	Vertex vertices[] = {
-		{ glm::vec2(-size.x / 2.0f, size.y / 2.0f), glm::vec2(0.0f, 1.0f) },
-		{ glm::vec2(size.x / 2.0f, size.y / 2.0f), glm::vec2(1.0f, 1.0f) },
-		{ glm::vec2(-size.x / 2.0f, -size.y / 2.0f), glm::vec2(0.0f, 0.0f) },
-		{ glm::vec2(size.x / 2.0f, -size.y / 2.0f), glm::vec2(1.0f, 0.0f) }
+		{ glm::vec2(-m_size.x / 2.0f, m_size.y / 2.0f), glm::vec2(0.0f, 1.0f) },
+		{ glm::vec2(m_size.x / 2.0f, m_size.y / 2.0f), glm::vec2(1.0f, 1.0f) },
+		{ glm::vec2(-m_size.x / 2.0f, -m_size.y / 2.0f), glm::vec2(0.0f, 0.0f) },
+		{ glm::vec2(m_size.x / 2.0f, -m_size.y / 2.0f), glm::vec2(1.0f, 0.0f) }
 	};
 
 	for (const auto& vertex : vertices) {

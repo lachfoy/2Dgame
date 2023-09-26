@@ -139,7 +139,7 @@ void Game::Create()
 	m_player = new Player(m_renderer, m_wizardTexture);
 	m_player->SetPosition(glm::vec2(300.0f, 300.0f));
 
-	for (int i = 0; i < 50; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		SpriteEntity* spriteEntity = new SpriteEntity(m_renderer, m_blackMageTexture, glm::ivec2(36, 52));
 		spriteEntity->SetPosition(glm::vec2(rand() % 800, rand() % 600));
@@ -150,6 +150,14 @@ void Game::Create()
 void Game::HandleInput()
 {
 	m_player->HandleInput(m_input);
+
+	for (const auto& spriteEntity : m_spriteEntities)
+	{
+		if (Collision(*m_player, *spriteEntity))
+		{
+			std::cout << "Collided\n";
+		}
+	}
 }
 
 void Game::Update(float dt)
