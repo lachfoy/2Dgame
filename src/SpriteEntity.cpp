@@ -43,3 +43,16 @@ void SpriteEntity::Render()
 
 	m_renderer->AddRenderObject(renderObject);
 }
+
+void SpriteEntity::RenderDebugQuad()
+{
+	glm::vec2 topL = m_position - (m_size * 0.5f);
+	glm::vec2 bottomR = m_position + (m_size * 0.5f);
+	glm::vec2 bottomL = glm::vec2(topL.x, bottomR.y);
+	glm::vec2 topR = glm::vec2(bottomR.x, topL.y);
+
+	m_renderer->AddDebugLine(topL, bottomL);
+	m_renderer->AddDebugLine(bottomL, bottomR);
+	m_renderer->AddDebugLine(bottomR, topR);
+	m_renderer->AddDebugLine(topR, topL);
+}

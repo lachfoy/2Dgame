@@ -25,6 +25,7 @@ public:
 	glm::vec2 GetExtents() const { return m_size * 0.5f; }
 
 	void Render();
+	void RenderDebugQuad();
 	
 protected:
 	Renderer* m_renderer;

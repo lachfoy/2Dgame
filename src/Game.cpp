@@ -109,8 +109,8 @@ void Game::Run()
 		// render
 		glClear(GL_COLOR_BUFFER_BIT);
 		Render();
-		m_renderer->RenderBackground();
 		m_renderer->RenderObjects();
+		m_renderer->RenderDebugLines();
 
 		// swap buffers
 		SDL_GL_SwapWindow(m_window);
@@ -168,8 +168,16 @@ void Game::Update(float dt)
 void Game::Render()
 {
 	m_backgroundImage->Render();
-	for (const auto& spriteEntity : m_spriteEntities) spriteEntity->Render();
+	for (const auto& spriteEntity : m_spriteEntities)
+	{
+		spriteEntity->Render();
+		spriteEntity->RenderDebugQuad();
+	}
 	m_player->Render();
+
+	//m_renderer->AddDebugLine(glm::vec2(0.0f, 0.0f), glm::vec2(800.0f, 600.0f));
+
+	m_player->RenderDebugQuad();
 }
 
 void Game::Destroy()
