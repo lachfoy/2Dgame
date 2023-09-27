@@ -11,8 +11,8 @@ bool Game::Init(int width, int height, bool fullscreen, const char* title)
 {
 	m_windowWidth = width;
 	m_windowHeight = height;
-	m_viewportWidth = width; // for now
-	m_viewportHeight = height; // for now
+	m_viewportWidth = m_windowWidth; // for now
+	m_viewportHeight = m_windowHeight; // for now
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
@@ -24,6 +24,14 @@ bool Game::Init(int width, int height, bool fullscreen, const char* title)
 	if (fullscreen)
 	{
 		//windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+		SDL_DisplayMode displayMode;
+		SDL_GetDesktopDisplayMode(0, &displayMode); // can return int error
+		m_windowWidth = displayMode.w;
+		m_windowHeight = displayMode.h;
+
+		m_viewportWidth = m_windowWidth;
+		m_viewportHeight = m_windowHeight;
+
 		windowFlags |= SDL_WINDOW_BORDERLESS;
 	}
 
@@ -107,7 +115,7 @@ void Game::Run()
 		Update(dt);
 
 		// render
-		glClear(GL_COLOR_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT);
 		Render();
 		m_renderer->RenderObjects();
 		m_renderer->RenderDebugLines();
@@ -124,8 +132,6 @@ void Game::SetupGL()
 {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glClearColor(0.4627f, 0.7569f, 0.9412f, 1.0f);
 }
 
 void Game::Create()
