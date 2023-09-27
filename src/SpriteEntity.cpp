@@ -46,8 +46,25 @@ void SpriteEntity::Render()
 
 void SpriteEntity::RenderDebugQuad()
 {
-	glm::vec2 topL = m_position - (m_size * 0.5f);
-	glm::vec2 bottomR = m_position + (m_size * 0.5f);
+	// Calculate a bounding rectangle
+	glm::vec2 min{0.0f};
+	glm::vec2 max{0.0f};
+
+	for (const auto& vertex : m_vertexVec)
+	{
+		if (vertex.position.x < min.x) min.x = vertex.position.x;
+		if (vertex.position.y < min.y) min.y = vertex.position.y;
+		if (vertex.position.x > max.x) max.x = vertex.position.x;
+		if (vertex.position.y > max.y) max.y = vertex.position.y;
+	}
+
+	//glm::vec2 topL = m_position - (m_size * 0.5f);
+	//glm::vec2 bottomR = m_position + (m_size * 0.5f);
+	//glm::vec2 bottomL = glm::vec2(topL.x, bottomR.y);
+	//glm::vec2 topR = glm::vec2(bottomR.x, topL.y);
+
+	glm::vec2 topL = min + m_position;
+	glm::vec2 bottomR = max + m_position;
 	glm::vec2 bottomL = glm::vec2(topL.x, bottomR.y);
 	glm::vec2 topR = glm::vec2(bottomR.x, topL.y);
 
