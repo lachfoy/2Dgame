@@ -6,12 +6,19 @@
 
 #include <memory>
 #include <vector>
-#include "SpriteEntity.h"
+#include "Enemy.h"
 
 class Renderer;
 class Input;
 class Player;
 class BackgroundImage;
+
+struct GameState
+{
+	std::vector<float> lanePositionsX;
+};
+
+typedef std::vector<std::unique_ptr<Enemy>> tEnemiesVec;
 
 class Game
 {
@@ -20,6 +27,7 @@ public:
 	bool Init(int width, int height, bool fullscreen, const char* title);
 	void Run();
 
+	const GameState& GetGameState() const { return gameState; }
 private:
 	void SetupGL();
 	void Cleanup();
@@ -39,13 +47,17 @@ private:
 	void Create(); // scene related
 	void Render(); // scene related
 	void Destroy(); // scene related
+
+
 	Player* m_player;
-	std::vector<std::unique_ptr<SpriteEntity>> m_spriteEntities;
+	tEnemiesVec m_enemies;
 
 	Texture* m_wizardTexture;
 	Texture* m_blackMageTexture;
 	Texture* m_backgroundTexture;
 
 	BackgroundImage* m_backgroundImage;
+
+	GameState gameState;
 
 };

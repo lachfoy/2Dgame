@@ -6,11 +6,12 @@
 #include <glm/glm.hpp>
 
 class Input;
+struct GameState;
 
 class Player : public SpriteEntity
 {
 public:
-	Player(Renderer* renderer, Texture* texture) : SpriteEntity(renderer, texture, glm::ivec2(34, 54)) {}
+	Player(Renderer* renderer, Texture* texture, GameState* gameState);
 	~Player() {}
 
 	void HandleInput(Input* input);
@@ -23,5 +24,10 @@ private:
 	glm::vec2 m_velocity{ 0.0f };
 	float kFrictionCoef = 0.5f;
 	float kMaxSpeed = 400.0f;
+	GameState* m_gameState;
+	//int m_laneIndex;
+
+	//float m_desiredX;
+	//float m_lerpRate = 40.0f;
 
 };

@@ -142,48 +142,74 @@ void Game::Create()
 
 	m_backgroundImage = new BackgroundImage(m_renderer, m_backgroundTexture, m_viewportWidth, m_viewportHeight);
 
-	m_player = new Player(m_renderer, m_wizardTexture);
-	m_player->SetPosition(glm::vec2(300.0f, 300.0f));
-
-	for (int i = 0; i < 5; i++)
+	const int laneNum = 5;
+	float laneWidth = 100;
+	float totalWidth = laneWidth * laneNum;
+	float startX = (800.0f / 2) - (totalWidth / 2);
+	for (int i = 0; i < laneNum; i++)
 	{
-		SpriteEntity* spriteEntity = new SpriteEntity(m_renderer, m_blackMageTexture, glm::ivec2(36, 52));
-		spriteEntity->SetPosition(glm::vec2(rand() % 800, rand() % 600));
-		m_spriteEntities.push_back(std::unique_ptr<SpriteEntity>(spriteEntity));
+		gameState.lanePositionsX.push_back(startX + (i * laneWidth) + (laneWidth / 2));
 	}
+
+	m_player = new Player(m_renderer, m_wizardTexture, &gameState);
+	m_player->SetPosition(glm::vec2(gameState.lanePositionsX[0], 500.0f));
+
+	for (int i = 0; i < 10; i++)
+	{
+		Enemy* enemy = new Enemy(m_renderer, m_blackMageTexture, m_player);
+		enemy->SetPosition(glm::vec2(rand() % 800, rand() % 600));
+		m_enemies.push_back(std::unique_ptr<Enemy>(enemy));
+	}
+
 }
 
 void Game::HandleInput()
 {
 	m_player->HandleInput(m_input);
+}
 
-	for (const auto& spriteEntity : m_spriteEntities)
+void Game::Update(float dt)
+{
+	for (const auto& enemy : m_enemies)
 	{
-		if (Collision(*m_player, *spriteEntity))
+		enemy->Update(dt);
+
+
+		if (enemy->GetPosition().x < -20.0f)
+		{
+			enemy->SetPosition(glm::vec2(820.0f, rand() % 600));
+		}
+	}
+
+	m_player->Update(dt);
+
+	for (const auto& enemy : m_enemies)
+	{
+		if (Collision(*m_player, *enemy))
 		{
 			std::cout << "Collided\n";
 		}
 	}
 }
 
-void Game::Update(float dt)
-{
-	m_player->Update(dt);
-}
-
 void Game::Render()
 {
 	m_backgroundImage->Render();
-	for (const auto& spriteEntity : m_spriteEntities)
+	for (const auto& enemy : m_enemies)
 	{
-		spriteEntity->Render();
-		spriteEntity->RenderDebugQuad();
+		enemy->Render();
+		//enemy->RenderDebugQuad();
 	}
 	m_player->Render();
 
 	//m_renderer->AddDebugLine(glm::vec2(0.0f, 0.0f), glm::vec2(800.0f, 600.0f));
 
-	m_player->RenderDebugQuad();
+	//m_player->RenderDebugQuad();
+	
+	//for (float x : gameState.lanePositionsX)
+	//{
+	//	m_renderer->AddDebugLine(glm::vec2(x, 0.0f), glm::vec2(x, 600.0f));
+	//}
 }
 
 void Game::Destroy()
