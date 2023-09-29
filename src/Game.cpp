@@ -11,8 +11,8 @@ bool Game::Init(int width, int height, bool fullscreen, const char* title)
 {
 	m_windowWidth = width;
 	m_windowHeight = height;
-	m_viewportWidth = m_windowWidth; // for now
-	m_viewportHeight = m_windowHeight; // for now
+	m_viewportWidth = m_windowWidth / 2; // for now
+	m_viewportHeight = m_windowHeight / 2; // for now
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
@@ -139,28 +139,20 @@ void Game::Create()
 	m_wizardTexture = new Texture("data/images/Wizard.png");
 	m_blackMageTexture = new Texture("data/images/BlackMage.png");
 	m_backgroundTexture = new Texture("data/images/Sky.png");
+	m_grassTexture = new Texture("data/images/Grass.png");
 
 	m_backgroundImage = new BackgroundImage(m_renderer, m_backgroundTexture, m_viewportWidth, m_viewportHeight);
-
-	const int laneNum = 5;
-	float laneWidth = 100;
-	float totalWidth = laneWidth * laneNum;
-	float startX = (800.0f / 2) - (totalWidth / 2);
-	for (int i = 0; i < laneNum; i++)
-	{
-		gameState.lanePositionsX.push_back(startX + (i * laneWidth) + (laneWidth / 2));
-	}
+	m_grassImage = new BackgroundImage(m_renderer, m_grassTexture, m_viewportWidth, 149);
 
 	m_player = new Player(m_renderer, m_wizardTexture, &gameState);
-	m_player->SetPosition(glm::vec2(gameState.lanePositionsX[0], 500.0f));
+	m_player->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 
 	for (int i = 0; i < 10; i++)
 	{
 		Enemy* enemy = new Enemy(m_renderer, m_blackMageTexture, m_player);
-		enemy->SetPosition(glm::vec2(rand() % 800, rand() % 600));
+		enemy->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 		m_enemies.push_back(std::unique_ptr<Enemy>(enemy));
 	}
-
 }
 
 void Game::HandleInput()
@@ -195,6 +187,8 @@ void Game::Update(float dt)
 void Game::Render()
 {
 	m_backgroundImage->Render();
+	//m_grassImage->Render();
+
 	for (const auto& enemy : m_enemies)
 	{
 		enemy->Render();

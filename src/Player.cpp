@@ -4,7 +4,7 @@
 #include "Renderer.h"
 #include "Game.h"
 
-Player::Player(Renderer* renderer, Texture* texture, GameState* gameState) : SpriteEntity(renderer, texture, glm::ivec2(34, 54))
+Player::Player(Renderer* renderer, Texture* texture, GameState* gameState) : SpriteEntity(renderer, texture, glm::ivec2(17, 27))
 {
 	m_gameState = gameState;
 	//m_laneIndex = 3;

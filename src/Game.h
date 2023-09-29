@@ -48,15 +48,16 @@ private:
 	void Render(); // scene related
 	void Destroy(); // scene related
 
-
 	Player* m_player;
 	tEnemiesVec m_enemies;
 
 	Texture* m_wizardTexture;
 	Texture* m_blackMageTexture;
 	Texture* m_backgroundTexture;
+	Texture* m_grassTexture;
 
 	BackgroundImage* m_backgroundImage;
+	BackgroundImage* m_grassImage;
 
 	GameState gameState;
 
