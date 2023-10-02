@@ -4,7 +4,7 @@
 #include "Renderer.h"
 #include "Player.h"
 
-Enemy::Enemy(Renderer* renderer, Texture* texture, Player* player) : SpriteEntity(renderer, texture, glm::ivec2(18, 26)), m_player(player)
+Enemy::Enemy(Renderer* renderer, Texture* texture, Player* player) : SpriteEntity(renderer, texture), m_player(player)
 {
 
 }

@@ -25,6 +25,7 @@ private:
 	float kFrictionCoef = 0.5f;
 	float kMaxSpeed = 400.0f;
 	GameState* m_gameState;
+
 	//int m_laneIndex;
 
 	//float m_desiredX;
