@@ -151,6 +151,7 @@
     <ClCompile Include="src\RenderObject.cpp" />
     <ClCompile Include="src\SpriteEntity.cpp" />
     <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\TileMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BackgroundImage.h" />
@@ -164,6 +165,7 @@
     <ClInclude Include="src\SpriteEntity.h" />
     <ClInclude Include="src\stb_image.h" />
     <ClInclude Include="src\Texture.h" />
+    <ClInclude Include="src\TileMap.h" />
     <ClInclude Include="src\Vertex.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

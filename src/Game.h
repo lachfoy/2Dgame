@@ -12,6 +12,7 @@ class Renderer;
 class Input;
 class Player;
 class BackgroundImage;
+class TileMap;
 
 struct GameState
 {
@@ -54,11 +55,12 @@ private:
 	Texture* m_wizardTexture;
 	Texture* m_blackMageTexture;
 	Texture* m_backgroundTexture;
-	Texture* m_grassTexture;
-
+	Texture* m_tileMapTexture;
+	
 	BackgroundImage* m_backgroundImage;
-	BackgroundImage* m_grassImage;
-
+	
 	GameState gameState;
+
+	TileMap* m_tileMap;
 
 };
