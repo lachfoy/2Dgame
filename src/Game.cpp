@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Texture.h"
 #include "BackgroundImage.h"
+#include "TileMap.h"
 
 bool Game::Init(int width, int height, bool fullscreen, const char* title)
 {
@@ -216,7 +217,7 @@ void Game::Destroy()
 
 void Game::Cleanup()
 {
-	m_renderer->Destroy();
+	m_renderer->Dispose();
 	delete m_renderer;
 	m_renderer = nullptr;
 	
