@@ -12,7 +12,12 @@ public:
 	bool LoadFromFile(const char* path, bool useMipMaps = false);
 	void Bind() const;
 
+	int GetWidth() const { return m_width; }
+	int GetHeight() const { return m_height; }
+
 private:
 	GLuint m_texture;
+	int m_width;
+	int m_height;
 
 };

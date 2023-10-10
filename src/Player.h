@@ -26,6 +26,11 @@ private:
 	float kMaxSpeed = 400.0f;
 
 	GameState* m_gameState;
+<<<<<<< HEAD
+=======
+
+	//int m_laneIndex;
+>>>>>>> cc9bfcfc3be0b5ae6481456b91b67b08383d65c4
 
 
 };

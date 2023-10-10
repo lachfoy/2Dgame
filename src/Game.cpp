@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Texture.h"
 #include "BackgroundImage.h"
+#include "TileMap.h"
 
 bool Game::Init(int width, int height, bool fullscreen, const char* title)
 {
@@ -136,9 +137,17 @@ void Game::SetupGL()
 
 void Game::Create()
 {
+<<<<<<< HEAD
 	m_wizardTexture = new Texture("data/images/Wizard.png");
 	m_blackMageTexture = new Texture("data/images/BlackMage.png");
 	m_backgroundTexture = new Texture("data/images/TileableBackGround.png");
+=======
+	m_wizardTexture = new Texture("data/images/shipSm.png");
+	m_blackMageTexture = new Texture("data/images/shipSmEnemy.png");
+	m_backgroundTexture = new Texture("data/images/Sky.png");
+	m_tileMapTexture = new Texture("data/images/tilemap.png");
+
+>>>>>>> cc9bfcfc3be0b5ae6481456b91b67b08383d65c4
 	m_backgroundImage = new BackgroundImage(m_renderer, m_backgroundTexture, m_viewportWidth, m_viewportHeight);
 
 	m_player = new Player(m_renderer, m_wizardTexture, &gameState);
@@ -151,6 +160,11 @@ void Game::Create()
 		enemy->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 		m_enemies.push_back(std::unique_ptr<Enemy>(enemy));
 	}
+
+	m_tileMap = new TileMap(m_renderer, m_tileMapTexture);
+	m_tileMap->CreateDebugMap();
+	m_tileMap->BuildTileMesh();
+
 }
 
 void Game::HandleInput()
@@ -160,6 +174,7 @@ void Game::HandleInput()
 
 void Game::Update(float dt)
 {
+<<<<<<< HEAD
 	m_player->Update(dt);
 
 	for (const auto& enemy : m_enemies)
@@ -174,16 +189,42 @@ void Game::Update(float dt)
 			std::cout << "Collided\n";
 		}
 	}
+=======
+	//for (const auto& enemy : m_enemies)
+	//{
+	//	enemy->Update(dt);
+	//}
+
+	m_player->Update(dt);
+
+	//for (const auto& enemy : m_enemies)
+	//{
+	//	if (Collision(*m_player, *enemy))
+	//	{
+	//		std::cout << "Collided\n";
+	//	}
+	//}
+>>>>>>> cc9bfcfc3be0b5ae6481456b91b67b08383d65c4
 }
 
 void Game::Render()
 {
 	m_backgroundImage->Render();
 
+<<<<<<< HEAD
 	for (const auto& enemy : m_enemies)
 	{
 		enemy->Render();
 	}
+=======
+	//for (const auto& enemy : m_enemies)
+	//{
+	//	enemy->Render();
+	//	enemy->RenderDebugQuad();
+	//}
+
+	m_tileMap->Render();
+>>>>>>> cc9bfcfc3be0b5ae6481456b91b67b08383d65c4
 
 	m_player->Render();
 }
@@ -193,7 +234,16 @@ void Game::Destroy()
 	delete m_wizardTexture;
 	delete m_blackMageTexture;
 	delete m_backgroundTexture;
+<<<<<<< HEAD
 	delete m_backgroundImage;
+=======
+	delete m_tileMapTexture;
+
+	delete m_backgroundImage;
+
+	m_tileMap->Destroy();
+	delete m_tileMap;
+>>>>>>> cc9bfcfc3be0b5ae6481456b91b67b08383d65c4
 
 	delete m_player;
 	m_player = nullptr;

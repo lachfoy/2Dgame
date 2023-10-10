@@ -18,7 +18,7 @@ typedef std::vector<unsigned int> tIndexVec;
 class SpriteEntity : public Entity
 {
 public:
-	SpriteEntity(Renderer* renderer, Texture* texture, const glm::vec2& size = glm::vec2(64, 64));
+	SpriteEntity(Renderer* renderer, Texture* texture);
 	~SpriteEntity() {}
 
 	glm::vec2 GetSize() const { return m_size; }

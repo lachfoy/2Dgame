@@ -24,9 +24,12 @@ bool Texture::LoadFromFile(const char *path, bool useMipMaps)
 	unsigned char *data = stbi_load(path, &width, &height, &numChannels, 0);
 	if (data == nullptr)
 	{
-		std::cout << stbi_failure_reason() << "\n";
+		printf("Error loading texture %s: %s\n", path, stbi_failure_reason());
 		assert(false);
 	}
+
+	m_width = width;
+	m_height = height;
 
 	// create and bind texture
 	glGenTextures(1, &m_texture);
@@ -45,7 +48,7 @@ bool Texture::LoadFromFile(const char *path, bool useMipMaps)
 		default:
 			assert(false);
 	}
-	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, format, m_width, m_height, 0, format, GL_UNSIGNED_BYTE, data);
 	stbi_image_free(data);
 
 	// set params

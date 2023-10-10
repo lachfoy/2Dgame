@@ -2,10 +2,12 @@
 
 #include "Renderer.h"
 
-SpriteEntity::SpriteEntity(Renderer* renderer, Texture* texture, const glm::vec2& size)
+SpriteEntity::SpriteEntity(Renderer* renderer, Texture* texture)
 {
 	m_renderer = renderer;
-	m_size = size;
+
+	m_size.x = texture->GetWidth();
+	m_size.y = texture->GetHeight();
 
 	// Create the mesh data
 	// This should be handled by a different class though

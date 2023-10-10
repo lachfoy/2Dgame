@@ -4,7 +4,7 @@
 #include "Renderer.h"
 #include "Game.h"
 
-Player::Player(Renderer* renderer, Texture* texture, GameState* gameState) : SpriteEntity(renderer, texture, glm::ivec2(17, 27))
+Player::Player(Renderer* renderer, Texture* texture, GameState* gameState) : SpriteEntity(renderer, texture)
 {
 	m_gameState = gameState;
 }
