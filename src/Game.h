@@ -15,7 +15,7 @@ class BackgroundImage;
 
 struct GameState
 {
-	std::vector<float> lanePositionsX;
+	
 };
 
 typedef std::vector<std::unique_ptr<Enemy>> tEnemiesVec;
@@ -27,7 +27,6 @@ public:
 	bool Init(int width, int height, bool fullscreen, const char* title);
 	void Run();
 
-	const GameState& GetGameState() const { return gameState; }
 private:
 	void SetupGL();
 	void Cleanup();
@@ -54,10 +53,8 @@ private:
 	Texture* m_wizardTexture;
 	Texture* m_blackMageTexture;
 	Texture* m_backgroundTexture;
-	Texture* m_grassTexture;
 
 	BackgroundImage* m_backgroundImage;
-	BackgroundImage* m_grassImage;
 
 	GameState gameState;
 

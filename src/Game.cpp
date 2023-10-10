@@ -29,8 +29,8 @@ bool Game::Init(int width, int height, bool fullscreen, const char* title)
 		m_windowWidth = displayMode.w;
 		m_windowHeight = displayMode.h;
 
-		m_viewportWidth = m_windowWidth;
-		m_viewportHeight = m_windowHeight;
+		//m_viewportWidth = m_windowWidth;
+		//m_viewportHeight = m_windowHeight;
 
 		windowFlags |= SDL_WINDOW_BORDERLESS;
 	}
@@ -138,13 +138,11 @@ void Game::Create()
 {
 	m_wizardTexture = new Texture("data/images/Wizard.png");
 	m_blackMageTexture = new Texture("data/images/BlackMage.png");
-	m_backgroundTexture = new Texture("data/images/Sky.png");
-	m_grassTexture = new Texture("data/images/Grass.png");
-
+	m_backgroundTexture = new Texture("data/images/TileableBackGround.png");
 	m_backgroundImage = new BackgroundImage(m_renderer, m_backgroundTexture, m_viewportWidth, m_viewportHeight);
-	m_grassImage = new BackgroundImage(m_renderer, m_grassTexture, m_viewportWidth, 149);
 
 	m_player = new Player(m_renderer, m_wizardTexture, &gameState);
+
 	m_player->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 
 	for (int i = 0; i < 10; i++)
@@ -162,18 +160,12 @@ void Game::HandleInput()
 
 void Game::Update(float dt)
 {
+	m_player->Update(dt);
+
 	for (const auto& enemy : m_enemies)
 	{
 		enemy->Update(dt);
-
-
-		if (enemy->GetPosition().x < -20.0f)
-		{
-			enemy->SetPosition(glm::vec2(820.0f, rand() % 600));
-		}
 	}
-
-	m_player->Update(dt);
 
 	for (const auto& enemy : m_enemies)
 	{
@@ -187,29 +179,21 @@ void Game::Update(float dt)
 void Game::Render()
 {
 	m_backgroundImage->Render();
-	//m_grassImage->Render();
 
 	for (const auto& enemy : m_enemies)
 	{
 		enemy->Render();
-		//enemy->RenderDebugQuad();
 	}
+
 	m_player->Render();
-
-	//m_renderer->AddDebugLine(glm::vec2(0.0f, 0.0f), glm::vec2(800.0f, 600.0f));
-
-	//m_player->RenderDebugQuad();
-	
-	//for (float x : gameState.lanePositionsX)
-	//{
-	//	m_renderer->AddDebugLine(glm::vec2(x, 0.0f), glm::vec2(x, 600.0f));
-	//}
 }
 
 void Game::Destroy()
 {
 	delete m_wizardTexture;
 	delete m_blackMageTexture;
+	delete m_backgroundTexture;
+	delete m_backgroundImage;
 
 	delete m_player;
 	m_player = nullptr;
@@ -217,6 +201,7 @@ void Game::Destroy()
 
 void Game::Cleanup()
 {
+	m_renderer->Dispose();
 	delete m_renderer;
 	m_renderer = nullptr;
 	

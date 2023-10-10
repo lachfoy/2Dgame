@@ -28,4 +28,7 @@
     <ClInclude Include="src\Enemy.h" />
     <ClInclude Include="src\RenderObject.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="todo.txt" />
+  </ItemGroup>
 </Project>

@@ -9,28 +9,29 @@ Enemy::Enemy(Renderer* renderer, Texture* texture, Player* player) : SpriteEntit
 
 }
 
+void Enemy::Think()
+{
+	// set direction to move towards player
+	glm::vec2 targetPosition = m_player->GetPosition();
+	m_moveDir = glm::normalize(targetPosition - m_position);
+}
+
 void Enemy::Update(float dt)
 {
-	//float theta = 0.01f;
-	//for (auto& vertex : m_vertexVec)
-	//{
-	//	glm::vec2 newPos;
-	//	newPos.x = vertex.position.x * cos(theta) - vertex.position.y * sin(theta);
-	//	newPos.y = vertex.position.x * sin(theta) + vertex.position.y * cos(theta);
-	//	vertex.position = newPos;
-	//}
+	m_thinkTimer += dt;
+	if (m_thinkTimer >= kThinkInterval)
+	{
+		m_thinkTimer = 0.0f;
+		Think();
+	}
 
-	//if (glm::length(m_moveDir) > 0.0f)
-	//{
-	//	m_moveDir = glm::normalize(m_moveDir);
-	//}
+	if (glm::length(m_moveDir) > 0.0f)
+	{
+		m_moveDir = glm::normalize(m_moveDir);
+	}
 
-	//m_velocity += m_acceleration * m_moveDir * dt;
-	//m_velocity -= m_velocity * kFrictionCoef;
+	m_velocity += m_acceleration * m_moveDir * dt;
+	m_velocity -= m_velocity * kFrictionCoef;
 
-	//m_position += m_velocity * dt;
-
-	//m_moveDir = glm::vec2(0.0f, 0.0f);
-
-	m_position.x -= m_moveSpeed * dt;
+	m_position += m_velocity * dt;
 }
