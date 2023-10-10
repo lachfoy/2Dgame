@@ -24,7 +24,7 @@ bool Texture::LoadFromFile(const char *path, bool useMipMaps)
 	unsigned char *data = stbi_load(path, &width, &height, &numChannels, 0);
 	if (data == nullptr)
 	{
-		std::cout << stbi_failure_reason() << "\n";
+		printf("Error loading texture %s: %s\n", path, stbi_failure_reason());
 		assert(false);
 	}
 
