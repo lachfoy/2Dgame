@@ -14,6 +14,10 @@ class Player;
 class BackgroundImage;
 class TileMap;
 
+class Panel;
+class Button;
+class GuiRenderer;
+
 struct GameState
 {
 	std::vector<float> lanePositionsX;
@@ -41,6 +45,7 @@ private:
 	int m_viewportHeight;
 	Renderer* m_renderer;
 	Input* m_input;
+	GuiRenderer* m_guiRenderer;
 
 private:
 	void HandleInput();
@@ -62,5 +67,9 @@ private:
 	GameState gameState;
 
 	TileMap* m_tileMap;
+
+	Panel* m_viewpointPanel;
+	Panel* m_testPanel;
+	Button* m_button;
 
 };

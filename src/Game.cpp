@@ -7,6 +7,9 @@
 #include "Texture.h"
 #include "BackgroundImage.h"
 #include "TileMap.h"
+#include "Panel.h"
+#include "Button.h"
+#include "GuiRenderer.h"
 
 bool Game::Init(int width, int height, bool fullscreen, const char* title)
 {
@@ -74,6 +77,10 @@ bool Game::Init(int width, int height, bool fullscreen, const char* title)
 	m_renderer->Init();
 	m_renderer->SetProjection(m_viewportWidth, m_viewportHeight);
 
+	m_guiRenderer = new GuiRenderer();
+	m_guiRenderer->Init();
+	m_guiRenderer->SetProjection(m_viewportWidth, m_viewportHeight);
+
 	m_input = new Input();
 
 	return true;
@@ -121,6 +128,10 @@ void Game::Run()
 		m_renderer->RenderObjects();
 		m_renderer->RenderDebugLines();
 
+		//glScissor(200, 200, 100, 100);
+		//glEnable(GL_SCISSOR_TEST);
+		//glClear(GL_COLOR_BUFFER_BIT);
+
 		// swap buffers
 		SDL_GL_SwapWindow(m_window);
 	}
@@ -133,6 +144,8 @@ void Game::SetupGL()
 {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glViewport(0, 0, m_viewportWidth, m_viewportHeight);
 }
 
 void Game::Create()
@@ -158,6 +171,10 @@ void Game::Create()
 	m_tileMap->CreateDebugMap();
 	m_tileMap->BuildTileMesh();
 
+
+	m_viewpointPanel = new Panel("Viewport", m_guiRenderer, glm::vec2(0, 0), glm::vec2(m_viewportWidth, m_viewportHeight));
+	m_testPanel = new Panel("test", m_guiRenderer, glm::vec2(200, 200), glm::vec2(200, 200), m_viewpointPanel);
+	m_button = new Button("test button", m_guiRenderer, glm::vec2(10, 10), glm::vec2(100, 40), m_testPanel);
 }
 
 void Game::HandleInput()
@@ -185,7 +202,7 @@ void Game::Update(float dt)
 
 void Game::Render()
 {
-	m_backgroundImage->Render();
+	//m_backgroundImage->Render();
 	//m_grassImage->Render();
 
 	//for (const auto& enemy : m_enemies)
@@ -194,9 +211,11 @@ void Game::Render()
 	//	enemy->RenderDebugQuad();
 	//}
 
-	m_tileMap->Render();
+	//m_tileMap->Render();
 
-	m_player->Render();
+	//m_player->Render();
+
+
 }
 
 void Game::Destroy()

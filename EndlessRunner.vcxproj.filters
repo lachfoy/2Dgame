@@ -12,8 +12,10 @@
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\BackgroundImage.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
-    <ClCompile Include="src\RenderObject.cpp" />
     <ClCompile Include="src\TileMap.cpp" />
+    <ClCompile Include="src\Panel.cpp" />
+    <ClCompile Include="src\Button.cpp" />
+    <ClCompile Include="src\GuiRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Entity.h" />
@@ -27,7 +29,9 @@
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\BackgroundImage.h" />
     <ClInclude Include="src\Enemy.h" />
-    <ClInclude Include="src\RenderObject.h" />
     <ClInclude Include="src\TileMap.h" />
+    <ClInclude Include="src\Panel.h" />
+    <ClInclude Include="src\Button.h" />
+    <ClInclude Include="src\GuiRenderer.h" />
   </ItemGroup>
 </Project>
