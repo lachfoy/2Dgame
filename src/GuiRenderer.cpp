@@ -44,9 +44,9 @@ void GuiRenderer::AddQuadToBatch(glm::vec2 position, glm::vec2 size, glm::vec4 c
 	// add 
 }
 
-void GuiRenderer::AddRenderObject(const GuiRenderObject& renderObject)
+void GuiRenderer::AddGuiRenderObject(const GuiRenderObject& renderObject)
 {
-	m_renderObjects.push_back(renderObject);
+	m_guiRenderObjects.push_back(renderObject);
 }
 
 void GuiRenderer::RenderObjects()
@@ -58,7 +58,7 @@ void GuiRenderer::RenderObjects()
 
 	Texture* currentTexture = nullptr;
 
-	for (const GuiRenderObject& obj : m_renderObjects)
+	for (const GuiRenderObject& obj : m_guiRenderObjects)
 	{
 		if (obj.GetTexture() != currentTexture)
 		{
@@ -96,7 +96,7 @@ void GuiRenderer::RenderObjects()
 	}
 
 	glBindVertexArray(0);
-	m_renderObjects.clear();
+	m_guiRenderObjects.clear();
 }
 
 void GuiRenderer::AddDebugLine(const glm::vec2& p1, const glm::vec2& p2)
