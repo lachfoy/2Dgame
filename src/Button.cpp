@@ -12,7 +12,7 @@ Button::Button(const char* name, GuiRenderer* guiRenderer, glm::vec2 position, g
 {
 }
 
-void Button::Render()
-{
-
-}
+//void Button::Render()
+//{
+//	Render();
+//}

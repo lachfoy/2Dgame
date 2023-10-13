@@ -8,6 +8,14 @@
 // store in a tree structure
 // things outside a panel should get clipped by default
 
+#include <vector>
+
+#include "Vertex.h"
+#include "Texture.h"
+
+typedef std::vector<Vertex> tVertexVec;
+typedef std::vector<unsigned int> tIndexVec;
+
 class GuiRenderer;
 
 class Panel
@@ -37,6 +45,9 @@ protected:
 
 	GuiRenderer* m_guiRenderer;
 
-	glm::vec4 m_color;
+	glm::vec4 m_color = glm::vec4(1.f, 1.f, 1.f, 1.f);
+
+	tVertexVec m_vertexVec;
+	tIndexVec m_indexVec;
 
 };

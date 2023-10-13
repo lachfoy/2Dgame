@@ -1,5 +1,7 @@
 #include "Panel.h"
 
+#include "GuiRenderer.h"
+
 Panel::Panel(const char* name, GuiRenderer* guiRenderer) : m_guiRenderer(guiRenderer)
 {
 	m_name = name;
@@ -20,7 +22,30 @@ void Panel::Render()
 	glm::vec2 position = GetAbsolutePosition();
 	glm::vec2 size = GetSize();
 
-	//m_guiRenderer->AddQuadToBatch();
+	// build the index and vertex vecs
+	// Create the mesh data
+	// This should be handled by a different class though
+	m_vertexVec.clear();
+	m_vertexVec.push_back({ glm::vec2(position.x, position.y + size.y), glm::vec2(0.0f, 1.0f) });
+	m_vertexVec.push_back({ position + size, glm::vec2(1.0f, 1.0f) });
+	m_vertexVec.push_back({ position, glm::vec2(0.0f, 0.0f) });
+	m_vertexVec.push_back({ glm::vec2(position.x + size.x, position.y), glm::vec2(1.0f, 0.0f) });
+
+	m_indexVec.clear();
+	m_indexVec.push_back(0);
+	m_indexVec.push_back(1);
+	m_indexVec.push_back(2);
+	m_indexVec.push_back(1);
+	m_indexVec.push_back(3);
+	m_indexVec.push_back(2);
+	
+	GuiRenderObject guiRenderObject = GuiRenderObject(
+		&m_vertexVec,
+		&m_indexVec,
+		m_color
+	);
+
+	m_guiRenderer->AddGuiRenderObject(guiRenderObject);
 }
 
 void Panel::DebugRenderBounds()

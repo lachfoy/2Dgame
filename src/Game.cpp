@@ -127,6 +127,7 @@ void Game::Run()
 		Render();
 		m_renderer->RenderObjects();
 		m_renderer->RenderDebugLines();
+		m_guiRenderer->RenderObjects();
 
 		//glScissor(200, 200, 100, 100);
 		//glEnable(GL_SCISSOR_TEST);
@@ -145,7 +146,7 @@ void Game::SetupGL()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glViewport(0, 0, m_viewportWidth, m_viewportHeight);
+	//glViewport(0, 0, m_viewportWidth, m_viewportHeight);
 }
 
 void Game::Create()
@@ -173,8 +174,10 @@ void Game::Create()
 
 
 	m_viewpointPanel = new Panel("Viewport", m_guiRenderer, glm::vec2(0, 0), glm::vec2(m_viewportWidth, m_viewportHeight));
-	m_testPanel = new Panel("test", m_guiRenderer, glm::vec2(200, 200), glm::vec2(200, 200), m_viewpointPanel);
+	m_testPanel = new Panel("test", m_guiRenderer, glm::vec2(100, 40), glm::vec2(200, 200), m_viewpointPanel);
+	m_testPanel->SetColor(glm::vec4(0.4, 0.4, 0.4, 1.0f));
 	m_button = new Button("test button", m_guiRenderer, glm::vec2(10, 10), glm::vec2(100, 40), m_testPanel);
+	m_button->SetColor(glm::vec4(0.9, 0.9, 0.9, 1.0f));
 }
 
 void Game::HandleInput()
@@ -215,7 +218,9 @@ void Game::Render()
 
 	//m_player->Render();
 
-
+	//m_viewpointPanel->Render();
+	m_testPanel->Render();
+	m_button->Render();
 }
 
 void Game::Destroy()
@@ -239,6 +244,9 @@ void Game::Cleanup()
 	m_renderer->Dispose();
 	delete m_renderer;
 	m_renderer = nullptr;
+
+	m_guiRenderer->Dispose();
+	delete m_guiRenderer;
 	
 	delete m_input;
 	m_input = nullptr;

@@ -56,26 +56,25 @@ void GuiRenderer::RenderObjects()
 	glUseProgram(m_shaderProgram);
 	glBindVertexArray(m_vao);
 
-	Texture* currentTexture = nullptr;
+	glm::vec4 currentColor;
 
 	for (const GuiRenderObject& obj : m_guiRenderObjects)
 	{
-		if (obj.GetTexture() != currentTexture)
+		if (obj.GetColor() != currentColor)
 		{
 			// If a different texture is encountered, start a new batch
 			if (!m_vertexBuffer.empty())
 			{
-				currentTexture->Bind();
+				glUniform3f(glGetUniformLocation(m_shaderProgram, "u_color"), currentColor.x, currentColor.y, currentColor.z);
+
 				FlushBatch();
 				ClearBatch();
 			}
-			currentTexture = obj.GetTexture();
+
+			currentColor = obj.GetColor();
 		}
 
 		for (Vertex vertex : *(obj.GetVertexVec())) {
-			if (obj.GetPosition() != nullptr)
-				vertex.position += *(obj.GetPosition());
-
 			m_vertexBuffer.push_back(vertex);
 		}
 
@@ -90,7 +89,8 @@ void GuiRenderer::RenderObjects()
 	// Add the last batch (if any) to the result
 	if (!m_vertexBuffer.empty())
 	{
-		currentTexture->Bind();
+		glUniform4f(glGetUniformLocation(m_shaderProgram, "u_color"), currentColor.r, currentColor.g, currentColor.b, currentColor.a);
+
 		FlushBatch();
 		ClearBatch();
 	}
@@ -191,8 +191,8 @@ void GuiRenderer::CreateShaderProgram()
 
 			void main()
 			{
-				out_color = texture(u_sampler, v_texcoord);
-				//out_color = vec4(1, 0, 1, 1);
+				//out_color = texture(u_sampler, v_texcoord);
+				out_color = u_color;
 			}
 		)";
 		
@@ -226,11 +226,11 @@ void GuiRenderer::CreateShaderProgram()
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
-	// Set up sampler ...just one for now
-	glUseProgram(m_shaderProgram);
-	GLint textureUniformLocation = glGetUniformLocation(m_shaderProgram, "u_sampler");
-	assert(textureUniformLocation >= 0 && "Sampler does not exist");
-	glUniform1i(textureUniformLocation, 0);
+	//// Set up sampler ...just one for now
+	//glUseProgram(m_shaderProgram);
+	//GLint textureUniformLocation = glGetUniformLocation(m_shaderProgram, "u_sampler");
+	//assert(textureUniformLocation >= 0 && "Sampler does not exist");
+	//glUniform1i(textureUniformLocation, 0);
 
 
 	// DEBUG SHADER -- MOVE THIS
