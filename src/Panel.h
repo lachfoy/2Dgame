@@ -9,12 +9,16 @@
 // things outside a panel should get clipped by default
 
 #include <vector>
+#include <list>
 
 #include "Vertex.h"
 #include "Texture.h"
 
 typedef std::vector<Vertex> tVertexVec;
 typedef std::vector<unsigned int> tIndexVec;
+
+class Panel;
+typedef std::list<Panel*> tPanelList;
 
 class GuiRenderer;
 
@@ -36,6 +40,16 @@ public:
 
 	void SetColor(glm::vec4 color);
 
+	Panel* GetParent() const { return m_parent; }
+	tPanelList GetChildren() const { return m_children; }
+	const char* GetName() const { return m_name.c_str(); }
+
+	void SetPosition(glm::vec2 position);
+	void SetSize(glm::vec2 size);
+	void Center(); // temp
+
+	void AddChild(Panel* child);
+
 protected:
 	std::string m_name;
 	glm::vec2 m_size;
@@ -43,9 +57,11 @@ protected:
 	glm::vec2 m_relativePosition; // top left
 	Panel* m_parent = nullptr;
 
+	tPanelList m_children;
+
 	GuiRenderer* m_guiRenderer;
 
-	glm::vec4 m_color = glm::vec4(1.f, 1.f, 1.f, 1.f);
+	glm::vec4 m_color = glm::vec4(1.f, 1.f, 1.f, 0.f);
 
 	tVertexVec m_vertexVec;
 	tIndexVec m_indexVec;

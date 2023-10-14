@@ -68,8 +68,10 @@ private:
 
 	TileMap* m_tileMap;
 
-	Panel* m_viewpointPanel;
+	Panel* m_rootPanel;
 	Panel* m_testPanel;
-	Button* m_button;
+	Button* m_button1;
+	Button* m_button2;
+	Button* m_button3;
 
 };

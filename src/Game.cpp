@@ -11,6 +11,20 @@
 #include "Button.h"
 #include "GuiRenderer.h"
 
+void RenderChildren(Panel* panel) {
+	if (panel) {
+		//printf("Rendering %s...\n", panel->GetName());
+		
+		panel->Render();
+		panel->DebugRenderBounds();
+
+		for (const auto& child : panel->GetChildren())
+		{
+			RenderChildren(child);
+		}
+	}
+}
+
 bool Game::Init(int width, int height, bool fullscreen, const char* title)
 {
 	m_windowWidth = width;
@@ -128,6 +142,7 @@ void Game::Run()
 		m_renderer->RenderObjects();
 		m_renderer->RenderDebugLines();
 		m_guiRenderer->RenderObjects();
+		m_guiRenderer->RenderDebugLines();
 
 		//glScissor(200, 200, 100, 100);
 		//glEnable(GL_SCISSOR_TEST);
@@ -172,12 +187,26 @@ void Game::Create()
 	m_tileMap->CreateDebugMap();
 	m_tileMap->BuildTileMesh();
 
+	// GUI stuff
+	m_rootPanel = new Panel("Root", m_guiRenderer, glm::vec2(0, 0), glm::vec2(m_viewportWidth, m_viewportHeight));
 
-	m_viewpointPanel = new Panel("Viewport", m_guiRenderer, glm::vec2(0, 0), glm::vec2(m_viewportWidth, m_viewportHeight));
-	m_testPanel = new Panel("test", m_guiRenderer, glm::vec2(100, 40), glm::vec2(200, 200), m_viewpointPanel);
-	m_testPanel->SetColor(glm::vec4(0.4, 0.4, 0.4, 1.0f));
-	m_button = new Button("test button", m_guiRenderer, glm::vec2(10, 10), glm::vec2(100, 40), m_testPanel);
-	m_button->SetColor(glm::vec4(0.9, 0.9, 0.9, 1.0f));
+	m_testPanel = new Panel("Panel", m_guiRenderer, glm::vec2(100, 40), glm::vec2(150, 170));
+	m_rootPanel->AddChild(m_testPanel);
+
+	m_button1 = new Button("Button1", m_guiRenderer);
+	m_button1->SetPosition(glm::vec2(25, 20));
+	m_button1->SetSize(glm::vec2(100, 30));
+	m_testPanel->AddChild(m_button1);
+
+	m_button2 = new Button("Button2", m_guiRenderer);
+	m_button2->SetPosition(glm::vec2(25, 70));
+	m_button2->SetSize(glm::vec2(100, 30));
+	m_testPanel->AddChild(m_button2);
+
+	m_button3 = new Button("Button3", m_guiRenderer);
+	m_button3->SetPosition(glm::vec2(25, 120));
+	m_button3->SetSize(glm::vec2(100, 30));
+	m_testPanel->AddChild(m_button3);
 }
 
 void Game::HandleInput()
@@ -201,6 +230,8 @@ void Game::Update(float dt)
 	//		std::cout << "Collided\n";
 	//	}
 	//}
+
+	
 }
 
 void Game::Render()
@@ -218,9 +249,7 @@ void Game::Render()
 
 	//m_player->Render();
 
-	//m_viewpointPanel->Render();
-	m_testPanel->Render();
-	m_button->Render();
+	RenderChildren(m_rootPanel);
 }
 
 void Game::Destroy()

@@ -56,7 +56,7 @@ void GuiRenderer::RenderObjects()
 	glUseProgram(m_shaderProgram);
 	glBindVertexArray(m_vao);
 
-	glm::vec4 currentColor;
+	glm::vec4* currentColor = nullptr;
 
 	for (const GuiRenderObject& obj : m_guiRenderObjects)
 	{
@@ -65,7 +65,7 @@ void GuiRenderer::RenderObjects()
 			// If a different texture is encountered, start a new batch
 			if (!m_vertexBuffer.empty())
 			{
-				glUniform3f(glGetUniformLocation(m_shaderProgram, "u_color"), currentColor.x, currentColor.y, currentColor.z);
+				glUniform4f(glGetUniformLocation(m_shaderProgram, "u_color"), currentColor->r, currentColor->g, currentColor->b, currentColor->a);
 
 				FlushBatch();
 				ClearBatch();
@@ -89,7 +89,7 @@ void GuiRenderer::RenderObjects()
 	// Add the last batch (if any) to the result
 	if (!m_vertexBuffer.empty())
 	{
-		glUniform4f(glGetUniformLocation(m_shaderProgram, "u_color"), currentColor.r, currentColor.g, currentColor.b, currentColor.a);
+		glUniform4f(glGetUniformLocation(m_shaderProgram, "u_color"), currentColor->r, currentColor->g, currentColor->b, currentColor->a);
 
 		FlushBatch();
 		ClearBatch();

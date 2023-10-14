@@ -5,16 +5,19 @@
 Panel::Panel(const char* name, GuiRenderer* guiRenderer) : m_guiRenderer(guiRenderer)
 {
 	m_name = name;
+	m_color = glm::vec4(0.3, 0.3, 0.3, 0.0f);
 }
 
 Panel::Panel(const char* name, GuiRenderer* guiRenderer, glm::vec2 position, glm::vec2 size) : m_guiRenderer(guiRenderer), m_relativePosition(position), m_size(size)
 {
 	m_name = name;
+	m_color = glm::vec4(0.3, 0.3, 0.3, 0.0f);
 }
 
 Panel::Panel(const char* name, GuiRenderer* guiRenderer, glm::vec2 position, glm::vec2 size, Panel* parent) : m_guiRenderer(guiRenderer), m_relativePosition(position), m_size(size), m_parent(parent)
 {
 	m_name = name;
+	m_color = glm::vec4(0.3, 0.3, 0.3, 0.0f);
 }
 
 void Panel::Render()
@@ -42,7 +45,7 @@ void Panel::Render()
 	GuiRenderObject guiRenderObject = GuiRenderObject(
 		&m_vertexVec,
 		&m_indexVec,
-		m_color
+		&m_color
 	);
 
 	m_guiRenderer->AddGuiRenderObject(guiRenderObject);
@@ -51,11 +54,13 @@ void Panel::Render()
 void Panel::DebugRenderBounds()
 {
 	// render outline
-
 	glm::vec2 position = GetAbsolutePosition();
 	glm::vec2 size = GetSize();
 
-
+	m_guiRenderer->AddDebugLine(glm::vec2(position.x, position.y + size.y), position + size); // bl to br
+	m_guiRenderer->AddDebugLine(position + size, glm::vec2(position.x + size.x, position.y)); // br to tr
+	m_guiRenderer->AddDebugLine(glm::vec2(position.x + size.x, position.y), position); // tr to tl
+	m_guiRenderer->AddDebugLine(position, glm::vec2(position.x, position.y + size.y)); // tl to bl
 }
 
 glm::vec2 Panel::GetAbsolutePosition() const
@@ -84,4 +89,25 @@ bool Panel::IsInBounds(glm::vec2 point)
 void Panel::SetColor(glm::vec4 color)
 {
 	m_color = color;
+}
+
+void Panel::SetPosition(glm::vec2 position)
+{
+	m_relativePosition = position;
+}
+
+void Panel::SetSize(glm::vec2 size)
+{
+	m_size = size;
+}
+
+void Panel::Center()
+{
+	// eugh
+}
+
+void Panel::AddChild(Panel* child)
+{
+	child->m_parent = this;
+	m_children.push_back(child);
 }

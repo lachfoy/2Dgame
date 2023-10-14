@@ -13,17 +13,17 @@ typedef std::vector<unsigned int> tIndexVec;
 class GuiRenderObject
 {
 public:
-	GuiRenderObject(tVertexVec* vertexVec, tIndexVec* indexVec, glm::vec4 color)
+	GuiRenderObject(tVertexVec* vertexVec, tIndexVec* indexVec, glm::vec4* color)
 		: m_vertexVec(vertexVec), m_indexVec(indexVec), m_color(color) {}
 
 	tVertexVec* GetVertexVec() const { return m_vertexVec; }
 	tIndexVec* GetIndexVec() const { return m_indexVec; }
-	glm::vec4 GetColor() const { return m_color; }
+	glm::vec4* GetColor() const { return m_color; }
 	
 private:
 	tVertexVec* m_vertexVec;
 	tIndexVec* m_indexVec;
-	glm::vec4 m_color;
+	glm::vec4* m_color;
 
 };
 
