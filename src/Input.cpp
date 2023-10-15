@@ -23,6 +23,7 @@ Input::~Input()
 
 bool Input::HandleEvents()
 {
+	int a, b, c;
 	// handle input events
 	while (SDL_PollEvent(&m_event) != 0) {
 		switch(m_event.type) {
@@ -38,6 +39,12 @@ bool Input::HandleEvents()
 			m_mouseAbsPos = glm::vec2(static_cast<float>(m_event.motion.x), static_cast<float>(m_event.motion.y));
 			//m_mouseAbsPos = (m_mouseAbsPos / glm::vec2(800.0f, 600.0f)); //*vVirtualSize;
 			break;
+		case SDL_MOUSEBUTTONDOWN:
+			m_mouseState[m_event.button.button] = true;
+			break;
+		case SDL_MOUSEBUTTONUP:
+			m_mouseState[m_event.button.button] = false;
+			break;
 		}
 	}
 
@@ -52,8 +59,14 @@ bool Input::HandleEvents()
 void Input::Update()
 {
 	// update last state
-	for (int i = 0; i < m_numKeys; i++) {
+	for (int i = 0; i < m_numKeys; i++)
+	{
 		m_lastKeyboardState[i] = m_keyboardState[i];
+	}
+
+	for (int i = 0; i < NUM_MOUSE_BUTTONS; i++)
+	{
+		m_lastMouseState[i] = m_mouseState[i];
 	}
 }
 
@@ -77,4 +90,14 @@ glm::vec2 Input::GetMouseRelPos()
 	glm::vec2 pos = m_mouseRelPos;
 	m_mouseRelPos = glm::vec2(0.0f);
 	return pos;
+}
+
+bool Input::IsMouseButtonPressed(Uint8 button) const
+{
+	return m_mouseState[button] && !m_lastMouseState[button];
+}
+
+bool Input::IsMouseButtonHeld(Uint8 button) const
+{
+	return m_mouseState[button];
 }

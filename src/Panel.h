@@ -21,6 +21,7 @@ class Panel;
 typedef std::list<Panel*> tPanelList;
 
 class GuiRenderer;
+class Input;
 
 class Panel
 {
@@ -29,6 +30,8 @@ public:
 	Panel(const char* name, GuiRenderer* guiRenderer, glm::vec2 position, glm::vec2 size);
 	Panel(const char* name, GuiRenderer* guiRenderer, glm::vec2 position, glm::vec2 size, Panel* parent);
 	~Panel() = default;
+
+	virtual bool HandleInput(Input* input);
 
 	virtual void Render();
 	void DebugRenderBounds();

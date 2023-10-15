@@ -1,6 +1,7 @@
 #include "Panel.h"
 
 #include "GuiRenderer.h"
+#include "Input.h"
 
 Panel::Panel(const char* name, GuiRenderer* guiRenderer) : m_guiRenderer(guiRenderer)
 {
@@ -18,6 +19,20 @@ Panel::Panel(const char* name, GuiRenderer* guiRenderer, glm::vec2 position, glm
 {
 	m_name = name;
 	m_color = glm::vec4(0.3, 0.3, 0.3, 0.0f);
+}
+
+bool Panel::HandleInput(Input* input)
+{
+	// return true to consume the input
+	// return false to allow the input to be read by other panels
+
+	//if (input->IsKeyPressed(SDL_SCANCODE_Z))
+	//{
+	//	printf("%s consumed input\n", m_name.c_str());
+	//	return true;
+	//}
+
+	return false;
 }
 
 void Panel::Render()
@@ -81,7 +96,8 @@ glm::vec2 Panel::GetSize() const
 bool Panel::IsInBounds(glm::vec2 point)
 {
 	glm::vec2 position = GetAbsolutePosition();
-	glm::vec2 bottomRight = position + GetSize();
+	glm::vec2 size = GetSize();
+	glm::vec2 bottomRight = position + size;
 
 	return point.x >= position.x && point.x <= bottomRight.x && point.y >= position.y && point.y <= bottomRight.y;
 }

@@ -11,18 +11,44 @@
 #include "Button.h"
 #include "GuiRenderer.h"
 
-void RenderChildren(Panel* panel) {
-	if (panel) {
+void RenderChildren(Panel* panel)
+{
+	if (panel)
+	{
 		//printf("Rendering %s...\n", panel->GetName());
 		
 		panel->Render();
 		panel->DebugRenderBounds();
 
-		for (const auto& child : panel->GetChildren())
+		for (Panel* child : panel->GetChildren())
 		{
 			RenderChildren(child);
 		}
 	}
+}
+
+bool PropogateInput(Panel* panel, Input* input)
+{
+	bool inputHandled = false;
+
+	if (panel)
+	{
+		if (panel->HandleInput(input))
+		{
+			inputHandled = true;
+		}
+
+		for (Panel* child : panel->GetChildren())
+		{
+			if (PropogateInput(child, input))
+			{
+				inputHandled = true;
+				break;
+			}
+		}
+	}
+
+	return inputHandled;
 }
 
 bool Game::Init(int width, int height, bool fullscreen, const char* title)
@@ -142,7 +168,7 @@ void Game::Run()
 		m_renderer->RenderObjects();
 		m_renderer->RenderDebugLines();
 		m_guiRenderer->RenderObjects();
-		m_guiRenderer->RenderDebugLines();
+		//m_guiRenderer->RenderDebugLines();
 
 		//glScissor(200, 200, 100, 100);
 		//glEnable(GL_SCISSOR_TEST);
@@ -191,6 +217,7 @@ void Game::Create()
 	m_rootPanel = new Panel("Root", m_guiRenderer, glm::vec2(0, 0), glm::vec2(m_viewportWidth, m_viewportHeight));
 
 	m_testPanel = new Panel("Panel", m_guiRenderer, glm::vec2(100, 40), glm::vec2(150, 170));
+	m_testPanel->SetColor(glm::vec4(0.4, 0.4, 0.4, 1));
 	m_rootPanel->AddChild(m_testPanel);
 
 	m_button1 = new Button("Button1", m_guiRenderer);
@@ -212,6 +239,8 @@ void Game::Create()
 void Game::HandleInput()
 {
 	m_player->HandleInput(m_input);
+
+	PropogateInput(m_rootPanel, m_input);
 }
 
 void Game::Update(float dt)
