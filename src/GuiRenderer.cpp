@@ -41,7 +41,93 @@ void GuiRenderer::Dispose()
 
 void GuiRenderer::AddQuadToBatch(glm::vec2 position, glm::vec2 size, glm::vec4 color)
 {
-	// add 
+	QuadEntry quadEntry;
+	quadEntry.vertices[0] = UIVertex::Make(position.x, position.y + size.y, 0.0f, 1.0f);
+	quadEntry.vertices[1] = UIVertex::Make(position.x + size.x, position.y + size.y, 1.0f, 1.0f);
+	quadEntry.vertices[2] = UIVertex::Make(position.x, position.y, 0.0f, 0.0f);
+	quadEntry.vertices[3] = UIVertex::Make(position.x + size.x, position.y, 1.0f, 0.0f);
+	quadEntry.color = color;
+
+	m_quadEntries.push_back(quadEntry);
+}
+
+void GuiRenderer::RenderQuads()
+{
+	//std::sort(m_renderObjects.begin(), m_renderObjects.end(), RenderObjectCompare());
+
+	glUseProgram(m_shaderProgram);
+	glBindVertexArray(m_vao);
+
+	// TODO eventually swap this out for a system using map sets so we can compare more than just the current color
+	// Also things like texture, alpha, and Z index
+	glm::vec4 currentColor = {};
+
+	for (const QuadEntry& obj : m_quadEntries)
+	{
+		if (obj.color != currentColor)
+		{
+			if (!m_quadVertices.empty())
+			{
+				glUniform4f(glGetUniformLocation(m_shaderProgram, "u_color"), currentColor.r, currentColor.g, currentColor.b, currentColor.a);
+
+				//
+				glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+				glBufferSubData(GL_ARRAY_BUFFER, 0, m_quadVertices.size() * sizeof(UIVertex), m_quadVertices.data());
+
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+				glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_quadIndices.size() * sizeof(unsigned int), m_quadIndices.data());
+
+				glDrawElements(GL_TRIANGLES, m_quadIndices.size(), GL_UNSIGNED_INT, 0);
+
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+				//
+				
+				m_quadVertices.clear();
+				m_quadIndices.clear();
+			}
+
+			currentColor = obj.color;
+		}
+
+		const UIVertex* vertices = obj.vertices;
+		const unsigned int vertexOffset = m_quadVertices.size();
+		for (int i = 0; i < 4; i++)
+		{
+			m_quadVertices.push_back(vertices[i]);
+		}
+
+		m_quadIndices.push_back(vertexOffset);
+		m_quadIndices.push_back(vertexOffset + 1);
+		m_quadIndices.push_back(vertexOffset + 2);
+		m_quadIndices.push_back(vertexOffset + 1);
+		m_quadIndices.push_back(vertexOffset + 3);
+		m_quadIndices.push_back(vertexOffset + 2);
+	}
+
+	if (!m_quadVertices.empty())
+	{
+		glUniform4f(glGetUniformLocation(m_shaderProgram, "u_color"), currentColor.r, currentColor.g, currentColor.b, currentColor.a);
+
+		//
+		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, m_quadVertices.size() * sizeof(UIVertex), m_quadVertices.data());
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_quadIndices.size() * sizeof(unsigned int), m_quadIndices.data());
+
+		glDrawElements(GL_TRIANGLES, m_quadIndices.size(), GL_UNSIGNED_INT, 0);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		//
+
+		m_quadVertices.clear();
+		m_quadIndices.clear();
+	}
+
+	glBindVertexArray(0);
+	m_quadEntries.clear();
 }
 
 void GuiRenderer::AddGuiRenderObject(const GuiRenderObject& renderObject)

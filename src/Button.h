@@ -5,6 +5,8 @@
 
 #include "Panel.h"
 
+#include <functional>
+
 enum class ButtonState
 {
 	NORMAL,
@@ -25,7 +27,14 @@ public:
 
 	void Render() override;
 
+	void SetCallback(std::function<void()> callback)
+	{
+		m_callback = callback;
+	}
+
 private:
 	ButtonState m_buttonState = ButtonState::NORMAL;
+
+	std::function<void()> m_callback;
 
 };

@@ -16,7 +16,6 @@
     <ClCompile Include="src\Panel.cpp" />
     <ClCompile Include="src\Button.cpp" />
     <ClCompile Include="src\GuiRenderer.cpp" />
-    <ClCompile Include="src\GuiManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Entity.h" />
@@ -34,6 +33,5 @@
     <ClInclude Include="src\Panel.h" />
     <ClInclude Include="src\Button.h" />
     <ClInclude Include="src\GuiRenderer.h" />
-    <ClInclude Include="src\GuiManager.h" />
   </ItemGroup>
 </Project>

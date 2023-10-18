@@ -167,7 +167,7 @@ void Game::Run()
 		Render();
 		m_renderer->RenderObjects();
 		m_renderer->RenderDebugLines();
-		m_guiRenderer->RenderObjects();
+		m_guiRenderer->RenderQuads();
 		//m_guiRenderer->RenderDebugLines();
 
 		//glScissor(200, 200, 100, 100);
@@ -223,11 +223,21 @@ void Game::Create()
 	m_button1 = new Button("Button1", m_guiRenderer);
 	m_button1->SetPosition(glm::vec2(25, 20));
 	m_button1->SetSize(glm::vec2(100, 30));
+	m_button1->SetCallback([]()
+		{
+			printf("Button1 callback!\n");
+		});
+
 	m_testPanel->AddChild(m_button1);
 
 	m_button2 = new Button("Button2", m_guiRenderer);
 	m_button2->SetPosition(glm::vec2(25, 70));
 	m_button2->SetSize(glm::vec2(100, 30));
+	m_button2->SetCallback([]()
+		{
+			printf("Button2 callback!\n");
+		});
+
 	m_testPanel->AddChild(m_button2);
 
 	m_button3 = new Button("Button3", m_guiRenderer);

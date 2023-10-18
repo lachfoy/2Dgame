@@ -36,6 +36,31 @@ private:
 //	}
 //};
 
+struct UIVertex
+{
+	float x;
+	float y;
+	float u;
+	float v;
+
+	static UIVertex Make(float x, float y, float u, float v)
+	{
+		UIVertex vertex;
+		vertex.x = x;
+		vertex.y = y;
+		vertex.u = u;
+		vertex.v = v;
+		return vertex;
+	}
+};
+
+struct QuadEntry
+{
+	UIVertex vertices[4];
+	unsigned int indices[6];
+	glm::vec4 color;
+};
+
 class GuiRenderer
 {
 public:
@@ -47,6 +72,8 @@ public:
 	void Dispose();
 
 	void AddQuadToBatch(glm::vec2 position, glm::vec2 size, glm::vec4 color);
+	void RenderQuads();
+
 
 	void AddGuiRenderObject(const GuiRenderObject& renderObject);
 	
@@ -80,5 +107,9 @@ private:
 	std::vector<glm::vec2> m_linePoints;
 	GLuint m_lineVao;
 	GLuint m_lineVbo;
+
+	std::vector<QuadEntry> m_quadEntries;
+	std::vector<UIVertex> m_quadVertices;
+	std::vector<unsigned int> m_quadIndices;
 
 };

@@ -53,6 +53,8 @@ public:
 
 	void AddChild(Panel* child);
 
+	void SetScale(float scale);
+
 protected:
 	std::string m_name;
 	glm::vec2 m_size;
@@ -68,5 +70,7 @@ protected:
 
 	tVertexVec m_vertexVec;
 	tIndexVec m_indexVec;
+
+	float m_scale = 1.0f;
 
 };

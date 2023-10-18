@@ -20,6 +20,7 @@ Button::Button(const char* name, GuiRenderer* guiRenderer, glm::vec2 position, g
 bool Button::HandleInput(Input* input)
 {
 	m_buttonState = ButtonState::NORMAL;
+	SetScale(1.0f);
 
 	glm::vec2 mousePos = input->GetMouseAbsPos() / 2.0f; // Hardcoded scaling factor. although the scale factor should be different for the UI
 	//printf("Mouse pos: %f, %f\n", mousePos.x, mousePos.y);
@@ -27,14 +28,21 @@ bool Button::HandleInput(Input* input)
 	if (IsInBounds(mousePos))
 	{
 		m_buttonState = ButtonState::HOVERED;
+		SetScale(1.1f);
 
 		if (input->IsMouseButtonHeld(SDL_BUTTON_LEFT))
 		{
 			m_buttonState = ButtonState::PRESSED;
 		}
-		else if (input->IsMouseButtonPressed(SDL_BUTTON_LEFT))
+		if (input->IsMouseButtonPressed(SDL_BUTTON_LEFT))
 		{
-			printf("%s pressed\n", m_name.c_str());
+			//printf("%s pressed\n", m_name.c_str());
+
+			if (m_callback)
+				m_callback();
+			else
+				printf("%s has no assigned callback function\n", m_name.c_str());
+
 			return true;
 		}
 	}

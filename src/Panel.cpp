@@ -40,35 +40,19 @@ void Panel::Render()
 	glm::vec2 position = GetAbsolutePosition();
 	glm::vec2 size = GetSize();
 
-	// build the index and vertex vecs
-	// Create the mesh data
-	// This should be handled by a different class though
-	m_vertexVec.clear();
-	m_vertexVec.push_back({ glm::vec2(position.x, position.y + size.y), glm::vec2(0.0f, 1.0f) });
-	m_vertexVec.push_back({ position + size, glm::vec2(1.0f, 1.0f) });
-	m_vertexVec.push_back({ position, glm::vec2(0.0f, 0.0f) });
-	m_vertexVec.push_back({ glm::vec2(position.x + size.x, position.y), glm::vec2(1.0f, 0.0f) });
+	// Apply scale
+	glm::vec2 center = position + (size * 0.5f);
+	size *= m_scale;
+	glm::vec2 newCenter = position + (size * 0.5f);
+	glm::vec2 centerDiff = newCenter - center;
+	position -= centerDiff;
 
-	m_indexVec.clear();
-	m_indexVec.push_back(0);
-	m_indexVec.push_back(1);
-	m_indexVec.push_back(2);
-	m_indexVec.push_back(1);
-	m_indexVec.push_back(3);
-	m_indexVec.push_back(2);
-	
-	GuiRenderObject guiRenderObject = GuiRenderObject(
-		&m_vertexVec,
-		&m_indexVec,
-		&m_color
-	);
-
-	m_guiRenderer->AddGuiRenderObject(guiRenderObject);
+	m_guiRenderer->AddQuadToBatch(position, size, m_color);
 }
 
 void Panel::DebugRenderBounds()
 {
-	// render outline
+	// Render outline
 	glm::vec2 position = GetAbsolutePosition();
 	glm::vec2 size = GetSize();
 
@@ -119,11 +103,16 @@ void Panel::SetSize(glm::vec2 size)
 
 void Panel::Center()
 {
-	// eugh
+	//
 }
 
 void Panel::AddChild(Panel* child)
 {
 	child->m_parent = this;
 	m_children.push_back(child);
+}
+
+void Panel::SetScale(float scale)
+{
+	m_scale = scale;
 }
