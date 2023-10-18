@@ -37,4 +37,6 @@ private:
 
 	std::function<void()> m_callback;
 
+
+	bool m_buttonPressedInside = false; // New flag to track button press within bounds
 };

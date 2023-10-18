@@ -92,12 +92,12 @@ glm::vec2 Input::GetMouseRelPos()
 	return pos;
 }
 
-bool Input::IsMouseButtonPressed(Uint8 button) const
+bool Input::IsMouseButtonReleased(Uint8 button) const
 {
 	return m_mouseState[button] && !m_lastMouseState[button];
 }
 
-bool Input::IsMouseButtonHeld(Uint8 button) const
+bool Input::IsMouseButtonDown(Uint8 button) const
 {
 	return m_mouseState[button];
 }

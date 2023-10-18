@@ -19,8 +19,8 @@ public:
 	glm::vec2 GetMouseAbsPos() const;
 	glm::vec2 GetMouseRelPos();
 
-	bool IsMouseButtonPressed(Uint8 button) const;
-	bool IsMouseButtonHeld(Uint8 button) const;
+	bool IsMouseButtonReleased(Uint8 button) const;
+	bool IsMouseButtonDown(Uint8 button) const;
 
 private:
 	SDL_Event m_event;
