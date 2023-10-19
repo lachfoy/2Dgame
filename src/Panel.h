@@ -49,7 +49,8 @@ public:
 
 	void SetPosition(glm::vec2 position);
 	void SetSize(glm::vec2 size);
-	void Center(); // temp
+	void CenterX(); // temp. really we want to have alignment flags and then evaluate these in some kind of layout function
+	void CenterY(); // temp. really we want to have alignment flags and then evaluate these in some kind of layout function
 
 	void AddChild(Panel* child);
 

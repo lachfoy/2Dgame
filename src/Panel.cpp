@@ -101,9 +101,21 @@ void Panel::SetSize(glm::vec2 size)
 	m_size = size;
 }
 
-void Panel::Center()
+void Panel::CenterX()
 {
-	//
+	if (m_parent)
+	{
+		m_relativePosition.x = (m_parent->GetSize().x / 2.0f) - (m_size.x / 2.0f);
+	}
+
+}
+
+void Panel::CenterY()
+{
+	if (m_parent)
+	{
+		m_relativePosition.y = (m_parent->GetSize().y / 2.0f) - (m_size.y / 2.0f);
+	}
 }
 
 void Panel::AddChild(Panel* child)

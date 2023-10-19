@@ -19,6 +19,8 @@ Button::Button(const char* name, GuiRenderer* guiRenderer, glm::vec2 position, g
 
 bool Button::HandleInput(Input* input)
 {
+	if (!m_enabled) return false;
+
 	m_buttonState = ButtonState::NORMAL;
 	SetScale(1.0f);
 
@@ -66,11 +68,21 @@ void Button::Render()
 		m_color = glm::vec4(0.55, 0.55, 0.55, 1.0f);
 		break;
 	case ButtonState::DISABLED:
-		m_color = glm::vec4(0.6, 0.6, 0.6, .5f);
+		m_color = glm::vec4(0.6, 0.6, 0.6, .3f);
 		break;
 	default:
 		break;
 	}
 
 	Panel::Render();
+}
+
+void Button::SetEnabled(bool enabled)
+{
+	m_enabled = enabled;
+
+	if (!m_enabled)
+	{
+		m_buttonState = ButtonState::DISABLED;
+	}
 }

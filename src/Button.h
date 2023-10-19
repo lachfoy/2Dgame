@@ -27,16 +27,18 @@ public:
 
 	void Render() override;
 
-	void SetCallback(std::function<void()> callback)
+	void AddCallback(std::function<void()> callback)
 	{
 		m_callback = callback;
 	}
+
+	void SetEnabled(bool enabled);
 
 private:
 	ButtonState m_buttonState = ButtonState::NORMAL;
 
 	std::function<void()> m_callback;
 
+	bool m_enabled = true;
 
-	bool m_buttonPressedInside = false; // New flag to track button press within bounds
 };
