@@ -170,10 +170,6 @@ void Game::Run()
 		m_guiRenderer->RenderQuads();
 		//m_guiRenderer->RenderDebugLines();
 
-		//glScissor(200, 200, 100, 100);
-		//glEnable(GL_SCISSOR_TEST);
-		//glClear(GL_COLOR_BUFFER_BIT);
-
 		// swap buffers
 		SDL_GL_SwapWindow(m_window);
 	}
@@ -187,7 +183,7 @@ void Game::SetupGL()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	//glViewport(0, 0, m_viewportWidth, m_viewportHeight);
+	glViewport(0, 0, m_windowWidth, m_windowHeight);
 }
 
 void Game::Create()
@@ -199,7 +195,7 @@ void Game::Create()
 
 	m_backgroundImage = new BackgroundImage(m_renderer, m_backgroundTexture, m_viewportWidth, m_viewportHeight);
 
-	m_player = new Player(m_renderer, m_wizardTexture, &gameState);
+	m_player = new Player(m_renderer, m_wizardTexture);
 
 	m_player->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 
@@ -214,7 +210,7 @@ void Game::Create()
 	m_tileMap->CreateDebugMap();
 	m_tileMap->BuildTileMesh();
 
-	// GUI stuff
+	// GUI test stuff
 	m_rootPanel = new Panel("Root", m_guiRenderer, glm::vec2(0, 0), glm::vec2(m_viewportWidth, m_viewportHeight));
 
 	m_testPanel = new Panel("Panel", m_guiRenderer, glm::vec2(0, 0), glm::vec2(150, 170));
@@ -273,48 +269,20 @@ void Game::Update(float dt)
 			std::cout << "Collided\n";
 		}
 	}
-	//for (const auto& enemy : m_enemies)
-	//{
-	//	enemy->Update(dt);
-	//}
-
-	m_player->Update(dt);
-
-	//for (const auto& enemy : m_enemies)
-	//{
-	//	if (Collision(*m_player, *enemy))
-	//	{
-	//		std::cout << "Collided\n";
-	//	}
-	//}
 }
 
 void Game::Render()
 {
-	//m_backgroundImage->Render();
-	//m_grassImage->Render();
-
-	m_backgroundImage->Render();
-
+	m_tileMap->Render();
 
 	for (const auto& enemy : m_enemies)
 	{
 		enemy->Render();
 	}
 
-	//for (const auto& enemy : m_enemies)
-	//{
-	//	enemy->Render();
-	//	enemy->RenderDebugQuad();
-	//}
+	m_player->Render();
 
-
-	m_tileMap->Render();
-
-
-	//m_player->Render();
-
-	RenderChildren(m_rootPanel);
+	//RenderChildren(m_rootPanel);
 }
 
 void Game::Destroy()

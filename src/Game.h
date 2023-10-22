@@ -18,11 +18,6 @@ class Panel;
 class Button;
 class GuiRenderer;
 
-struct GameState
-{
-	
-};
-
 typedef std::vector<std::unique_ptr<Enemy>> tEnemiesVec;
 
 class Game
@@ -59,17 +54,10 @@ private:
 	Texture* m_wizardTexture;
 	Texture* m_blackMageTexture;
 	Texture* m_backgroundTexture;
-<<<<<<< HEAD
 
 	BackgroundImage* m_backgroundImage;
 
-=======
 	Texture* m_tileMapTexture;
-	
-	BackgroundImage* m_backgroundImage;
-	
->>>>>>> cc9bfcfc3be0b5ae6481456b91b67b08383d65c4
-	GameState gameState;
 
 	TileMap* m_tileMap;
 

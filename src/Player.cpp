@@ -4,9 +4,8 @@
 #include "Renderer.h"
 #include "Game.h"
 
-Player::Player(Renderer* renderer, Texture* texture, GameState* gameState) : SpriteEntity(renderer, texture)
+Player::Player(Renderer* renderer, Texture* texture) : SpriteEntity(renderer, texture)
 {
-	m_gameState = gameState;
 }
 
 void Player::HandleInput(Input* input)

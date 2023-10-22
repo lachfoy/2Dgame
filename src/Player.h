@@ -11,7 +11,7 @@ struct GameState;
 class Player : public SpriteEntity
 {
 public:
-	Player(Renderer* renderer, Texture* texture, GameState* gameState);
+	Player(Renderer* renderer, Texture* texture);
 	~Player() {}
 
 	void HandleInput(Input* input);
@@ -24,13 +24,5 @@ private:
 	glm::vec2 m_velocity{ 0.0f };
 	float kFrictionCoef = 0.5f;
 	float kMaxSpeed = 400.0f;
-
-	GameState* m_gameState;
-<<<<<<< HEAD
-=======
-
-	//int m_laneIndex;
->>>>>>> cc9bfcfc3be0b5ae6481456b91b67b08383d65c4
-
 
 };
