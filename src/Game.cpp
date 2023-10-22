@@ -5,7 +5,6 @@
 #include <iostream>
 #include "Player.h"
 #include "Texture.h"
-#include "BackgroundImage.h"
 #include "TileMap.h"
 #include "Panel.h"
 #include "Button.h"
@@ -184,24 +183,23 @@ void Game::SetupGL()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glViewport(0, 0, m_windowWidth, m_windowHeight);
+
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 void Game::Create()
 {
-	m_wizardTexture = new Texture("data/images/shipSm.png");
-	m_blackMageTexture = new Texture("data/images/shipSmEnemy.png");
-	m_backgroundTexture = new Texture("data/images/Sky.png");
-	m_tileMapTexture = new Texture("data/images/tilemap.png");
+	m_playerTexture = new Texture("data/images/guy.png");
+	m_enemyTexture = new Texture("data/images/droid.png");
+	m_tileMapTexture = new Texture("data/images/tile.png");
 
-	m_backgroundImage = new BackgroundImage(m_renderer, m_backgroundTexture, m_viewportWidth, m_viewportHeight);
-
-	m_player = new Player(m_renderer, m_wizardTexture);
+	m_player = new Player(m_renderer, m_playerTexture);
 
 	m_player->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 
 	for (int i = 0; i < 10; i++)
 	{
-		Enemy* enemy = new Enemy(m_renderer, m_blackMageTexture, m_player);
+		Enemy* enemy = new Enemy(m_renderer, m_enemyTexture, m_player);
 		enemy->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 		m_enemies.push_back(std::unique_ptr<Enemy>(enemy));
 	}
@@ -287,13 +285,10 @@ void Game::Render()
 
 void Game::Destroy()
 {
-	delete m_wizardTexture;
-	delete m_blackMageTexture;
-	delete m_backgroundTexture;
+	delete m_playerTexture;
+	delete m_enemyTexture;
 
 	delete m_tileMapTexture;
-
-	delete m_backgroundImage;
 
 	m_tileMap->Destroy();
 	delete m_tileMap;

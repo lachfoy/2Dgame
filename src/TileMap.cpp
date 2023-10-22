@@ -37,7 +37,7 @@ void TileMap::CreateDebugMap()
 
 void TileMap::BuildTileMesh()
 {
-	float tileTexSize = 0.5;
+	float tileTexSize = 1.f;
 
 	for (int x = 0; x < m_width; x++) {
 		for (int y = 0; y < m_height; y++) {
@@ -46,22 +46,22 @@ void TileMap::BuildTileMesh()
 			float ty0 = (tile >> 4) * tileTexSize;
 
 			Vertex topLeft;
-			topLeft.position = glm::vec2(x, y) * 16.0f;
+			topLeft.position = glm::vec2(x, y) * 32.0f;
 			topLeft.texCoord = glm::vec2(tx0, ty0);
 			m_vertexVec.push_back(topLeft);
 
 			Vertex topRight;
-			topRight.position = glm::vec2(x + 1, y) * 16.0f;
+			topRight.position = glm::vec2(x + 1, y) * 32.0f;
 			topRight.texCoord = glm::vec2(tx0 + tileTexSize, ty0);
 			m_vertexVec.push_back(topRight);
 
 			Vertex bottomLeft;
-			bottomLeft.position = glm::vec2(x, y + 1) * 16.0f;
+			bottomLeft.position = glm::vec2(x, y + 1) * 32.0f;
 			bottomLeft.texCoord = glm::vec2(tx0, ty0 + tileTexSize);
 			m_vertexVec.push_back(bottomLeft);
 
 			Vertex bottomRight;
-			bottomRight.position = glm::vec2(x + 1, y + 1) * 16.0f;
+			bottomRight.position = glm::vec2(x + 1, y + 1) * 32.0f;
 			bottomRight.texCoord = glm::vec2(tx0 + tileTexSize, ty0 + tileTexSize);
 			m_vertexVec.push_back(bottomRight);
 		}

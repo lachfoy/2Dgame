@@ -11,7 +11,6 @@
 class Renderer;
 class Input;
 class Player;
-class BackgroundImage;
 class TileMap;
 
 class Panel;
@@ -51,12 +50,9 @@ private:
 	Player* m_player;
 	tEnemiesVec m_enemies;
 
-	Texture* m_wizardTexture;
-	Texture* m_blackMageTexture;
-	Texture* m_backgroundTexture;
-
-	BackgroundImage* m_backgroundImage;
-
+	Texture* m_playerTexture;
+	Texture* m_enemyTexture;
+	
 	Texture* m_tileMapTexture;
 
 	TileMap* m_tileMap;
