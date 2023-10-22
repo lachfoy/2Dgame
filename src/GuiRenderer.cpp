@@ -1,4 +1,4 @@
-#include "Renderer.h"
+#include "GuiRenderer.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -10,13 +10,13 @@
 static const unsigned int kMaxSprites = 2000;
 static const unsigned int kMaxLines = 100;
 
-void Renderer::Init()
+void GuiRenderer::Init()
 {
 	CreateShaderProgram();
 	CreateRenderData();
 }
 
-void Renderer::SetProjection(unsigned int screenWidth, unsigned int screenHeight)
+void GuiRenderer::SetProjection(unsigned int screenWidth, unsigned int screenHeight)
 {
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f, -1.0f, 1.0f);
 	
@@ -27,7 +27,7 @@ void Renderer::SetProjection(unsigned int screenWidth, unsigned int screenHeight
 	glUniformMatrix4fv(glGetUniformLocation(m_debugShaderProgram, "u_projection"), 1, false, glm::value_ptr(projection));
 }
 
-void Renderer::Dispose()
+void GuiRenderer::Dispose()
 {
 	glDeleteBuffers(1, &m_ebo);
 	glDeleteBuffers(1, &m_vbo);
@@ -39,38 +39,128 @@ void Renderer::Dispose()
 	glDeleteProgram(m_debugShaderProgram);
 }
 
-void Renderer::AddRenderObject(const RenderObject& renderObject)
+void GuiRenderer::AddQuadToBatch(glm::vec2 position, glm::vec2 size, glm::vec4 color)
 {
-	m_renderObjects.push_back(renderObject);
+	QuadEntry quadEntry;
+	quadEntry.vertices[0] = UIVertex::Make(position.x, position.y + size.y, 0.0f, 1.0f);
+	quadEntry.vertices[1] = UIVertex::Make(position.x + size.x, position.y + size.y, 1.0f, 1.0f);
+	quadEntry.vertices[2] = UIVertex::Make(position.x, position.y, 0.0f, 0.0f);
+	quadEntry.vertices[3] = UIVertex::Make(position.x + size.x, position.y, 1.0f, 0.0f);
+	quadEntry.color = color;
+
+	m_quadEntries.push_back(quadEntry);
 }
 
-void Renderer::RenderObjects()
+void GuiRenderer::RenderQuads()
 {
 	//std::sort(m_renderObjects.begin(), m_renderObjects.end(), RenderObjectCompare());
 
 	glUseProgram(m_shaderProgram);
 	glBindVertexArray(m_vao);
 
-	Texture* currentTexture = nullptr;
+	// TODO eventually swap this out for a system using map sets so we can compare more than just the current color
+	// Also things like texture, alpha, and Z index
+	glm::vec4 currentColor = {};
 
-	for (const RenderObject& obj : m_renderObjects)
+	for (const QuadEntry& obj : m_quadEntries)
 	{
-		if (obj.GetTexture() != currentTexture)
+		if (obj.color != currentColor)
+		{
+			if (!m_quadVertices.empty())
+			{
+				glUniform4f(glGetUniformLocation(m_shaderProgram, "u_color"), currentColor.r, currentColor.g, currentColor.b, currentColor.a);
+
+				//
+				glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+				glBufferSubData(GL_ARRAY_BUFFER, 0, m_quadVertices.size() * sizeof(UIVertex), m_quadVertices.data());
+
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+				glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_quadIndices.size() * sizeof(unsigned int), m_quadIndices.data());
+
+				glDrawElements(GL_TRIANGLES, m_quadIndices.size(), GL_UNSIGNED_INT, 0);
+
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+				//
+				
+				m_quadVertices.clear();
+				m_quadIndices.clear();
+			}
+
+			currentColor = obj.color;
+		}
+
+		const UIVertex* vertices = obj.vertices;
+		const unsigned int vertexOffset = m_quadVertices.size();
+		for (int i = 0; i < 4; i++)
+		{
+			m_quadVertices.push_back(vertices[i]);
+		}
+
+		m_quadIndices.push_back(vertexOffset);
+		m_quadIndices.push_back(vertexOffset + 1);
+		m_quadIndices.push_back(vertexOffset + 2);
+		m_quadIndices.push_back(vertexOffset + 1);
+		m_quadIndices.push_back(vertexOffset + 3);
+		m_quadIndices.push_back(vertexOffset + 2);
+	}
+
+	if (!m_quadVertices.empty())
+	{
+		glUniform4f(glGetUniformLocation(m_shaderProgram, "u_color"), currentColor.r, currentColor.g, currentColor.b, currentColor.a);
+
+		//
+		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, m_quadVertices.size() * sizeof(UIVertex), m_quadVertices.data());
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_quadIndices.size() * sizeof(unsigned int), m_quadIndices.data());
+
+		glDrawElements(GL_TRIANGLES, m_quadIndices.size(), GL_UNSIGNED_INT, 0);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		//
+
+		m_quadVertices.clear();
+		m_quadIndices.clear();
+	}
+
+	glBindVertexArray(0);
+	m_quadEntries.clear();
+}
+
+void GuiRenderer::AddGuiRenderObject(const GuiRenderObject& renderObject)
+{
+	m_guiRenderObjects.push_back(renderObject);
+}
+
+void GuiRenderer::RenderObjects()
+{
+	//std::sort(m_renderObjects.begin(), m_renderObjects.end(), RenderObjectCompare());
+
+	glUseProgram(m_shaderProgram);
+	glBindVertexArray(m_vao);
+
+	glm::vec4* currentColor = nullptr;
+
+	for (const GuiRenderObject& obj : m_guiRenderObjects)
+	{
+		if (obj.GetColor() != currentColor)
 		{
 			// If a different texture is encountered, start a new batch
 			if (!m_vertexBuffer.empty())
 			{
-				currentTexture->Bind();
+				glUniform4f(glGetUniformLocation(m_shaderProgram, "u_color"), currentColor->r, currentColor->g, currentColor->b, currentColor->a);
+
 				FlushBatch();
 				ClearBatch();
 			}
-			currentTexture = obj.GetTexture();
+
+			currentColor = obj.GetColor();
 		}
 
 		for (Vertex vertex : *(obj.GetVertexVec())) {
-			if (obj.GetPosition() != nullptr)
-				vertex.position += *(obj.GetPosition());
-
 			m_vertexBuffer.push_back(vertex);
 		}
 
@@ -85,22 +175,23 @@ void Renderer::RenderObjects()
 	// Add the last batch (if any) to the result
 	if (!m_vertexBuffer.empty())
 	{
-		currentTexture->Bind();
+		glUniform4f(glGetUniformLocation(m_shaderProgram, "u_color"), currentColor->r, currentColor->g, currentColor->b, currentColor->a);
+
 		FlushBatch();
 		ClearBatch();
 	}
 
 	glBindVertexArray(0);
-	m_renderObjects.clear();
+	m_guiRenderObjects.clear();
 }
 
-void Renderer::AddDebugLine(const glm::vec2& p1, const glm::vec2& p2)
+void GuiRenderer::AddDebugLine(const glm::vec2& p1, const glm::vec2& p2)
 {
 	m_linePoints.push_back(p1);
 	m_linePoints.push_back(p2);
 }
 
-void Renderer::RenderDebugLines()
+void GuiRenderer::RenderDebugLines()
 {
 	glUseProgram(m_debugShaderProgram);
 	glBindVertexArray(m_lineVao);
@@ -109,7 +200,7 @@ void Renderer::RenderDebugLines()
 	glBufferSubData(GL_ARRAY_BUFFER, 0, m_linePoints.size() * sizeof(glm::vec2), m_linePoints.data());
 
 	glDrawArrays(GL_LINES, 0, m_linePoints.size());
-	
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -118,7 +209,7 @@ void Renderer::RenderDebugLines()
 	glBindVertexArray(0);
 }
 
-void Renderer::FlushBatch()
+void GuiRenderer::FlushBatch()
 {
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, m_vertexBuffer.size() * sizeof(Vertex), m_vertexBuffer.data());
@@ -132,13 +223,13 @@ void Renderer::FlushBatch()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Renderer::ClearBatch()
+void GuiRenderer::ClearBatch()
 {
 	m_vertexBuffer.clear();
 	m_indexBuffer.clear();
 }
 
-void Renderer::CreateShaderProgram()
+void GuiRenderer::CreateShaderProgram()
 {
 	// Create the vertex shader
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -186,8 +277,8 @@ void Renderer::CreateShaderProgram()
 
 			void main()
 			{
-				out_color = texture(u_sampler, v_texcoord);
-				//out_color = vec4(1, 0, 1, 1);
+				//out_color = texture(u_sampler, v_texcoord);
+				out_color = u_color;
 			}
 		)";
 		
@@ -221,11 +312,11 @@ void Renderer::CreateShaderProgram()
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
-	// Set up sampler ...just one for now
-	glUseProgram(m_shaderProgram);
-	GLint textureUniformLocation = glGetUniformLocation(m_shaderProgram, "u_sampler");
-	assert(textureUniformLocation >= 0 && "Sampler does not exist");
-	glUniform1i(textureUniformLocation, 0);
+	//// Set up sampler ...just one for now
+	//glUseProgram(m_shaderProgram);
+	//GLint textureUniformLocation = glGetUniformLocation(m_shaderProgram, "u_sampler");
+	//assert(textureUniformLocation >= 0 && "Sampler does not exist");
+	//glUniform1i(textureUniformLocation, 0);
 
 
 	// DEBUG SHADER -- MOVE THIS
@@ -305,7 +396,7 @@ void Renderer::CreateShaderProgram()
 	}
 }
 
-void Renderer::CreateRenderData()
+void GuiRenderer::CreateRenderData()
 {
 	// VAO
 	glGenVertexArrays(1, &m_vao);
@@ -351,7 +442,7 @@ void Renderer::CreateRenderData()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Renderer::CheckError()
+void GuiRenderer::CheckError()
 {
 	GLenum error = glGetError();
 	if (error > 0) {

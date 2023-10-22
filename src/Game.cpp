@@ -7,6 +7,49 @@
 #include "Texture.h"
 #include "BackgroundImage.h"
 #include "TileMap.h"
+#include "Panel.h"
+#include "Button.h"
+#include "GuiRenderer.h"
+
+void RenderChildren(Panel* panel)
+{
+	if (panel)
+	{
+		//printf("Rendering %s...\n", panel->GetName());
+		
+		panel->Render();
+		panel->DebugRenderBounds();
+
+		for (Panel* child : panel->GetChildren())
+		{
+			RenderChildren(child);
+		}
+	}
+}
+
+bool PropogateInput(Panel* panel, Input* input)
+{
+	bool inputHandled = false;
+
+	if (panel)
+	{
+		if (panel->HandleInput(input))
+		{
+			inputHandled = true;
+		}
+
+		for (Panel* child : panel->GetChildren())
+		{
+			if (PropogateInput(child, input))
+			{
+				inputHandled = true;
+				break;
+			}
+		}
+	}
+
+	return inputHandled;
+}
 
 bool Game::Init(int width, int height, bool fullscreen, const char* title)
 {
@@ -74,6 +117,10 @@ bool Game::Init(int width, int height, bool fullscreen, const char* title)
 	m_renderer->Init();
 	m_renderer->SetProjection(m_viewportWidth, m_viewportHeight);
 
+	m_guiRenderer = new GuiRenderer();
+	m_guiRenderer->Init();
+	m_guiRenderer->SetProjection(m_viewportWidth, m_viewportHeight);
+
 	m_input = new Input();
 
 	return true;
@@ -120,6 +167,12 @@ void Game::Run()
 		Render();
 		m_renderer->RenderObjects();
 		m_renderer->RenderDebugLines();
+		m_guiRenderer->RenderQuads();
+		//m_guiRenderer->RenderDebugLines();
+
+		//glScissor(200, 200, 100, 100);
+		//glEnable(GL_SCISSOR_TEST);
+		//glClear(GL_COLOR_BUFFER_BIT);
 
 		// swap buffers
 		SDL_GL_SwapWindow(m_window);
@@ -133,21 +186,17 @@ void Game::SetupGL()
 {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	//glViewport(0, 0, m_viewportWidth, m_viewportHeight);
 }
 
 void Game::Create()
 {
-<<<<<<< HEAD
-	m_wizardTexture = new Texture("data/images/Wizard.png");
-	m_blackMageTexture = new Texture("data/images/BlackMage.png");
-	m_backgroundTexture = new Texture("data/images/TileableBackGround.png");
-=======
 	m_wizardTexture = new Texture("data/images/shipSm.png");
 	m_blackMageTexture = new Texture("data/images/shipSmEnemy.png");
 	m_backgroundTexture = new Texture("data/images/Sky.png");
 	m_tileMapTexture = new Texture("data/images/tilemap.png");
 
->>>>>>> cc9bfcfc3be0b5ae6481456b91b67b08383d65c4
 	m_backgroundImage = new BackgroundImage(m_renderer, m_backgroundTexture, m_viewportWidth, m_viewportHeight);
 
 	m_player = new Player(m_renderer, m_wizardTexture, &gameState);
@@ -165,16 +214,51 @@ void Game::Create()
 	m_tileMap->CreateDebugMap();
 	m_tileMap->BuildTileMesh();
 
+	// GUI stuff
+	m_rootPanel = new Panel("Root", m_guiRenderer, glm::vec2(0, 0), glm::vec2(m_viewportWidth, m_viewportHeight));
+
+	m_testPanel = new Panel("Panel", m_guiRenderer, glm::vec2(0, 0), glm::vec2(150, 170));
+	m_rootPanel->AddChild(m_testPanel);
+	m_testPanel->SetColor(glm::vec4(0.4, 0.4, 0.4, 1));
+	m_testPanel->CenterX();
+	m_testPanel->CenterY();
+
+	m_button1 = new Button("Button1", m_guiRenderer);
+	m_testPanel->AddChild(m_button1);
+	m_button1->SetPosition(glm::vec2(25, 20));
+	m_button1->SetSize(glm::vec2(100, 30));
+	m_button1->AddCallback([]()
+		{
+			printf("Button1 callback!\n");
+		});
+
+
+	m_button2 = new Button("Button2", m_guiRenderer);
+	m_testPanel->AddChild(m_button2);
+	m_button2->SetPosition(glm::vec2(25, 70));
+	m_button2->SetSize(glm::vec2(100, 30));
+	m_button2->AddCallback([]()
+		{
+			printf("Button2 callback!\n");
+		});
+
+
+	m_button3 = new Button("Button3", m_guiRenderer);
+	m_testPanel->AddChild(m_button3);
+	m_button3->SetPosition(glm::vec2(25, 120));
+	m_button3->SetSize(glm::vec2(100, 30));
+	m_button3->SetEnabled(false);
 }
 
 void Game::HandleInput()
 {
 	m_player->HandleInput(m_input);
+
+	PropogateInput(m_rootPanel, m_input);
 }
 
 void Game::Update(float dt)
 {
-<<<<<<< HEAD
 	m_player->Update(dt);
 
 	for (const auto& enemy : m_enemies)
@@ -189,7 +273,6 @@ void Game::Update(float dt)
 			std::cout << "Collided\n";
 		}
 	}
-=======
 	//for (const auto& enemy : m_enemies)
 	//{
 	//	enemy->Update(dt);
@@ -204,29 +287,34 @@ void Game::Update(float dt)
 	//		std::cout << "Collided\n";
 	//	}
 	//}
->>>>>>> cc9bfcfc3be0b5ae6481456b91b67b08383d65c4
 }
 
 void Game::Render()
 {
+	//m_backgroundImage->Render();
+	//m_grassImage->Render();
+
 	m_backgroundImage->Render();
 
-<<<<<<< HEAD
+
 	for (const auto& enemy : m_enemies)
 	{
 		enemy->Render();
 	}
-=======
+
 	//for (const auto& enemy : m_enemies)
 	//{
 	//	enemy->Render();
 	//	enemy->RenderDebugQuad();
 	//}
 
-	m_tileMap->Render();
->>>>>>> cc9bfcfc3be0b5ae6481456b91b67b08383d65c4
 
-	m_player->Render();
+	m_tileMap->Render();
+
+
+	//m_player->Render();
+
+	RenderChildren(m_rootPanel);
 }
 
 void Game::Destroy()
@@ -234,16 +322,13 @@ void Game::Destroy()
 	delete m_wizardTexture;
 	delete m_blackMageTexture;
 	delete m_backgroundTexture;
-<<<<<<< HEAD
-	delete m_backgroundImage;
-=======
+
 	delete m_tileMapTexture;
 
 	delete m_backgroundImage;
 
 	m_tileMap->Destroy();
 	delete m_tileMap;
->>>>>>> cc9bfcfc3be0b5ae6481456b91b67b08383d65c4
 
 	delete m_player;
 	m_player = nullptr;
@@ -254,6 +339,9 @@ void Game::Cleanup()
 	m_renderer->Dispose();
 	delete m_renderer;
 	m_renderer = nullptr;
+
+	m_guiRenderer->Dispose();
+	delete m_guiRenderer;
 	
 	delete m_input;
 	m_input = nullptr;

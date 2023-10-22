@@ -14,6 +14,10 @@ class Player;
 class BackgroundImage;
 class TileMap;
 
+class Panel;
+class Button;
+class GuiRenderer;
+
 struct GameState
 {
 	
@@ -40,6 +44,7 @@ private:
 	int m_viewportHeight;
 	Renderer* m_renderer;
 	Input* m_input;
+	GuiRenderer* m_guiRenderer;
 
 private:
 	void HandleInput();
@@ -67,5 +72,11 @@ private:
 	GameState gameState;
 
 	TileMap* m_tileMap;
+
+	Panel* m_rootPanel;
+	Panel* m_testPanel;
+	Button* m_button1;
+	Button* m_button2;
+	Button* m_button3;
 
 };
