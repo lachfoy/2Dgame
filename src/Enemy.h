@@ -11,7 +11,7 @@ class Player;
 class Enemy : public SpriteEntity
 {
 public:
-	Enemy(Renderer* renderer, Texture* texture, Player* player);
+	Enemy(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, Player* player);
 	~Enemy() {}
 
 	void Think();

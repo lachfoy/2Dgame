@@ -10,7 +10,7 @@ class Input;
 class Player : public SpriteEntity
 {
 public:
-	Player(Renderer* renderer, Texture* texture);
+	Player(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture);
 	~Player() {}
 
 	void HandleInput(Input* input);

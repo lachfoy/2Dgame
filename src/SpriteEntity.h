@@ -8,9 +8,10 @@
 #include <vector>
 
 #include "Vertex.h"
-#include "Texture.h"
 
 class Renderer;
+class DebugRenderer;
+class Texture;
 
 typedef std::vector<Vertex> tVertexVec;
 typedef std::vector<unsigned int> tIndexVec;
@@ -18,7 +19,7 @@ typedef std::vector<unsigned int> tIndexVec;
 class SpriteEntity : public Entity
 {
 public:
-	SpriteEntity(Renderer* renderer, Texture* texture);
+	SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture);
 	~SpriteEntity() {}
 
 	glm::vec2 GetSize() const { return m_size; }
@@ -29,6 +30,7 @@ public:
 	
 protected:
 	Renderer* m_renderer;
+	DebugRenderer* m_debugRenderer;
 	tVertexVec m_vertexVec;
 	tIndexVec m_indexVec;
 	Texture* m_texture;

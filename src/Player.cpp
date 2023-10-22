@@ -2,9 +2,10 @@
 
 #include "Input.h"
 #include "Renderer.h"
-#include "Game.h"
+#include "DebugRenderer.h"
 
-Player::Player(Renderer* renderer, Texture* texture) : SpriteEntity(renderer, texture)
+Player::Player(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture)
+	: SpriteEntity(renderer, debugRenderer, texture)
 {
 }
 

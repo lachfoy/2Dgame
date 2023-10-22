@@ -55,9 +55,6 @@ public:
 	
 	void RenderObjects();
 
-	void AddDebugLine(const glm::vec2& p1, const glm::vec2& p2);
-	void RenderDebugLines();
-
 	void FlushBatch();
 	void ClearBatch();
 
@@ -77,11 +74,5 @@ private:
 	GLuint m_ebo;
 
 	std::vector<RenderObject> m_renderObjects;
-
-	// Debug lines
-	GLuint m_debugShaderProgram;
-	std::vector<glm::vec2> m_linePoints;
-	GLuint m_lineVao;
-	GLuint m_lineVbo;
 
 };

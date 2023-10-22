@@ -13,7 +13,7 @@ class Input;
 class Turret : public SpriteEntity
 {
 public:
-	Turret(Renderer* renderer, Texture* texture, std::vector<std::unique_ptr<Enemy>>* enemies);
+	Turret(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, std::vector<std::unique_ptr<Enemy>>* enemies);
 	~Turret() {}
 
 	void Think(); // exact same as enemy

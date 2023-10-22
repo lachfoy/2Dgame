@@ -9,6 +9,7 @@
 #include "Enemy.h"
 
 class Renderer;
+class DebugRenderer;
 class Input;
 class Player;
 class Turret;
@@ -38,6 +39,7 @@ private:
 	int m_viewportWidth;
 	int m_viewportHeight;
 	Renderer* m_renderer;
+	DebugRenderer* m_debugRenderer;
 	Input* m_input;
 	GuiRenderer* m_guiRenderer;
 

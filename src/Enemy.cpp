@@ -2,9 +2,11 @@
 
 #include "Input.h"
 #include "Renderer.h"
+#include "DebugRenderer.h"
 #include "Player.h"
 
-Enemy::Enemy(Renderer* renderer, Texture* texture, Player* player) : SpriteEntity(renderer, texture), m_player(player)
+Enemy::Enemy(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, Player* player)
+	: SpriteEntity(renderer, debugRenderer, texture), m_player(player)
 {
 
 }

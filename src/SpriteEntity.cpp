@@ -1,13 +1,14 @@
 #include "SpriteEntity.h"
 
 #include "Renderer.h"
+#include "DebugRenderer.h"
+#include "Texture.h"
 
-SpriteEntity::SpriteEntity(Renderer* renderer, Texture* texture)
+SpriteEntity::SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture)
+	: m_renderer(renderer), m_debugRenderer(debugRenderer), m_texture(texture)
 {
-	m_renderer = renderer;
-
-	m_size.x = texture->GetWidth();
-	m_size.y = texture->GetHeight();
+	m_size.x = m_texture->GetWidth();
+	m_size.y = m_texture->GetHeight();
 
 	// Create the mesh data
 	// This should be handled by a different class though
@@ -30,8 +31,6 @@ SpriteEntity::SpriteEntity(Renderer* renderer, Texture* texture)
 	for (const auto& index : indices) {
 		m_indexVec.push_back(index);
 	}
-
-	m_texture = texture;
 }
 
 void SpriteEntity::Render()
@@ -70,8 +69,9 @@ void SpriteEntity::RenderDebugQuad()
 	glm::vec2 bottomL = glm::vec2(topL.x, bottomR.y);
 	glm::vec2 topR = glm::vec2(bottomR.x, topL.y);
 
-	m_renderer->AddDebugLine(topL, bottomL);
-	m_renderer->AddDebugLine(bottomL, bottomR);
-	m_renderer->AddDebugLine(bottomR, topR);
-	m_renderer->AddDebugLine(topR, topL);
+	const glm::vec3 color = glm::vec3(1.0f, 0.0f, 0.0f);
+	m_debugRenderer->AddLine(topL, bottomL, color);
+	m_debugRenderer->AddLine(bottomL, bottomR, color);
+	m_debugRenderer->AddLine(bottomR, topR, color);
+	m_debugRenderer->AddLine(topR, topL, color);
 }
