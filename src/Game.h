@@ -11,6 +11,7 @@
 class Renderer;
 class Input;
 class Player;
+class Turret;
 class TileMap;
 
 class Panel;
@@ -49,9 +50,11 @@ private:
 
 	Player* m_player;
 	tEnemiesVec m_enemies;
+	Turret* m_turret; // just one for now
 
 	Texture* m_playerTexture;
 	Texture* m_enemyTexture;
+	Texture* m_turretTexture;
 	
 	Texture* m_tileMapTexture;
 

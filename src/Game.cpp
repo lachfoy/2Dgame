@@ -4,6 +4,7 @@
 #include "Input.h"
 #include <iostream>
 #include "Player.h"
+#include "Turret.h"
 #include "Texture.h"
 #include "TileMap.h"
 #include "Panel.h"
@@ -190,6 +191,7 @@ void Game::SetupGL()
 void Game::Create()
 {
 	m_playerTexture = new Texture("data/images/guy.png");
+	m_turretTexture = new Texture("data/images/turret.png");
 	m_enemyTexture = new Texture("data/images/droid.png");
 	m_tileMapTexture = new Texture("data/images/tile.png");
 
@@ -203,6 +205,9 @@ void Game::Create()
 		enemy->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 		m_enemies.push_back(std::unique_ptr<Enemy>(enemy));
 	}
+
+	m_turret = new Turret(m_renderer, m_turretTexture, &m_enemies);
+	m_turret->SetPosition(glm::vec2(200, 150));
 
 	m_tileMap = new TileMap(m_renderer, m_tileMapTexture);
 	m_tileMap->CreateDebugMap();
@@ -255,6 +260,8 @@ void Game::Update(float dt)
 {
 	m_player->Update(dt);
 
+	m_turret->Update(dt);
+
 	for (const auto& enemy : m_enemies)
 	{
 		enemy->Update(dt);
@@ -280,12 +287,15 @@ void Game::Render()
 
 	m_player->Render();
 
+	m_turret->Render();
+
 	//RenderChildren(m_rootPanel);
 }
 
 void Game::Destroy()
 {
 	delete m_playerTexture;
+	delete m_turretTexture;
 	delete m_enemyTexture;
 
 	delete m_tileMapTexture;
@@ -295,6 +305,9 @@ void Game::Destroy()
 
 	delete m_player;
 	m_player = nullptr;
+
+	delete m_turret;
+	m_turret = nullptr;
 }
 
 void Game::Cleanup()

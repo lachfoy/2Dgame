@@ -6,7 +6,6 @@
 #include <glm/glm.hpp>
 
 class Input;
-struct GameState;
 
 class Player : public SpriteEntity
 {

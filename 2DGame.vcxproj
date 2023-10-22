@@ -154,6 +154,7 @@
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\TileMap.cpp" />
     <ClCompile Include="src\GuiRenderer.cpp" />
+    <ClCompile Include="src\Turret.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BackgroundImage.h" />
@@ -170,6 +171,7 @@
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\TileMap.h" />
     <ClInclude Include="src\GuiRenderer.h" />
+    <ClInclude Include="src\Turret.h" />
     <ClInclude Include="src\Vertex.h" />
   </ItemGroup>
   <ItemGroup>

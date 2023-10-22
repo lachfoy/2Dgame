@@ -113,7 +113,7 @@ void Renderer::RenderDebugLines()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	m_linePoints.clear();
+	//m_linePoints.clear();
 
 	glBindVertexArray(0);
 }
