@@ -73,8 +73,8 @@ bool Game::Init(int width, int height, bool fullscreen, const char* title)
 		m_windowWidth = displayMode.w;
 		m_windowHeight = displayMode.h;
 
-		m_viewportWidth = m_windowWidth;
-		m_viewportHeight = m_windowHeight;
+		//m_viewportWidth = m_windowWidth;
+		//m_viewportHeight = m_windowHeight;
 
 		windowFlags |= SDL_WINDOW_BORDERLESS;
 	}
@@ -200,6 +200,7 @@ void Game::Create()
 	m_backgroundImage = new BackgroundImage(m_renderer, m_backgroundTexture, m_viewportWidth, m_viewportHeight);
 
 	m_player = new Player(m_renderer, m_wizardTexture, &gameState);
+
 	m_player->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 
 	for (int i = 0; i < 10; i++)
@@ -258,6 +259,20 @@ void Game::HandleInput()
 
 void Game::Update(float dt)
 {
+	m_player->Update(dt);
+
+	for (const auto& enemy : m_enemies)
+	{
+		enemy->Update(dt);
+	}
+
+	for (const auto& enemy : m_enemies)
+	{
+		if (Collision(*m_player, *enemy))
+		{
+			std::cout << "Collided\n";
+		}
+	}
 	//for (const auto& enemy : m_enemies)
 	//{
 	//	enemy->Update(dt);
@@ -272,8 +287,6 @@ void Game::Update(float dt)
 	//		std::cout << "Collided\n";
 	//	}
 	//}
-
-	
 }
 
 void Game::Render()
@@ -281,13 +294,23 @@ void Game::Render()
 	//m_backgroundImage->Render();
 	//m_grassImage->Render();
 
+	m_backgroundImage->Render();
+
+
+	for (const auto& enemy : m_enemies)
+	{
+		enemy->Render();
+	}
+
 	//for (const auto& enemy : m_enemies)
 	//{
 	//	enemy->Render();
 	//	enemy->RenderDebugQuad();
 	//}
 
-	//m_tileMap->Render();
+
+	m_tileMap->Render();
+
 
 	//m_player->Render();
 
@@ -299,6 +322,7 @@ void Game::Destroy()
 	delete m_wizardTexture;
 	delete m_blackMageTexture;
 	delete m_backgroundTexture;
+
 	delete m_tileMapTexture;
 
 	delete m_backgroundImage;

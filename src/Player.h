@@ -19,16 +19,18 @@ public:
 
 private:
 	glm::vec2 m_moveDir{ 0.0f };
-	float m_acceleration = 20000.0f;
+	float m_acceleration = 10000.0f;
 
 	glm::vec2 m_velocity{ 0.0f };
 	float kFrictionCoef = 0.5f;
 	float kMaxSpeed = 400.0f;
+
 	GameState* m_gameState;
+<<<<<<< HEAD
+=======
 
 	//int m_laneIndex;
+>>>>>>> cc9bfcfc3be0b5ae6481456b91b67b08383d65c4
 
-	//float m_desiredX;
-	//float m_lerpRate = 40.0f;
 
 };

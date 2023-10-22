@@ -20,7 +20,7 @@ class GuiRenderer;
 
 struct GameState
 {
-	std::vector<float> lanePositionsX;
+	
 };
 
 typedef std::vector<std::unique_ptr<Enemy>> tEnemiesVec;
@@ -32,7 +32,6 @@ public:
 	bool Init(int width, int height, bool fullscreen, const char* title);
 	void Run();
 
-	const GameState& GetGameState() const { return gameState; }
 private:
 	void SetupGL();
 	void Cleanup();
@@ -60,10 +59,16 @@ private:
 	Texture* m_wizardTexture;
 	Texture* m_blackMageTexture;
 	Texture* m_backgroundTexture;
+<<<<<<< HEAD
+
+	BackgroundImage* m_backgroundImage;
+
+=======
 	Texture* m_tileMapTexture;
 	
 	BackgroundImage* m_backgroundImage;
 	
+>>>>>>> cc9bfcfc3be0b5ae6481456b91b67b08383d65c4
 	GameState gameState;
 
 	TileMap* m_tileMap;
