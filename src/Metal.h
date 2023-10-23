@@ -24,6 +24,6 @@ private:
 	const float kThinkInterval = 0.5f;
 
 	bool m_active = false;
-	float m_activationRadius = 30.0f;
+	float m_activationRadius = 100.0f;
 
 };

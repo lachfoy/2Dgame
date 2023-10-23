@@ -216,7 +216,7 @@ void Game::Create()
 	for (int i = 0; i < 10; i++)
 	{
 		Texture* texture = rand() % 2 == 1 ? m_textureManager->GetTexture("droid") : m_textureManager->GetTexture("droid4");
-		Enemy* enemy = new Enemy(m_renderer, m_debugRenderer, texture, m_player, &m_metal, m_textureManager);
+		Enemy* enemy = new Enemy(m_renderer, m_debugRenderer, texture, m_player, m_textureManager);
 		enemy->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 		m_enemies.push_back(std::unique_ptr<Enemy>(enemy));
 	}
@@ -268,6 +268,11 @@ void Game::HandleInput()
 	m_player->HandleInput(m_input);
 
 	PropogateInput(m_rootPanel, m_input);
+
+	if (m_input->IsKeyPressed(SDL_SCANCODE_Z))
+	{
+		m_enemies[rand() % m_enemies.size()]->FlagDestroy();
+	}
 }
 
 void Game::Update(float dt)
@@ -283,15 +288,12 @@ void Game::Update(float dt)
 
 	// Remove enemy 
 	m_enemies.erase(std::remove_if(m_enemies.begin(), m_enemies.end(), [&](const std::unique_ptr<Enemy>& enemy) {
-		if (enemy->GetRemove())
+		bool remove = enemy->GetRemove();
+		if (remove)
 		{
-			std::unique_ptr<Metal> metal = std::make_unique<Metal>(m_renderer, m_debugRenderer, m_textureManager->GetTexture("metal"), m_player);
-			metal->SetPosition(enemy->GetPosition());
-			m_metal.push_back(std::move(metal));
-
-			//enemy->OnDestroy();
+			enemy->OnDestroy(m_metal);
 		}
-		return enemy->GetRemove();
+		return remove;
 		}), m_enemies.end());
 
 	for (const auto& metal : m_metal)
