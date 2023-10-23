@@ -15,6 +15,7 @@ class Input;
 class Player;
 class Turret;
 class TileMap;
+class TextureManager;
 
 class Panel;
 class Button;
@@ -44,6 +45,7 @@ private:
 	DebugRenderer* m_debugRenderer;
 	Input* m_input;
 	GuiRenderer* m_guiRenderer;
+	TextureManager* m_textureManager;
 
 private:
 	void HandleInput();

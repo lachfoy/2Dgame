@@ -11,6 +11,7 @@
 #include "Panel.h"
 #include "Button.h"
 #include "GuiRenderer.h"
+#include "TextureManager.h"
 
 void RenderChildren(Panel* panel)
 {
@@ -128,6 +129,8 @@ bool Game::Init(int width, int height, bool fullscreen, const char* title)
 
 	m_input = new Input();
 
+	m_textureManager = new TextureManager();
+
 	return true;
 }
 
@@ -201,7 +204,8 @@ void Game::Create()
 	m_enemyTexture = new Texture("data/images/droid.png");
 	m_tileMapTexture = new Texture("data/images/tile.png");
 
-	m_player = new Player(m_renderer, m_debugRenderer, m_playerTexture);
+	m_textureManager->LoadTexture("guy");
+	m_player = new Player(m_renderer, m_debugRenderer, m_textureManager->GetTexture("guy"));
 
 	m_player->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 
@@ -343,9 +347,14 @@ void Game::Cleanup()
 
 	m_guiRenderer->Dispose();
 	delete m_guiRenderer;
+	m_guiRenderer = nullptr;
 	
 	delete m_input;
 	m_input = nullptr;
+
+	m_textureManager->UnloadResources();
+	delete m_textureManager;
+	m_textureManager = nullptr;
 
 	SDL_GL_DeleteContext(m_context);
 	SDL_DestroyWindow(m_window);
