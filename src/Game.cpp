@@ -201,17 +201,22 @@ void Game::Create()
 {
 	m_playerTexture = new Texture("data/images/guy.png");
 	m_turretTexture = new Texture("data/images/turret.png");
-	m_enemyTexture = new Texture("data/images/droid.png");
+	m_enemyTexture = new Texture("data/images/droid4.png");
 	m_tileMapTexture = new Texture("data/images/tile.png");
 
 	m_textureManager->LoadTexture("guy");
+	m_textureManager->LoadTexture("metal");
+	m_textureManager->LoadTexture("droid");
+	m_textureManager->LoadTexture("droid4");
+
 	m_player = new Player(m_renderer, m_debugRenderer, m_textureManager->GetTexture("guy"));
 
 	m_player->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 
 	for (int i = 0; i < 10; i++)
 	{
-		Enemy* enemy = new Enemy(m_renderer, m_debugRenderer, m_enemyTexture, m_player, &m_metal);
+		Texture* texture = rand() % 2 == 1 ? m_textureManager->GetTexture("droid") : m_textureManager->GetTexture("droid4");
+		Enemy* enemy = new Enemy(m_renderer, m_debugRenderer, texture, m_player, &m_metal, m_textureManager);
 		enemy->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 		m_enemies.push_back(std::unique_ptr<Enemy>(enemy));
 	}
@@ -275,6 +280,19 @@ void Game::Update(float dt)
 	{
 		enemy->Update(dt);
 	}
+
+	// Remove enemy 
+	m_enemies.erase(std::remove_if(m_enemies.begin(), m_enemies.end(), [&](const std::unique_ptr<Enemy>& enemy) {
+		if (enemy->GetRemove())
+		{
+			std::unique_ptr<Metal> metal = std::make_unique<Metal>(m_renderer, m_debugRenderer, m_textureManager->GetTexture("metal"), m_player);
+			metal->SetPosition(enemy->GetPosition());
+			m_metal.push_back(std::move(metal));
+
+			//enemy->OnDestroy();
+		}
+		return enemy->GetRemove();
+		}), m_enemies.end());
 
 	for (const auto& metal : m_metal)
 	{

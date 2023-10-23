@@ -4,11 +4,11 @@
 #include "Renderer.h"
 #include "DebugRenderer.h"
 #include "Player.h"
+#include "TextureManager.h"
 
-Enemy::Enemy(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, Player* player, std::vector<std::unique_ptr<Metal>>* metal)
-	: SpriteEntity(renderer, debugRenderer, texture), m_player(player), m_metal(metal)
+Enemy::Enemy(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, Player* player, std::vector<std::unique_ptr<Metal>>* metal, TextureManager* textureManager)
+	: SpriteEntity(renderer, debugRenderer, texture), m_player(player), m_metal(metal), m_textureManager(textureManager)
 {
-
 }
 
 void Enemy::Think()
@@ -18,9 +18,9 @@ void Enemy::Think()
 	m_moveDir = glm::normalize(targetPosition - m_position);
 
 	// this is not good but whatever
-	std::unique_ptr<Metal> metal = std::make_unique<Metal>(m_renderer, m_debugRenderer, m_texture, m_player);
-	metal->SetPosition(m_position);
-	m_metal->push_back(std::move(metal));
+	//std::unique_ptr<Metal> metal = std::make_unique<Metal>(m_renderer, m_debugRenderer, m_textureManager->GetTexture("metal"), m_player);
+	//metal->SetPosition(m_position);
+	//m_metal->push_back(std::move(metal));
 }
 
 void Enemy::Update(float dt)
