@@ -5,8 +5,8 @@
 #include "DebugRenderer.h"
 #include "Player.h"
 
-Enemy::Enemy(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, Player* player)
-	: SpriteEntity(renderer, debugRenderer, texture), m_player(player)
+Enemy::Enemy(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, Player* player, std::vector<std::unique_ptr<Metal>>* metal)
+	: SpriteEntity(renderer, debugRenderer, texture), m_player(player), m_metal(metal)
 {
 
 }
@@ -16,6 +16,11 @@ void Enemy::Think()
 	// set direction to move towards player
 	glm::vec2 targetPosition = m_player->GetPosition();
 	m_moveDir = glm::normalize(targetPosition - m_position);
+
+	// this is not good but whatever
+	std::unique_ptr<Metal> metal = std::make_unique<Metal>(m_renderer, m_debugRenderer, m_texture, m_player);
+	metal->SetPosition(m_position);
+	m_metal->push_back(std::move(metal));
 }
 
 void Enemy::Update(float dt)

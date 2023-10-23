@@ -207,7 +207,7 @@ void Game::Create()
 
 	for (int i = 0; i < 10; i++)
 	{
-		Enemy* enemy = new Enemy(m_renderer, m_debugRenderer, m_enemyTexture, m_player);
+		Enemy* enemy = new Enemy(m_renderer, m_debugRenderer, m_enemyTexture, m_player, &m_metal);
 		enemy->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 		m_enemies.push_back(std::unique_ptr<Enemy>(enemy));
 	}
@@ -247,7 +247,6 @@ void Game::Create()
 			printf("Button2 callback!\n");
 		});
 
-
 	m_button3 = new Button("Button3", m_guiRenderer);
 	m_testPanel->AddChild(m_button3);
 	m_button3->SetPosition(glm::vec2(25, 120));
@@ -273,6 +272,11 @@ void Game::Update(float dt)
 		enemy->Update(dt);
 	}
 
+	for (const auto& metal : m_metal)
+	{
+		metal->Update(dt);
+	}
+
 	for (const auto& enemy : m_enemies)
 	{
 		if (Collision(*m_player, *enemy))
@@ -285,6 +289,11 @@ void Game::Update(float dt)
 void Game::Render()
 {
 	m_tileMap->Render();
+
+	for (const auto& metal : m_metal)
+	{
+		metal->Render();
+	}
 
 	for (const auto& enemy : m_enemies)
 	{
@@ -314,6 +323,12 @@ void Game::Destroy()
 
 	delete m_turret;
 	m_turret = nullptr;
+
+	delete m_rootPanel;
+	delete m_testPanel;
+	delete m_button1;
+	delete m_button2;
+	delete m_button3;
 }
 
 void Game::Cleanup()

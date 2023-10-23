@@ -7,6 +7,7 @@
 #include <memory>
 #include <vector>
 #include "Enemy.h"
+#include "Metal.h"
 
 class Renderer;
 class DebugRenderer;
@@ -20,6 +21,7 @@ class Button;
 class GuiRenderer;
 
 typedef std::vector<std::unique_ptr<Enemy>> tEnemiesVec;
+typedef std::vector<std::unique_ptr<Metal>> tMetalVec;
 
 class Game
 {
@@ -52,6 +54,7 @@ private:
 
 	Player* m_player;
 	tEnemiesVec m_enemies;
+	tMetalVec m_metal;
 	Turret* m_turret; // just one for now
 
 	Texture* m_playerTexture;
