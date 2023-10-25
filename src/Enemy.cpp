@@ -49,7 +49,7 @@ void Enemy::Update(float dt)
 	m_position += m_velocity * dt;
 }
 
-void Enemy::OnDestroy(std::vector<std::unique_ptr<Metal>>& metal)
+void Enemy::OnRemove(std::vector<std::unique_ptr<Metal>>& metal)
 {
 	std::unique_ptr<Metal> m = std::make_unique<Metal>(m_renderer, m_debugRenderer, m_textureManager->GetTexture("metal"), m_player);
 	m->SetPosition(m_position);

@@ -19,11 +19,12 @@ public:
 	~Enemy() {}
 
 	void Damage(int amount);
+	int GetDamage() const { return rand() % (m_maxDamage - m_minDamage + 1) + m_minDamage; }
 
 	void Think();
 	void Update(float dt);
 
-	void OnDestroy(std::vector<std::unique_ptr<Metal>>& metal);
+	void OnRemove(std::vector<std::unique_ptr<Metal>>& metal);
 
 private:
 	glm::vec2 m_moveDir{ 0.0f };
@@ -42,5 +43,8 @@ private:
 
 	int m_maxHealth = 10;
 	int m_health = m_maxHealth;
+
+	int m_minDamage = 1;
+	int m_maxDamage = 5;
 
 };

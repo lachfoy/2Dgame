@@ -27,6 +27,16 @@ void Player::HandleInput(Input* input)
 
 void Player::Update(float dt)
 {
+	if (m_immune) // replace this with a timer class probably
+	{
+		m_immuneTimer += dt;
+		if (m_immuneTimer >= kImmuneInterval)
+		{
+			m_immuneTimer = 0.0f;
+			m_immune = false;
+		}
+	}
+
 	if (glm::length(m_moveDir) > 0.0f)
 	{
 		m_moveDir = glm::normalize(m_moveDir);
@@ -38,4 +48,23 @@ void Player::Update(float dt)
 	m_position += m_velocity * dt;
 
 	m_moveDir = glm::vec2(0.0f, 0.0f);
+}
+
+void Player::Damage(int amount)
+{
+	if (m_health > 0)
+	{
+		m_health -= amount;
+		printf("Player took %d damage! New hp = %d/%d\n", amount, m_health, m_maxHealth);
+
+		if (m_health <= 0)
+		{
+			printf("Dead!!!!!\n");
+		}
+		else
+		{
+			// kick immunity timer
+			m_immune = true;
+		}
+	}
 }

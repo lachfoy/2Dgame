@@ -295,7 +295,8 @@ void Game::Update(float dt)
 
 		if (Collision(*m_player, *metal))
 		{
-			metal->FlagDestroy();
+			metal->Remove();
+			m_player->IncMetalCount();
 			printf("picked up metal!\n");
 		}
 	}
@@ -305,29 +306,31 @@ void Game::Update(float dt)
 	{
 		if (Collision(*m_player, *enemy))
 		{
-			std::cout << "Collided\n";
+			if (m_player->CanTakeDamage())
+			{
+				m_player->Damage(enemy->GetDamage());
+				//std::cout << "Collided\n";
+			}
 		}
 	}
 
-	// clean up
-	// Remove enemy 
-	m_enemies.erase(std::remove_if(m_enemies.begin(), m_enemies.end(), [&](const std::unique_ptr<Enemy>& enemy) {
-		bool remove = enemy->GetRemove();
-		if (remove)
-		{
-			enemy->OnDestroy(m_metal);
-		}
-		return remove;
-		}), m_enemies.end());
+	// Clean up entities
+	m_enemies.erase(std::remove_if(m_enemies.begin(), m_enemies.end(),
+		[&](const std::unique_ptr<Enemy>& enemy) {
+			bool remove = enemy->GetRemove();
+			if (remove)
+			{
+				enemy->OnRemove(m_metal);
+			}
+			return remove;
+		}),
+		m_enemies.end());
 
-	m_metal.erase(std::remove_if(m_metal.begin(), m_metal.end(), [&](const std::unique_ptr<Metal>& metal) {
-		bool remove = metal->GetRemove();
-		if (remove)
-		{
-			//metal->OnDestroy(m_metal);
-		}
-		return remove;
-		}), m_metal.end());
+	m_metal.erase(std::remove_if(m_metal.begin(), m_metal.end(),
+		[&](const std::unique_ptr<Metal>& metal) {
+			return metal->GetRemove();
+		}),
+		m_metal.end());
 }
 
 void Game::Render()

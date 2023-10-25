@@ -29,6 +29,10 @@ void Metal::Update(float dt)
 
 	if (!m_active) return;
 
-	glm::vec2 direction = glm::normalize(m_player->GetPosition() - m_position);
-	m_position += direction * 200.0f * dt;
+	glm::vec2 moveDir = glm::normalize(m_player->GetPosition() - m_position);
+
+	m_velocity += m_acceleration * moveDir * dt;
+	m_velocity -= m_velocity * kFrictionCoef;
+
+	m_position += m_velocity * dt;
 }
