@@ -271,14 +271,16 @@ void Game::HandleInput()
 
 	if (m_input->IsKeyPressed(SDL_SCANCODE_Z))
 	{
-		m_enemies[rand() % m_enemies.size()]->FlagDestroy();
+		if (!m_enemies.empty())
+		{
+			m_enemies[rand() % m_enemies.size()]->Damage(5);
+		}
 	}
 }
 
 void Game::Update(float dt)
 {
 	m_player->Update(dt);
-
 	m_turret->Update(dt);
 
 	for (const auto& enemy : m_enemies)
@@ -286,6 +288,28 @@ void Game::Update(float dt)
 		enemy->Update(dt);
 	}
 
+
+	for (const auto& metal : m_metal)
+	{
+		metal->Update(dt);
+
+		if (Collision(*m_player, *metal))
+		{
+			metal->FlagDestroy();
+			printf("picked up metal!\n");
+		}
+	}
+
+
+	for (const auto& enemy : m_enemies)
+	{
+		if (Collision(*m_player, *enemy))
+		{
+			std::cout << "Collided\n";
+		}
+	}
+
+	// clean up
 	// Remove enemy 
 	m_enemies.erase(std::remove_if(m_enemies.begin(), m_enemies.end(), [&](const std::unique_ptr<Enemy>& enemy) {
 		bool remove = enemy->GetRemove();
@@ -296,18 +320,14 @@ void Game::Update(float dt)
 		return remove;
 		}), m_enemies.end());
 
-	for (const auto& metal : m_metal)
-	{
-		metal->Update(dt);
-	}
-
-	for (const auto& enemy : m_enemies)
-	{
-		if (Collision(*m_player, *enemy))
+	m_metal.erase(std::remove_if(m_metal.begin(), m_metal.end(), [&](const std::unique_ptr<Metal>& metal) {
+		bool remove = metal->GetRemove();
+		if (remove)
 		{
-			std::cout << "Collided\n";
+			//metal->OnDestroy(m_metal);
 		}
-	}
+		return remove;
+		}), m_metal.end());
 }
 
 void Game::Render()

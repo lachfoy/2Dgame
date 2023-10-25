@@ -12,7 +12,11 @@ public:
 	glm::vec2 GetPosition() const { return m_position; }
 	void SetPosition(const glm::vec2& position);
 
+	void FlagDestroy() { m_remove = true; }
+	bool GetRemove() const { return m_remove; }
+
 protected:
 	glm::vec2 m_position;
+	bool m_remove = false;
 
 };

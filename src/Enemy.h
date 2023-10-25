@@ -18,8 +18,7 @@ public:
 	Enemy(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, Player* player, TextureManager* textureManager);
 	~Enemy() {}
 
-	void FlagDestroy() { m_remove = true; }
-	bool GetRemove() const { return m_remove; }
+	void Damage(int amount);
 
 	void Think();
 	void Update(float dt);
@@ -43,7 +42,5 @@ private:
 
 	int m_maxHealth = 10;
 	int m_health = m_maxHealth;
-
-	bool m_remove = false;
 
 };

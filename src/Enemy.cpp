@@ -11,6 +11,18 @@ Enemy::Enemy(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture,
 {
 }
 
+void Enemy::Damage(int amount)
+{
+	m_health -= amount;
+	printf("enemy damaged for %d. New hp = %d/%d\n", amount, m_health, m_maxHealth);
+
+	if (m_health <= 0)
+	{
+		m_remove = true;
+		printf("Enemy destroyed\n");
+	}
+}
+
 void Enemy::Think()
 {
 	// set direction to move towards player

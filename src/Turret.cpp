@@ -16,6 +16,7 @@ void Turret::Think()
 		std::unique_ptr<Enemy>& enemy = m_enemies->at(i);
 
 		m_debugRenderer->AddLine(m_position, enemy->GetPosition(), glm::vec3(0.0f, 1.0f, 0.0f), 0.5f);
+		enemy->Damage(rand() % 5);
 	}
 }
 

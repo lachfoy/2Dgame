@@ -30,5 +30,5 @@ void Metal::Update(float dt)
 	if (!m_active) return;
 
 	glm::vec2 direction = glm::normalize(m_player->GetPosition() - m_position);
-	m_position += direction * 100.0f * dt;
+	m_position += direction * 200.0f * dt;
 }
