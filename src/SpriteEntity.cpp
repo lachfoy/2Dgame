@@ -4,12 +4,9 @@
 #include "DebugRenderer.h"
 #include "Texture.h"
 
-SpriteEntity::SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture)
-	: m_renderer(renderer), m_debugRenderer(debugRenderer), m_texture(texture)
+SpriteEntity::SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, glm::vec2 size)
+	: m_renderer(renderer), m_debugRenderer(debugRenderer), m_texture(texture), m_size(size)
 {
-	m_size.x = m_texture->GetWidth();
-	m_size.y = m_texture->GetHeight();
-
 	// Create the mesh data
 	// This should be handled by a different class though
 	Vertex vertices[] = {
@@ -31,6 +28,31 @@ SpriteEntity::SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Tex
 	for (const auto& index : indices) {
 		m_indexVec.push_back(index);
 	}
+}
+
+void SpriteEntity::RotateBy(float radians)
+{
+	for (auto& vertex : m_vertexVec) {
+		float x = vertex.position.x;
+		vertex.position.x = x * cos(radians) - vertex.position.y * sin(radians);
+		vertex.position.y = x * sin(radians) + vertex.position.y * cos(radians);
+	}
+
+	m_rotation += radians;
+}
+
+void SpriteEntity::SetRotation(float radians)
+{
+	float diff = radians - m_rotation;
+
+	for (auto& vertex : m_vertexVec)
+	{
+		float x = vertex.position.x;
+		vertex.position.x = x * cos(diff) - vertex.position.y * sin(diff);
+		vertex.position.y = x * sin(diff) + vertex.position.y * cos(diff);
+	}
+
+	m_rotation = radians;
 }
 
 void SpriteEntity::Render()

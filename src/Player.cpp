@@ -5,7 +5,7 @@
 #include "DebugRenderer.h"
 
 Player::Player(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture)
-	: SpriteEntity(renderer, debugRenderer, texture)
+	: SpriteEntity(renderer, debugRenderer, texture, glm::vec2(16, 16))
 {
 }
 

@@ -199,15 +199,11 @@ void Game::SetupGL()
 
 void Game::Create()
 {
-	m_playerTexture = new Texture("data/images/guy.png");
-	m_turretTexture = new Texture("data/images/turret.png");
-	m_enemyTexture = new Texture("data/images/droid4.png");
-	m_tileMapTexture = new Texture("data/images/tile.png");
-
 	m_textureManager->LoadTexture("guy");
-	m_textureManager->LoadTexture("metal");
+	m_textureManager->LoadTexture("diamond");
+	m_textureManager->LoadTexture("turret3");
 	m_textureManager->LoadTexture("droid");
-	m_textureManager->LoadTexture("droid4");
+	m_textureManager->LoadTexture("tile");
 
 	m_player = new Player(m_renderer, m_debugRenderer, m_textureManager->GetTexture("guy"));
 
@@ -215,16 +211,15 @@ void Game::Create()
 
 	for (int i = 0; i < 10; i++)
 	{
-		Texture* texture = rand() % 2 == 1 ? m_textureManager->GetTexture("droid") : m_textureManager->GetTexture("droid4");
-		Enemy* enemy = new Enemy(m_renderer, m_debugRenderer, texture, m_player, m_textureManager);
+		Enemy* enemy = new Enemy(m_renderer, m_debugRenderer, m_textureManager->GetTexture("droid"), m_player, m_textureManager);
 		enemy->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 		m_enemies.push_back(std::unique_ptr<Enemy>(enemy));
 	}
 
-	m_turret = new Turret(m_renderer, m_debugRenderer, m_turretTexture, &m_enemies);
+	m_turret = new Turret(m_renderer, m_debugRenderer, m_textureManager->GetTexture("turret3"), &m_enemies);
 	m_turret->SetPosition(glm::vec2(200, 150));
 
-	m_tileMap = new TileMap(m_renderer, m_tileMapTexture);
+	m_tileMap = new TileMap(m_renderer, m_textureManager->GetTexture("tile"));
 	m_tileMap->CreateDebugMap();
 	m_tileMap->BuildTileMesh();
 
@@ -353,12 +348,6 @@ void Game::Render()
 
 void Game::Destroy()
 {
-	delete m_playerTexture;
-	delete m_turretTexture;
-	delete m_enemyTexture;
-
-	delete m_tileMapTexture;
-
 	m_tileMap->Destroy();
 	delete m_tileMap;
 

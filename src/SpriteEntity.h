@@ -19,11 +19,14 @@ typedef std::vector<unsigned int> tIndexVec;
 class SpriteEntity : public Entity
 {
 public:
-	SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture);
+	SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, glm::vec2 size);
 	~SpriteEntity() {}
 
 	glm::vec2 GetSize() const { return m_size; }
 	glm::vec2 GetExtents() const { return m_size * 0.5f; }
+
+	void RotateBy(float radians);
+	void SetRotation(float radians); // sets the rotation
 
 	void Render();
 	void RenderDebugQuad();
@@ -35,6 +38,8 @@ protected:
 	tIndexVec m_indexVec;
 	Texture* m_texture;
 	glm::vec2 m_size;
+
+	float m_rotation = 1.5708f;
 
 };
 
