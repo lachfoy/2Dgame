@@ -15,7 +15,7 @@ void Turret::Think()
 		int i = rand() % m_enemies->size();
 		std::unique_ptr<Enemy>& enemy = m_enemies->at(i);
 
-		glm::vec2 directionToEnemy = glm::normalize(m_position - enemy->GetPosition());
+		glm::vec2 directionToEnemy = glm::normalize(enemy->GetPosition() - m_position);
 		float angleToEnemy = atan2(directionToEnemy.y, directionToEnemy.x);
 		SetRotation(angleToEnemy);
 

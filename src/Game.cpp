@@ -204,8 +204,9 @@ void Game::Create()
 	m_textureManager->LoadTexture("turret3");
 	m_textureManager->LoadTexture("droid");
 	m_textureManager->LoadTexture("tile");
+	m_textureManager->LoadTexture("shotgun");
 
-	m_player = new Player(m_renderer, m_debugRenderer, m_textureManager->GetTexture("guy"));
+	m_player = new Player(m_renderer, m_debugRenderer, m_textureManager);
 
 	m_player->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 

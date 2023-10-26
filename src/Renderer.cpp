@@ -61,7 +61,26 @@ void Renderer::RenderObjects()
 			currentTexture = obj.GetTexture();
 		}
 
-		for (Vertex vertex : *(obj.GetVertexVec())) {
+
+		// Create a scale matrix for horizontal flip
+		glm::mat3 flipMatrix = glm::mat3(
+			glm::vec3(1.0f, 0.0f, 0.0f),
+			glm::vec3(0.0f, -1.0f, 0.0f),
+			glm::vec3(0.0f, 0.0f, 1.0f)
+		);
+
+		for (Vertex vertex : *(obj.GetVertexVec()))
+		{
+			if (obj.GetFlipPolicy() == FlipPolicy::FlipX)
+			{
+				vertex.position = glm::vec2(glm::vec3(vertex.position, 1.0f) * flipMatrix);
+			}
+
+			float rotation = obj.GetRotation();
+			float x = vertex.position.x;
+			vertex.position.x = x * cos(rotation) - vertex.position.y * sin(rotation);
+			vertex.position.y = x * sin(rotation) + vertex.position.y * cos(rotation);
+
 			if (obj.GetPosition() != nullptr)
 				vertex.position += *(obj.GetPosition());
 

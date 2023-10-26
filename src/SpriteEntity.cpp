@@ -1,8 +1,9 @@
 #include "SpriteEntity.h"
 
-#include "Renderer.h"
 #include "DebugRenderer.h"
 #include "Texture.h"
+
+#include <glm/gtc/matrix_transform.hpp>
 
 SpriteEntity::SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, glm::vec2 size)
 	: m_renderer(renderer), m_debugRenderer(debugRenderer), m_texture(texture), m_size(size)
@@ -10,10 +11,10 @@ SpriteEntity::SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Tex
 	// Create the mesh data
 	// This should be handled by a different class though
 	Vertex vertices[] = {
-		{ glm::vec2(-m_size.x / 2.0f, m_size.y / 2.0f), glm::vec2(0.0f, 1.0f) },
-		{ glm::vec2(m_size.x / 2.0f, m_size.y / 2.0f), glm::vec2(1.0f, 1.0f) },
-		{ glm::vec2(-m_size.x / 2.0f, -m_size.y / 2.0f), glm::vec2(0.0f, 0.0f) },
-		{ glm::vec2(m_size.x / 2.0f, -m_size.y / 2.0f), glm::vec2(1.0f, 0.0f) }
+		{ glm::vec2(-m_size.x / 2.0f, -m_size.y / 2.0f), glm::vec2(0.0f, 0.0f) }, // Bottom-left corner
+		{ glm::vec2(m_size.x / 2.0f, -m_size.y / 2.0f), glm::vec2(1.0f, 0.0f) },  // Bottom-right corner
+		{ glm::vec2(-m_size.x / 2.0f, m_size.y / 2.0f), glm::vec2(0.0f, 1.0f) },  // Top-left corner
+		{ glm::vec2(m_size.x / 2.0f, m_size.y / 2.0f), glm::vec2(1.0f, 1.0f) }    // Top-right corner
 	};
 
 	for (const auto& vertex : vertices) {
@@ -30,29 +31,14 @@ SpriteEntity::SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Tex
 	}
 }
 
-void SpriteEntity::RotateBy(float radians)
-{
-	for (auto& vertex : m_vertexVec) {
-		float x = vertex.position.x;
-		vertex.position.x = x * cos(radians) - vertex.position.y * sin(radians);
-		vertex.position.y = x * sin(radians) + vertex.position.y * cos(radians);
-	}
-
-	m_rotation += radians;
-}
-
 void SpriteEntity::SetRotation(float radians)
 {
-	float diff = radians - m_rotation;
-
-	for (auto& vertex : m_vertexVec)
-	{
-		float x = vertex.position.x;
-		vertex.position.x = x * cos(diff) - vertex.position.y * sin(diff);
-		vertex.position.y = x * sin(diff) + vertex.position.y * cos(diff);
-	}
-
 	m_rotation = radians;
+}
+
+void SpriteEntity::SetFlipPolicy(FlipPolicy flipPolicy)
+{
+	m_flipPolicy = flipPolicy;
 }
 
 void SpriteEntity::Render()
@@ -61,7 +47,9 @@ void SpriteEntity::Render()
 		&m_vertexVec,
 		&m_indexVec,
 		&m_position,
-		m_texture
+		m_texture,
+		m_rotation,
+		m_flipPolicy
 	);
 
 	m_renderer->AddRenderObject(renderObject);

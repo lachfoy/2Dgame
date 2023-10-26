@@ -8,8 +8,8 @@
 #include <vector>
 
 #include "Vertex.h"
+#include "Renderer.h"
 
-class Renderer;
 class DebugRenderer;
 class Texture;
 
@@ -19,16 +19,18 @@ typedef std::vector<unsigned int> tIndexVec;
 class SpriteEntity : public Entity
 {
 public:
+	SpriteEntity() = default;
 	SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, glm::vec2 size);
 	~SpriteEntity() {}
 
 	glm::vec2 GetSize() const { return m_size; }
 	glm::vec2 GetExtents() const { return m_size * 0.5f; }
 
-	void RotateBy(float radians);
 	void SetRotation(float radians); // sets the rotation
 
-	void Render();
+	void SetFlipPolicy(FlipPolicy flipPolicy); // I don't like this lol
+
+	virtual void Render();
 	void RenderDebugQuad();
 	
 protected:
@@ -39,7 +41,8 @@ protected:
 	Texture* m_texture;
 	glm::vec2 m_size;
 
-	float m_rotation = 1.5708f;
+	float m_rotation = 0.0f;
+	FlipPolicy m_flipPolicy = FlipPolicy::DoNotFlip;
 
 };
 
