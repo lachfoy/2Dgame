@@ -1,22 +1,20 @@
 #include "SpriteEntity.h"
 
-#include "Renderer.h"
 #include "DebugRenderer.h"
 #include "Texture.h"
 
-SpriteEntity::SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture)
-	: m_renderer(renderer), m_debugRenderer(debugRenderer), m_texture(texture)
-{
-	m_size.x = m_texture->GetWidth();
-	m_size.y = m_texture->GetHeight();
+#include <glm/gtc/matrix_transform.hpp>
 
+SpriteEntity::SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, glm::vec2 size)
+	: m_renderer(renderer), m_debugRenderer(debugRenderer), m_texture(texture), m_size(size)
+{
 	// Create the mesh data
 	// This should be handled by a different class though
 	Vertex vertices[] = {
-		{ glm::vec2(-m_size.x / 2.0f, m_size.y / 2.0f), glm::vec2(0.0f, 1.0f) },
-		{ glm::vec2(m_size.x / 2.0f, m_size.y / 2.0f), glm::vec2(1.0f, 1.0f) },
-		{ glm::vec2(-m_size.x / 2.0f, -m_size.y / 2.0f), glm::vec2(0.0f, 0.0f) },
-		{ glm::vec2(m_size.x / 2.0f, -m_size.y / 2.0f), glm::vec2(1.0f, 0.0f) }
+		{ glm::vec2(-m_size.x / 2.0f, -m_size.y / 2.0f), glm::vec2(0.0f, 0.0f) }, // Bottom-left corner
+		{ glm::vec2(m_size.x / 2.0f, -m_size.y / 2.0f), glm::vec2(1.0f, 0.0f) },  // Bottom-right corner
+		{ glm::vec2(-m_size.x / 2.0f, m_size.y / 2.0f), glm::vec2(0.0f, 1.0f) },  // Top-left corner
+		{ glm::vec2(m_size.x / 2.0f, m_size.y / 2.0f), glm::vec2(1.0f, 1.0f) }    // Top-right corner
 	};
 
 	for (const auto& vertex : vertices) {
@@ -33,13 +31,25 @@ SpriteEntity::SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Tex
 	}
 }
 
+void SpriteEntity::SetRotation(float radians)
+{
+	m_rotation = radians;
+}
+
+void SpriteEntity::SetFlipPolicy(FlipPolicy flipPolicy)
+{
+	m_flipPolicy = flipPolicy;
+}
+
 void SpriteEntity::Render()
 {
 	RenderObject renderObject = RenderObject(
 		&m_vertexVec,
 		&m_indexVec,
 		&m_position,
-		m_texture
+		m_texture,
+		m_rotation,
+		m_flipPolicy
 	);
 
 	m_renderer->AddRenderObject(renderObject);

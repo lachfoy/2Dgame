@@ -13,22 +13,35 @@ class SpriteEntity;
 typedef std::vector<Vertex> tVertexVec;
 typedef std::vector<unsigned int> tIndexVec;
 
+enum class FlipPolicy
+{
+	DoNotFlip,
+	FlipX
+};
+
 class RenderObject
 {
 public:
-	RenderObject(tVertexVec* vertexVec, tIndexVec* indexVec, glm::vec2* position, Texture* texture)
-		: m_vertexVec(vertexVec), m_indexVec(indexVec), m_position(position), m_texture(texture) {}
+	//RenderObject(tVertexVec* vertexVec, tIndexVec* indexVec, glm::vec2* position, Texture* texture)
+	//	: m_vertexVec(vertexVec), m_indexVec(indexVec), m_position(position), m_texture(texture) {}
+
+	RenderObject(tVertexVec* vertexVec, tIndexVec* indexVec, glm::vec2* position, Texture* texture, float rotation = 0.0f, FlipPolicy flipPolicy = FlipPolicy::DoNotFlip)
+		: m_vertexVec(vertexVec), m_indexVec(indexVec), m_position(position), m_texture(texture), m_rotation(rotation), m_flipPolicy(flipPolicy) {}
 
 	tVertexVec* GetVertexVec() const { return m_vertexVec; }
 	tIndexVec* GetIndexVec() const { return m_indexVec; }
 	Texture* GetTexture() const { return m_texture; }
 	glm::vec2* GetPosition() const { return m_position; }
+	float GetRotation() const { return m_rotation; }
+	FlipPolicy GetFlipPolicy() const { return m_flipPolicy; }
 
 private:
 	tVertexVec* m_vertexVec;
 	tIndexVec* m_indexVec;
 	Texture* m_texture;
 	glm::vec2* m_position;
+	float m_rotation;
+	FlipPolicy m_flipPolicy;
 
 };
 

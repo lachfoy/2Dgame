@@ -59,12 +59,6 @@ private:
 	tMetalVec m_metal;
 	Turret* m_turret; // just one for now
 
-	Texture* m_playerTexture;
-	Texture* m_enemyTexture;
-	Texture* m_turretTexture;
-	
-	Texture* m_tileMapTexture;
-
 	TileMap* m_tileMap;
 
 	Panel* m_rootPanel;

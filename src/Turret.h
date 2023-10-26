@@ -8,8 +8,6 @@
 #include <vector>
 #include "Enemy.h"
 
-class Input;
-
 class Turret : public SpriteEntity
 {
 public:

@@ -4,7 +4,7 @@
 #include "DebugRenderer.h"
 
 Turret::Turret(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, std::vector<std::unique_ptr<Enemy>>* enemies)
-	: SpriteEntity(renderer, debugRenderer, texture), m_enemies(enemies)
+	: SpriteEntity(renderer, debugRenderer, texture, glm::vec2(16, 16)), m_enemies(enemies)
 {
 }
 
@@ -14,6 +14,10 @@ void Turret::Think()
 	{
 		int i = rand() % m_enemies->size();
 		std::unique_ptr<Enemy>& enemy = m_enemies->at(i);
+
+		glm::vec2 directionToEnemy = glm::normalize(enemy->GetPosition() - m_position);
+		float angleToEnemy = atan2(directionToEnemy.y, directionToEnemy.x);
+		SetRotation(angleToEnemy);
 
 		m_debugRenderer->AddLine(m_position, enemy->GetPosition(), glm::vec3(0.0f, 1.0f, 0.0f), 0.5f);
 		enemy->Damage(rand() % 5);

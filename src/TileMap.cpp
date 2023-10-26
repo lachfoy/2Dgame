@@ -87,7 +87,8 @@ void TileMap::Render()
 		&m_vertexVec,
 		&m_indexVec,
 		nullptr,
-		m_texture
+		m_texture,
+		0.0f
 	);
 
 	m_renderer->AddRenderObject(renderObject);

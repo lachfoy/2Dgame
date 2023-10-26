@@ -3,10 +3,13 @@
 #include "Input.h"
 #include "Renderer.h"
 #include "DebugRenderer.h"
+#include "TextureManager.h"
 
-Player::Player(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture)
-	: SpriteEntity(renderer, debugRenderer, texture)
+Player::Player(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager)
+	: SpriteEntity(renderer, debugRenderer, nullptr, glm::vec2(16, 16)), m_textureManager(textureManager)
 {
+	m_texture = m_textureManager->GetTexture("guy");
+	m_shotgun = SpriteEntity(renderer, debugRenderer, m_textureManager->GetTexture("shotgun"), glm::vec2(16, 8));
 }
 
 void Player::HandleInput(Input* input)
@@ -23,6 +26,8 @@ void Player::HandleInput(Input* input)
 	if (input->IsKeyHeld(SDL_SCANCODE_D) || input->IsKeyHeld(SDL_SCANCODE_RIGHT)) {
 		m_moveDir.x = 1.0f;
 	}
+
+	m_aimTarget = input->GetMouseAbsPos() / 2.0f;
 }
 
 void Player::Update(float dt)
@@ -42,10 +47,27 @@ void Player::Update(float dt)
 		m_moveDir = glm::normalize(m_moveDir);
 	}
 
+	// Rotate the shotgun towards the mouse
+	glm::vec2 aimDirection = glm::normalize(m_aimTarget - m_position);
+	float aimAngle = atan2(aimDirection.y, aimDirection.x);
+	m_shotgun.SetRotation(aimAngle);
+
+	// Apply movement
 	m_velocity += m_acceleration * m_moveDir * dt;
 	m_velocity -= m_velocity * kFrictionCoef;
 
 	m_position += m_velocity * dt;
+	m_shotgun.SetPosition(m_position);
+
+	// Flip the shotgun sprite if necessary
+	if (m_position.x > m_aimTarget.x)
+	{
+		m_shotgun.SetFlipPolicy(FlipPolicy::FlipX);
+	}
+	else
+	{
+		m_shotgun.SetFlipPolicy(FlipPolicy::DoNotFlip);
+	}
 
 	m_moveDir = glm::vec2(0.0f, 0.0f);
 }
@@ -68,3 +90,10 @@ void Player::Damage(int amount)
 		}
 	}
 }
+
+void Player::Render()
+{
+	SpriteEntity::Render();
+	m_shotgun.Render();
+}
+
