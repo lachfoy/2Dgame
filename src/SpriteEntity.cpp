@@ -29,6 +29,9 @@ SpriteEntity::SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Tex
 	for (const auto& index : indices) {
 		m_indexVec.push_back(index);
 	}
+
+	// Set the radius acording to the largest dimension of size
+	m_radius = m_size.x >= m_size.y ? m_size.x * 0.5f : m_size.y * 0.5f;
 }
 
 void SpriteEntity::SetRotation(float radians)

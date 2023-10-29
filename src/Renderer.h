@@ -51,6 +51,12 @@ public:
 	bool operator()(const RenderObject& obj1, const RenderObject& obj2) const
 	{
 		return obj1.GetTexture() < obj2.GetTexture();
+		//if (obj1.GetPosition() && obj2.GetPosition())
+		//{
+		//	return obj1.GetPosition()->y < obj2.GetPosition()->y;
+		//}
+
+		//return false;
 	}
 };
 

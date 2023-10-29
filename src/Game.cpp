@@ -202,7 +202,7 @@ void Game::Create()
 	m_textureManager->LoadTexture("guy");
 	m_textureManager->LoadTexture("diamond");
 	m_textureManager->LoadTexture("turret3");
-	m_textureManager->LoadTexture("droid");
+	m_textureManager->LoadTexture("droid4");
 	m_textureManager->LoadTexture("tile");
 	m_textureManager->LoadTexture("shotgun");
 
@@ -210,9 +210,9 @@ void Game::Create()
 
 	m_player->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 100; i++)
 	{
-		Enemy* enemy = new Enemy(m_renderer, m_debugRenderer, m_textureManager->GetTexture("droid"), m_player, m_textureManager);
+		Enemy* enemy = new Enemy(m_renderer, m_debugRenderer, m_textureManager->GetTexture("droid4"), m_player, m_textureManager);
 		enemy->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 		m_enemies.push_back(std::unique_ptr<Enemy>(enemy));
 	}
@@ -279,17 +279,14 @@ void Game::Update(float dt)
 	m_player->Update(dt);
 	m_turret->Update(dt);
 
-	for (const auto& enemy : m_enemies)
-	{
-		enemy->Update(dt);
-	}
+
 
 
 	for (const auto& metal : m_metal)
 	{
 		metal->Update(dt);
 
-		if (Collision(*m_player, *metal))
+		if (SpriteEntity::Collision(*m_player, *metal))
 		{
 			metal->Remove();
 			m_player->IncMetalCount();
@@ -300,7 +297,19 @@ void Game::Update(float dt)
 
 	for (const auto& enemy : m_enemies)
 	{
-		if (Collision(*m_player, *enemy))
+		enemy->Update(dt);
+
+		// Do collisions
+		for (const auto& enemyB : m_enemies)
+		{
+			if (enemy == enemyB) break;
+			SpriteEntity::ResolveCollision(*enemy, *enemyB);
+		}
+
+		//SpriteEntity::ResolveCollision(*enemy, *m_player);
+		//SpriteEntity::ResolveCollision(*enemy, *m_turret);
+
+		if (SpriteEntity::Collision(*m_player, *enemy))
 		{
 			if (m_player->CanTakeDamage())
 			{
