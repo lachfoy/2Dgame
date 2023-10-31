@@ -11,7 +11,7 @@
 class Projectile : public SpriteEntity
 {
 public:
-	Projectile(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture);
+	Projectile(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, glm::vec2 direction);
 	~Projectile() {}
 
 	void Update(float dt);
@@ -19,6 +19,6 @@ public:
 private:
 	
 	glm::vec2 m_moveDir{0.0f};
-	float m_moveSpeed = 20.0f;
+	float m_moveSpeed = 400.0f;
 
 };

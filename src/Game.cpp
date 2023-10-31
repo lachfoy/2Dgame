@@ -300,10 +300,10 @@ void Game::Update(float dt)
 		enemy->Update(dt);
 
 		// Do collisions
-		for (const auto& enemyB : m_enemies)
+		for (const auto& other : m_enemies)
 		{
-			if (enemy == enemyB) break;
-			SpriteEntity::ResolveCollision(*enemy, *enemyB);
+			if (enemy == other) break;
+			SpriteEntity::ResolveCollision(*enemy, *other);
 		}
 
 		//SpriteEntity::ResolveCollision(*enemy, *m_player);
@@ -315,6 +315,19 @@ void Game::Update(float dt)
 			{
 				m_player->Damage(enemy->GetDamage());
 				//std::cout << "Collided\n";
+			}
+		}
+	}
+
+	for (const auto& projectile : m_projectiles)
+	{
+		projectile->Update(dt);
+
+		for (const auto& enemy : m_enemies)
+		{
+			if (SpriteEntity::Collision(*projectile, *enemy))
+			{
+				enemy->Damage(1);
 			}
 		}
 	}

@@ -3,8 +3,8 @@
 #include "Renderer.h"
 #include "DebugRenderer.h"
 
-Projectile::Projectile(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture)
-	: SpriteEntity(renderer, debugRenderer, texture, glm::vec2(16, 16))
+Projectile::Projectile(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, glm::vec2 direction)
+	: SpriteEntity(renderer, debugRenderer, texture, glm::vec2(4, 4)), m_moveDir(direction)
 {
 }
 
