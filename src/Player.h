@@ -5,13 +5,15 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
+#include "Projectile.h"
+
 class Input;
 class TextureManager;
 
 class Player : public SpriteEntity
 {
 public:
-	Player(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager);
+	Player(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager, std::vector<std::unique_ptr<Projectile>>* projectiles);
 	~Player() {}
 
 	void HandleInput(Input* input);
@@ -44,5 +46,7 @@ private:
 	bool m_immune = false;
 
 	glm::vec2 m_aimTarget;
+
+	std::vector<std::unique_ptr<Projectile>>* m_projectiles;
 
 };

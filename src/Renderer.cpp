@@ -8,7 +8,6 @@
 #include <algorithm>
 
 static const unsigned int kMaxSprites = 2000;
-static const unsigned int kMaxLines = 100;
 
 void Renderer::Init()
 {

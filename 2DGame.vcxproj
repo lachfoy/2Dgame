@@ -151,6 +151,7 @@
     <ClCompile Include="src\Metal.cpp" />
     <ClCompile Include="src\Panel.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\Projectile.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\SpriteEntity.cpp" />
     <ClCompile Include="src\Texture.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="src\Metal.h" />
     <ClInclude Include="src\Panel.h" />
     <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\Projectile.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\SpriteEntity.h" />
     <ClInclude Include="src\stb_image.h" />

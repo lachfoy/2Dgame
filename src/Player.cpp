@@ -5,8 +5,8 @@
 #include "DebugRenderer.h"
 #include "TextureManager.h"
 
-Player::Player(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager)
-	: SpriteEntity(renderer, debugRenderer, nullptr, glm::vec2(16, 16)), m_textureManager(textureManager)
+Player::Player(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager, std::vector<std::unique_ptr<Projectile>>* projectiles)
+	: SpriteEntity(renderer, debugRenderer, nullptr, glm::vec2(16, 16)), m_textureManager(textureManager), m_projectiles(projectiles)
 {
 	m_texture = m_textureManager->GetTexture("guy");
 	m_shotgun = SpriteEntity(renderer, debugRenderer, m_textureManager->GetTexture("shotgun"), glm::vec2(16, 8));
@@ -28,6 +28,13 @@ void Player::HandleInput(Input* input)
 	}
 
 	m_aimTarget = input->GetMouseAbsPos() / 2.0f;
+
+	if (input->IsMouseButtonDown(SDL_BUTTON_LEFT))
+	{
+		std::unique_ptr<Projectile> m = std::make_unique<Projectile>(m_renderer, m_debugRenderer, m_textureManager->GetTexture("diamond"));
+		m->SetPosition(m_position);
+		m_projectiles->push_back(std::move(m));
+	}
 }
 
 void Player::Update(float dt)

@@ -202,17 +202,17 @@ void Game::Create()
 	m_textureManager->LoadTexture("guy");
 	m_textureManager->LoadTexture("diamond");
 	m_textureManager->LoadTexture("turret3");
-	m_textureManager->LoadTexture("droid4");
+	m_textureManager->LoadTexture("droid");
 	m_textureManager->LoadTexture("tile");
 	m_textureManager->LoadTexture("shotgun");
 
-	m_player = new Player(m_renderer, m_debugRenderer, m_textureManager);
+	m_player = new Player(m_renderer, m_debugRenderer, m_textureManager, &m_projectiles);
 
 	m_player->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 
 	for (int i = 0; i < 100; i++)
 	{
-		Enemy* enemy = new Enemy(m_renderer, m_debugRenderer, m_textureManager->GetTexture("droid4"), m_player, m_textureManager);
+		Enemy* enemy = new Enemy(m_renderer, m_debugRenderer, m_textureManager->GetTexture("droid"), m_player, m_textureManager);
 		enemy->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
 		m_enemies.push_back(std::unique_ptr<Enemy>(enemy));
 	}
@@ -336,6 +336,12 @@ void Game::Update(float dt)
 			return metal->GetRemove();
 		}),
 		m_metal.end());
+
+	m_projectiles.erase(std::remove_if(m_projectiles.begin(), m_projectiles.end(),
+		[&](const std::unique_ptr<Projectile>& projectile) {
+			return projectile->GetRemove();
+		}),
+		m_projectiles.end());
 }
 
 void Game::Render()
@@ -355,6 +361,11 @@ void Game::Render()
 	m_player->Render();
 
 	m_turret->Render();
+
+	for (const auto& projectile : m_projectiles)
+	{
+		projectile->Render();
+	}
 
 	//RenderChildren(m_rootPanel);
 }
