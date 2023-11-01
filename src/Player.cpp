@@ -32,7 +32,7 @@ void Player::HandleInput(Input* input)
 	if (input->IsMouseButtonDown(SDL_BUTTON_LEFT))
 	{
 		glm::vec2 aimDirection = glm::normalize(m_aimTarget - m_position);
-		std::unique_ptr<Projectile> m = std::make_unique<Projectile>(m_renderer, m_debugRenderer, m_textureManager->GetTexture("diamond"), aimDirection);
+		std::unique_ptr<Projectile> m = std::make_unique<Projectile>(m_renderer, m_debugRenderer, m_textureManager->GetTexture("bullet"), aimDirection);
 		m->SetPosition(m_position);
 		m_projectiles->push_back(std::move(m));
 	}

@@ -21,4 +21,6 @@ private:
 	glm::vec2 m_moveDir{0.0f};
 	float m_moveSpeed = 400.0f;
 
+	float m_lifeTime = 1.0f;
+
 };
