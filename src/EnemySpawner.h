@@ -20,13 +20,17 @@ public:
 
 	void Update(float dt, Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, Player* player, TextureManager* textureManager);
 
-	void SpawnWave(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, Player* player, TextureManager* textureManager);
+	void SpawnEnemyGroup(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, Player* player, TextureManager* textureManager);
 
 private:
 	float m_spawnTimer = 0.0f;
-	float m_spawnInterval = 0.5f; // make this more smart later on. Follow a defined curve.
+	float m_spawnInterval = 2.0f; // make this more smart later on. Follow a defined curve.
 
-	float m_elapsedTime = 0.0f;
+	float m_spawnRadius = 200.0f;
+
+	//float m_elapsedTime = 0.0f;
+
+	int m_enemiesPerGroup = 5;
 
 	Player* m_player;
 

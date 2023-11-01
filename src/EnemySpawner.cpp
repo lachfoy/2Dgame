@@ -1,7 +1,8 @@
 #include "EnemySpawner.h"
 
 #include "Player.h"
-#include "SDL_stdinc.h"
+
+#define M_PI 3.14159265358979323846
 
 EnemySpawner::EnemySpawner(std::vector<std::unique_ptr<Enemy>>* enemies, DebugRenderer* debugRenderer, Player* player)
 	: m_enemies(enemies), m_debugRenderer(debugRenderer), m_player(player)
@@ -10,33 +11,24 @@ EnemySpawner::EnemySpawner(std::vector<std::unique_ptr<Enemy>>* enemies, DebugRe
 
 void EnemySpawner::Update(float dt, Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, Player* player, TextureManager* textureManager)
 {
-	m_elapsedTime += dt;
-
+	//m_elapsedTime += dt;
 	m_spawnTimer += dt;
+
 	if (m_spawnTimer >= m_spawnInterval)
 	{
-
-		SpawnWave(renderer, debugRenderer, texture, player, textureManager);
-
+		SpawnEnemyGroup(renderer, debugRenderer, texture, player, textureManager);
 		m_spawnTimer = 0.0f; // Reset
 	}
 }
 
-void EnemySpawner::SpawnWave(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, Player* player, TextureManager* textureManager)
+void EnemySpawner::SpawnEnemyGroup(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, Player* player, TextureManager* textureManager)
 {
-	glm::vec2 pos = m_player->GetPosition();
+	glm::vec2 playerPos = m_player->GetPosition();
 
-	const float radius = 50.0f;
-	const int enemiesToSpawn = 10;
-
-	for (int i = 0; i < enemiesToSpawn; i++)
+	for (int i = 0; i < m_enemiesPerGroup; i++)
 	{
 		float randomAngle = static_cast<float>(rand()) / RAND_MAX * 2.0f * M_PI;
-
-		float x = std::cos(randomAngle);
-		float y = std::sin(randomAngle);
-
-		glm::vec2 spawnPos = pos + glm::vec2(x, y)* radius;
+		glm::vec2 spawnPos = playerPos + glm::vec2(std::cos(randomAngle), std::sin(randomAngle)) * m_spawnRadius;
 
 		m_enemies->push_back(std::make_unique<Enemy>(renderer, debugRenderer, spawnPos, texture, player, textureManager));
 	}
