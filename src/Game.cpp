@@ -5,7 +5,6 @@
 #include "Input.h"
 #include <iostream>
 #include "Player.h"
-#include "Turret.h"
 #include "Texture.h"
 #include "TileMap.h"
 #include "Panel.h"
@@ -218,7 +217,9 @@ void Game::Create()
 
 	m_enemySpawner = new EnemySpawner(&m_enemies, m_debugRenderer, m_player);
 
-	m_turret = new Turret(m_renderer, m_debugRenderer, glm::vec2(200, 150), m_textureManager->GetTexture("turret3"), &m_enemies);
+	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, glm::vec2(200, 150), m_textureManager->GetTexture("turret3"), &m_enemies));
+	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, glm::vec2(230, 120), m_textureManager->GetTexture("turret3"), &m_enemies));
+	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, glm::vec2(170, 150), m_textureManager->GetTexture("turret3"), &m_enemies));
 
 	m_tileMap = new TileMap(m_renderer, m_textureManager->GetTexture("tile"));
 	m_tileMap->CreateDebugMap();
@@ -277,7 +278,11 @@ void Game::HandleInput()
 void Game::Update(float dt)
 {
 	m_player->Update(dt);
-	m_turret->Update(dt);
+
+	for (const auto& turret : m_turrets)
+	{
+		turret->Update(dt);
+	}
 
 	m_enemySpawner->Update(dt, m_renderer, m_debugRenderer, m_textureManager->GetTexture("droid"), m_player, m_textureManager);
 
@@ -374,6 +379,11 @@ void Game::Render()
 		metal->Render();
 	}
 
+	for (const auto& turret : m_turrets)
+	{
+		turret->Render();
+	}
+
 	for (const auto& enemy : m_enemies)
 	{
 		enemy->Render();
@@ -381,7 +391,6 @@ void Game::Render()
 
 	m_player->Render();
 
-	m_turret->Render();
 
 	for (const auto& projectile : m_projectiles)
 	{
@@ -401,9 +410,6 @@ void Game::Destroy()
 
 	delete m_player;
 	m_player = nullptr;
-
-	delete m_turret;
-	m_turret = nullptr;
 
 	delete m_rootPanel;
 	delete m_testPanel;

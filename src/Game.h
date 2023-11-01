@@ -9,6 +9,7 @@
 #include "Enemy.h"
 #include "Metal.h"
 #include "Projectile.h"
+#include "Turret.h"
 
 class Renderer;
 class DebugRenderer;
@@ -26,6 +27,7 @@ class GuiRenderer;
 typedef std::vector<std::unique_ptr<Enemy>> tEnemiesVec;
 typedef std::vector<std::unique_ptr<Metal>> tMetalVec;
 typedef std::vector<std::unique_ptr<Projectile>> tProjectilesVec;
+typedef std::vector<std::unique_ptr<Turret>> tTurretVec;
 
 class Game
 {
@@ -60,7 +62,7 @@ private:
 	Player* m_player;
 	tEnemiesVec m_enemies;
 	tMetalVec m_metal;
-	Turret* m_turret; // just one for now
+	tTurretVec m_turrets;
 	tProjectilesVec m_projectiles;
 
 	EnemySpawner* m_enemySpawner;
