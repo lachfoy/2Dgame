@@ -12,15 +12,31 @@ void Turret::Think()
 {
 	if (!m_enemies->empty())
 	{
-		int i = rand() % m_enemies->size();
-		std::unique_ptr<Enemy>& enemy = m_enemies->at(i);
+		std::vector<Enemy> enemiesInRange;
 
-		glm::vec2 directionToEnemy = glm::normalize(enemy->GetPosition() - m_position);
-		float angleToEnemy = atan2(directionToEnemy.y, directionToEnemy.x);
-		SetRotation(angleToEnemy);
+		for (int i = 0; i < m_enemies->size(); i++)
+		{
+			std::unique_ptr<Enemy>& enemy = m_enemies->at(i);
 
-		m_debugRenderer->AddLine(m_position, enemy->GetPosition(), glm::vec3(0.0f, 1.0f, 0.0f), 0.5f);
-		enemy->Damage(rand() % 5);
+			float dist = glm::length(enemy->GetPosition() - m_position);
+			if (dist < m_detectRadius)
+			{
+				enemiesInRange.push_back(*enemy); // Copy the enemy 
+			}
+		}
+
+		if (!enemiesInRange.empty())
+		{
+			int i = rand() % enemiesInRange.size();
+			Enemy& enemy = enemiesInRange.at(i);
+
+			glm::vec2 directionToEnemy = glm::normalize(enemy.GetPosition() - m_position);
+			float angleToEnemy = atan2(directionToEnemy.y, directionToEnemy.x);
+			SetRotation(angleToEnemy);
+
+			m_debugRenderer->AddLine(m_position, enemy.GetPosition(), glm::vec3(0.0f, 1.0f, 0.0f), 0.5f);
+			enemy.Damage(rand() % 5);
+		}
 	}
 }
 
