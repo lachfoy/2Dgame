@@ -15,7 +15,7 @@ class TextureManager;
 class Enemy : public SpriteEntity
 {
 public:
-	Enemy(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, Player* player, TextureManager* textureManager);
+	Enemy(Renderer* renderer, DebugRenderer* debugRenderer, glm::vec2 position, Texture* texture, Player* player, TextureManager* textureManager);
 	~Enemy() {}
 
 	void Damage(int amount);

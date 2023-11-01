@@ -207,19 +207,15 @@ void Game::Create()
 	m_textureManager->LoadTexture("shotgun");
 	m_textureManager->LoadTexture("bullet");
 
-	m_player = new Player(m_renderer, m_debugRenderer, m_textureManager, &m_projectiles);
-
-	m_player->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
+	m_player = new Player(m_renderer, m_debugRenderer, glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight), m_textureManager, &m_projectiles);
 
 	for (int i = 0; i < 10; i++)
 	{
-		Enemy* enemy = new Enemy(m_renderer, m_debugRenderer, m_textureManager->GetTexture("droid"), m_player, m_textureManager);
-		enemy->SetPosition(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight));
+		Enemy* enemy = new Enemy(m_renderer, m_debugRenderer, glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight), m_textureManager->GetTexture("droid"), m_player, m_textureManager);
 		m_enemies.push_back(std::unique_ptr<Enemy>(enemy));
 	}
 
-	m_turret = new Turret(m_renderer, m_debugRenderer, m_textureManager->GetTexture("turret3"), &m_enemies);
-	m_turret->SetPosition(glm::vec2(200, 150));
+	m_turret = new Turret(m_renderer, m_debugRenderer, glm::vec2(200, 150), m_textureManager->GetTexture("turret3"), &m_enemies);
 
 	m_tileMap = new TileMap(m_renderer, m_textureManager->GetTexture("tile"));
 	m_tileMap->CreateDebugMap();

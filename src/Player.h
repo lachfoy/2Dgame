@@ -13,7 +13,7 @@ class TextureManager;
 class Player : public SpriteEntity
 {
 public:
-	Player(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager, std::vector<std::unique_ptr<Projectile>>* projectiles);
+	Player(Renderer* renderer, DebugRenderer* debugRenderer, glm::vec2 position, TextureManager* textureManager, std::vector<std::unique_ptr<Projectile>>* projectiles);
 	~Player() {}
 
 	void HandleInput(Input* input);

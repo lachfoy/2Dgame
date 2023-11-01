@@ -3,8 +3,8 @@
 #include "Renderer.h"
 #include "DebugRenderer.h"
 
-Turret::Turret(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, std::vector<std::unique_ptr<Enemy>>* enemies)
-	: SpriteEntity(renderer, debugRenderer, texture, glm::vec2(16, 16)), m_enemies(enemies)
+Turret::Turret(Renderer* renderer, DebugRenderer* debugRenderer, glm::vec2 position, Texture* texture, std::vector<std::unique_ptr<Enemy>>* enemies)
+	: SpriteEntity(renderer, debugRenderer, texture, position, glm::vec2(16, 16)), m_enemies(enemies)
 {
 }
 

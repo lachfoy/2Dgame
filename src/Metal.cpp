@@ -4,8 +4,8 @@
 #include "DebugRenderer.h"
 #include "Player.h"
 
-Metal::Metal(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, Player* player)
-	: SpriteEntity(renderer, debugRenderer, texture, glm::vec2(8, 8)), m_player(player)
+Metal::Metal(Renderer* renderer, DebugRenderer* debugRenderer, glm::vec2 position, Texture* texture, Player* player)
+	: SpriteEntity(renderer, debugRenderer, texture, position, glm::vec2(8, 8)), m_player(player)
 {
 }
 

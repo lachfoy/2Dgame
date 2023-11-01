@@ -20,7 +20,7 @@ class SpriteEntity : public Entity
 {
 public:
 	SpriteEntity() = default;
-	SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, glm::vec2 size);
+	SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, glm::vec2 position, glm::vec2 size);
 	~SpriteEntity() {}
 
 	glm::vec2 GetSize() const { return m_size; }

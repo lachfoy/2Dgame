@@ -5,9 +5,11 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-SpriteEntity::SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, glm::vec2 size)
+SpriteEntity::SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, glm::vec2 position, glm::vec2 size)
 	: m_renderer(renderer), m_debugRenderer(debugRenderer), m_texture(texture), m_size(size)
 {
+	m_position = position;
+
 	// Create the mesh data
 	// This should be handled by a different class though
 	Vertex vertices[] = {

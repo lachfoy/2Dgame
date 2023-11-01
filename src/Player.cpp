@@ -5,11 +5,11 @@
 #include "DebugRenderer.h"
 #include "TextureManager.h"
 
-Player::Player(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager, std::vector<std::unique_ptr<Projectile>>* projectiles)
-	: SpriteEntity(renderer, debugRenderer, nullptr, glm::vec2(16, 16)), m_textureManager(textureManager), m_projectiles(projectiles)
+Player::Player(Renderer* renderer, DebugRenderer* debugRenderer, glm::vec2 position, TextureManager* textureManager, std::vector<std::unique_ptr<Projectile>>* projectiles)
+	: SpriteEntity(renderer, debugRenderer, nullptr, position, glm::vec2(16, 16)), m_textureManager(textureManager), m_projectiles(projectiles)
 {
 	m_texture = m_textureManager->GetTexture("guy");
-	m_shotgun = SpriteEntity(renderer, debugRenderer, m_textureManager->GetTexture("shotgun"), glm::vec2(16, 8));
+	m_shotgun = SpriteEntity(renderer, debugRenderer, m_textureManager->GetTexture("shotgun"), m_position, glm::vec2(16, 8));
 }
 
 void Player::HandleInput(Input* input)
@@ -32,9 +32,7 @@ void Player::HandleInput(Input* input)
 	if (input->IsMouseButtonDown(SDL_BUTTON_LEFT))
 	{
 		glm::vec2 aimDirection = glm::normalize(m_aimTarget - m_position);
-		std::unique_ptr<Projectile> m = std::make_unique<Projectile>(m_renderer, m_debugRenderer, m_textureManager->GetTexture("bullet"), aimDirection);
-		m->SetPosition(m_position);
-		m_projectiles->push_back(std::move(m));
+		m_projectiles->push_back(std::make_unique<Projectile>(m_renderer, m_debugRenderer, m_position, m_textureManager->GetTexture("bullet"), aimDirection));
 	}
 }
 

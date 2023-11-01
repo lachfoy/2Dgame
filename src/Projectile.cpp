@@ -3,8 +3,8 @@
 #include "Renderer.h"
 #include "DebugRenderer.h"
 
-Projectile::Projectile(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, glm::vec2 direction)
-	: SpriteEntity(renderer, debugRenderer, texture, glm::vec2(4, 4)), m_moveDir(direction)
+Projectile::Projectile(Renderer* renderer, DebugRenderer* debugRenderer, glm::vec2 position, Texture* texture, glm::vec2 direction)
+	: SpriteEntity(renderer, debugRenderer, texture, position, glm::vec2(4, 4)), m_moveDir(direction)
 {
 	m_rotation = atan2(m_moveDir.y, m_moveDir.x);
 }

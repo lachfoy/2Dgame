@@ -6,8 +6,8 @@
 #include "Player.h"
 #include "TextureManager.h"
 
-Enemy::Enemy(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, Player* player, TextureManager* textureManager)
-	: SpriteEntity(renderer, debugRenderer, texture, glm::vec2(16, 16)), m_player(player), m_textureManager(textureManager)
+Enemy::Enemy(Renderer* renderer, DebugRenderer* debugRenderer, glm::vec2 position, Texture* texture, Player* player, TextureManager* textureManager)
+	: SpriteEntity(renderer, debugRenderer, texture, position, glm::vec2(16, 16)), m_player(player), m_textureManager(textureManager)
 {
 }
 
@@ -51,7 +51,5 @@ void Enemy::Update(float dt)
 
 void Enemy::OnRemove(std::vector<std::unique_ptr<Metal>>& metal)
 {
-	std::unique_ptr<Metal> m = std::make_unique<Metal>(m_renderer, m_debugRenderer, m_textureManager->GetTexture("diamond"), m_player);
-	m->SetPosition(m_position);
-	metal.push_back(std::move(m));
+	metal.push_back(std::make_unique<Metal>(m_renderer, m_debugRenderer, m_position, m_textureManager->GetTexture("diamond"), m_player));
 }
