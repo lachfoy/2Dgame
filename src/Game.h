@@ -17,6 +17,7 @@ class Player;
 class Turret;
 class TileMap;
 class TextureManager;
+class EnemySpawner;
 
 class Panel;
 class Button;
@@ -61,6 +62,8 @@ private:
 	tMetalVec m_metal;
 	Turret* m_turret; // just one for now
 	tProjectilesVec m_projectiles;
+
+	EnemySpawner* m_enemySpawner;
 
 	TileMap* m_tileMap;
 

@@ -12,6 +12,7 @@
 #include "Button.h"
 #include "GuiRenderer.h"
 #include "TextureManager.h"
+#include "EnemySpawner.h"
 
 void RenderChildren(Panel* panel)
 {
@@ -215,6 +216,8 @@ void Game::Create()
 		m_enemies.push_back(std::unique_ptr<Enemy>(enemy));
 	}
 
+	m_enemySpawner = new EnemySpawner(&m_enemies, m_debugRenderer, m_player);
+
 	m_turret = new Turret(m_renderer, m_debugRenderer, glm::vec2(200, 150), m_textureManager->GetTexture("turret3"), &m_enemies);
 
 	m_tileMap = new TileMap(m_renderer, m_textureManager->GetTexture("tile"));
@@ -275,6 +278,8 @@ void Game::Update(float dt)
 {
 	m_player->Update(dt);
 	m_turret->Update(dt);
+
+	m_enemySpawner->Update(dt, m_renderer, m_debugRenderer, m_textureManager->GetTexture("droid"), m_player, m_textureManager);
 
 	for (const auto& metal : m_metal)
 	{
@@ -390,6 +395,9 @@ void Game::Destroy()
 {
 	m_tileMap->Destroy();
 	delete m_tileMap;
+
+	delete m_enemySpawner;
+	m_enemySpawner = nullptr;
 
 	delete m_player;
 	m_player = nullptr;
