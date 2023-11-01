@@ -30,6 +30,7 @@ public:
 	void Dispose();
 
 	void AddLine(const glm::vec2& p1, const glm::vec2& p2, const glm::vec3& color, float duration = -1.0f);
+	void AddCircle(const glm::vec2& center, float radius, const glm::vec3& color, float duration = -1.0f);
 	void Update(float dt);
 	void Render();
 

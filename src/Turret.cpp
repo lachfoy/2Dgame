@@ -6,13 +6,14 @@
 Turret::Turret(Renderer* renderer, DebugRenderer* debugRenderer, glm::vec2 position, Texture* texture, std::vector<std::unique_ptr<Enemy>>* enemies)
 	: SpriteEntity(renderer, debugRenderer, texture, position, glm::vec2(16, 16)), m_enemies(enemies)
 {
+	//debugRenderer->AddCircle(position, m_detectRadius, glm::vec3(0.0f, 1.0f, 1.0f)); //whar
 }
 
 void Turret::Think()
 {
 	if (!m_enemies->empty())
 	{
-		std::vector<Enemy> enemiesInRange;
+		std::vector<int> enemiesInRangeIndices;
 
 		for (int i = 0; i < m_enemies->size(); i++)
 		{
@@ -21,21 +22,21 @@ void Turret::Think()
 			float dist = glm::length(enemy->GetPosition() - m_position);
 			if (dist < m_detectRadius)
 			{
-				enemiesInRange.push_back(*enemy); // Copy the enemy 
+				enemiesInRangeIndices.push_back(i); // Copy the enemy 
 			}
 		}
 
-		if (!enemiesInRange.empty())
+		if (!enemiesInRangeIndices.empty())
 		{
-			int i = rand() % enemiesInRange.size();
-			Enemy& enemy = enemiesInRange.at(i);
+			int i = rand() % enemiesInRangeIndices.size();
+			std::unique_ptr<Enemy>& enemy = m_enemies->at(enemiesInRangeIndices.at(i));
 
-			glm::vec2 directionToEnemy = glm::normalize(enemy.GetPosition() - m_position);
+			glm::vec2 directionToEnemy = glm::normalize(enemy->GetPosition() - m_position);
 			float angleToEnemy = atan2(directionToEnemy.y, directionToEnemy.x);
 			SetRotation(angleToEnemy);
 
-			m_debugRenderer->AddLine(m_position, enemy.GetPosition(), glm::vec3(0.0f, 1.0f, 0.0f), 0.5f);
-			enemy.Damage(rand() % 5);
+			m_debugRenderer->AddLine(m_position, enemy->GetPosition(), glm::vec3(0.0f, 1.0f, 0.0f), 0.5f);
+			enemy->Damage(rand() % 5);
 		}
 	}
 }

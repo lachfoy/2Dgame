@@ -220,6 +220,8 @@ void Game::Create()
 	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, glm::vec2(200, 150), m_textureManager->GetTexture("turret3"), &m_enemies));
 	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, glm::vec2(230, 120), m_textureManager->GetTexture("turret3"), &m_enemies));
 	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, glm::vec2(170, 150), m_textureManager->GetTexture("turret3"), &m_enemies));
+	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, glm::vec2(200, 120), m_textureManager->GetTexture("turret3"), &m_enemies));
+	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, glm::vec2(230, 170), m_textureManager->GetTexture("turret3"), &m_enemies));
 
 	m_tileMap = new TileMap(m_renderer, m_textureManager->GetTexture("tile"));
 	m_tileMap->CreateDebugMap();

@@ -7,7 +7,10 @@
 #include <cassert>
 #include <algorithm>
 
-static const unsigned int kMaxLines = 100;
+static const unsigned int kMaxLines = 1000;
+static const unsigned int kCircleSegments = 32;
+
+#define M_PI 3.14159265358979323846 // uh oh getting messy...
 
 void DebugRenderer::Init()
 {
@@ -41,23 +44,49 @@ void DebugRenderer::AddLine(const glm::vec2& p1, const glm::vec2& p2, const glm:
 	m_lines.push_back(line);
 }
 
+void DebugRenderer::AddCircle(const glm::vec2& center, float radius, const glm::vec3& color, float duration)
+{
+	float angleIncrement = 2.0f * M_PI / kCircleSegments;
+
+	for (int i = 0; i < kCircleSegments; i++)
+	{
+		float angle1 = i * angleIncrement;
+		float angle2 = (i + 1) * angleIncrement;
+
+		glm::vec2 p1 = center + glm::vec2(radius * std::cos(angle1), radius * std::sin(angle1));
+		glm::vec2 p2 = center + glm::vec2(radius * std::cos(angle2), radius * std::sin(angle2));
+
+		DebugLine line;
+		line.p1 = p1;
+		line.p2 = p2;
+		line.color = color;
+		line.duration = duration;
+		m_lines.push_back(line);
+	}
+}
+
 void DebugRenderer::Update(float dt)
 {
 	auto it = m_lines.begin();
 	while (it != m_lines.end())
 	{
 		if (it->duration == -1.0f) // skip if the duration is -1
-			continue;
-		
-		it->duration -= dt;
-		if (it->duration <= 0.0f)
-		{
-			it = m_lines.erase(it);
-		}
-		else
 		{
 			++it;
 		}
+		else
+		{
+			it->duration -= dt;
+			if (it->duration <= 0.0f)
+			{
+				it = m_lines.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+		
 	}
 }
 
@@ -77,7 +106,7 @@ void DebugRenderer::Render()
 		glDrawArrays(GL_LINES, i * 2, 2);
 	}
 
-	glDrawArrays(GL_LINES, 0, m_lines.size() * 2);
+	//glDrawArrays(GL_LINES, 0, m_lines.size() * 2);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -173,7 +202,7 @@ void DebugRenderer::CreateRenderData()
 	// VBO
 	glGenBuffers(1, &m_lineVbo);
 	glBindBuffer(GL_ARRAY_BUFFER, m_lineVbo);
-	glBufferData(GL_ARRAY_BUFFER, kMaxLines * 2 * sizeof(glm::vec2), NULL, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, kMaxLines * sizeof(DebugLine), NULL, GL_DYNAMIC_DRAW);
 
 	// Enable the vertex attribute arrays for position and texcoords
 	glEnableVertexAttribArray(0);

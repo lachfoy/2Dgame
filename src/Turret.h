@@ -23,6 +23,6 @@ private:
 	float m_thinkTimer = 0.0f;
 	const float kThinkInterval = 0.5f;
 
-	float m_detectRadius = 200.0f;
+	float m_detectRadius = 100.0f;
 
 };
