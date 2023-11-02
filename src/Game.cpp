@@ -310,7 +310,7 @@ void Game::Update(float dt)
 		for (const auto& other : m_enemies)
 		{
 			if (enemy == other) break;
-			SpriteEntity::ResolveCollision(*enemy, *other);
+			//SpriteEntity::ResolveCollision(*enemy, *other);
 		}
 
 		//SpriteEntity::ResolveCollision(*enemy, *m_player);
@@ -333,6 +333,7 @@ void Game::Update(float dt)
 			if (SpriteEntity::Collision(*projectile, *enemy))
 			{
 				enemy->Damage(1);
+				projectile->Remove();
 			}
 		}
 	}
