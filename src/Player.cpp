@@ -29,10 +29,9 @@ void Player::HandleInput(Input* input)
 
 	m_aimTarget = input->GetMouseAbsPos() / 2.0f;
 
-	if (input->IsMouseButtonDown(SDL_BUTTON_LEFT))
+	if (input->IsMouseButtonPressed(SDL_BUTTON_LEFT))
 	{
-		glm::vec2 aimDirection = glm::normalize(m_aimTarget - m_position);
-		m_projectiles->push_back(std::make_unique<Projectile>(m_renderer, m_debugRenderer, m_position, m_textureManager->GetTexture("bullet"), aimDirection));
+		Shoot();
 	}
 }
 
@@ -94,6 +93,22 @@ void Player::Damage(int amount)
 			// kick immunity timer
 			m_immune = true;
 		}
+	}
+}
+
+void Player::Shoot()
+{
+	glm::vec2 aimDirection = glm::normalize(m_aimTarget - m_position);
+	float aimAngle = atan2(aimDirection.y, aimDirection.x);
+
+	float shotSpreadRadians = m_shotSpread * (M_PI / 180.0);
+
+	for (int i = 0; i < m_numShots; i++)
+	{
+		float angle = aimAngle - shotSpreadRadians / 2.0 + ((float)rand() / RAND_MAX) * shotSpreadRadians;
+
+		glm::vec2 shotDirection = glm::vec2(cos(angle), sin(angle));
+		m_projectiles->push_back(std::make_unique<Projectile>(m_renderer, m_debugRenderer, m_position, m_textureManager->GetTexture("bullet"), shotDirection));
 	}
 }
 

@@ -26,6 +26,8 @@ public:
 
 	void IncMetalCount() { m_metalCount++; }
 
+	void Shoot();
+
 private:
 	glm::vec2 m_moveDir{ 0.0f };
 	float m_acceleration = 10000.0f;
@@ -44,6 +46,9 @@ private:
 	float m_immuneTimer = 0.0f;
 	const float kImmuneInterval = 0.5f;
 	bool m_immune = false;
+
+	float m_shotSpread = 5.0f; // DEGREES!
+	int m_numShots = 5;
 
 	glm::vec2 m_aimTarget;
 

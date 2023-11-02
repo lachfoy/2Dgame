@@ -31,7 +31,7 @@ bool Button::HandleInput(Input* input)
 		m_buttonState = ButtonState::HOVERED;
 		SetScale(1.05f);
 
-		if (input->IsMouseButtonReleased(SDL_BUTTON_LEFT))
+		if (input->IsMouseButtonPressed(SDL_BUTTON_LEFT))
 		{
 			if (m_callback)
 			{
@@ -45,7 +45,7 @@ bool Button::HandleInput(Input* input)
 			return true;
 		}
 
-		if (input->IsMouseButtonDown(SDL_BUTTON_LEFT))
+		if (input->IsMouseButtonHeld(SDL_BUTTON_LEFT))
 		{
 			m_buttonState = ButtonState::PRESSED;
 		}
