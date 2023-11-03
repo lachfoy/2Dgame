@@ -199,23 +199,23 @@ void Game::SetupGL()
 
 void Game::Create()
 {
-	m_textureManager->LoadTexture("guy");
-	m_textureManager->LoadTexture("diamond");
-	m_textureManager->LoadTexture("turret3");
-	m_textureManager->LoadTexture("droid");
-	m_textureManager->LoadTexture("tile");
-	m_textureManager->LoadTexture("shotgun");
-	m_textureManager->LoadTexture("bullet");
+	m_textureManager->LoadTexture("guy", "data/images/guy.png");
+	m_textureManager->LoadTexture("diamond", "data/images/diamond.png");
+	m_textureManager->LoadTexture("turret", "data/images/turret3.png");
+	m_textureManager->LoadTexture("enemy", "data/images/droid.png");
+	m_textureManager->LoadTexture("tile", "data/images/tile.png");
+	m_textureManager->LoadTexture("shotgun", "data/images/shotgun.png");
+	m_textureManager->LoadTexture("bullet", "data/images/bullet.png");
 
-	m_player = new Player(m_renderer, m_debugRenderer, glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight), m_textureManager, &m_projectiles);
+	m_player = new Player(m_renderer, m_debugRenderer, m_textureManager, glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight), &m_projectiles);
 
 	m_enemySpawner = new EnemySpawner(&m_enemies, m_debugRenderer, m_player);
 
-	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, glm::vec2(200, 150), m_textureManager->GetTexture("turret3"), &m_enemies));
-	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, glm::vec2(230, 120), m_textureManager->GetTexture("turret3"), &m_enemies));
-	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, glm::vec2(170, 150), m_textureManager->GetTexture("turret3"), &m_enemies));
-	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, glm::vec2(200, 120), m_textureManager->GetTexture("turret3"), &m_enemies));
-	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, glm::vec2(230, 170), m_textureManager->GetTexture("turret3"), &m_enemies));
+	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, m_textureManager, glm::vec2(200, 150), &m_enemies));
+	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, m_textureManager, glm::vec2(230, 120), &m_enemies));
+	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, m_textureManager, glm::vec2(170, 150), &m_enemies));
+	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, m_textureManager, glm::vec2(200, 120), &m_enemies));
+	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, m_textureManager, glm::vec2(230, 170), &m_enemies));
 
 	m_tileMap = new TileMap(m_renderer, m_textureManager->GetTexture("tile"));
 	m_tileMap->CreateDebugMap();
@@ -280,7 +280,7 @@ void Game::Update(float dt)
 		turret->Update(dt);
 	}
 
-	m_enemySpawner->Update(dt, m_renderer, m_debugRenderer, m_textureManager->GetTexture("droid"), m_player, m_textureManager);
+	m_enemySpawner->Update(dt, m_renderer, m_debugRenderer, m_player, m_textureManager);
 
 	for (const auto& metal : m_metal)
 	{
@@ -289,7 +289,7 @@ void Game::Update(float dt)
 
 	for (const auto& enemy : m_enemies)
 	{
-		enemy->Update(dt, *m_player);
+		enemy->Update(dt);
 	}
 
 	for (const auto& projectile : m_projectiles)

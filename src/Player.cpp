@@ -5,11 +5,10 @@
 #include "DebugRenderer.h"
 #include "TextureManager.h"
 
-Player::Player(Renderer* renderer, DebugRenderer* debugRenderer, glm::vec2 position, TextureManager* textureManager, std::vector<std::unique_ptr<Projectile>>* projectiles)
-	: SpriteEntity(renderer, debugRenderer, nullptr, position, glm::vec2(16, 16)), m_textureManager(textureManager), m_projectiles(projectiles)
+Player::Player(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager, glm::vec2 position, std::vector<std::unique_ptr<Projectile>>* projectiles)
+	: SpriteEntity(renderer, debugRenderer, textureManager, m_textureManager->GetTexture("guy"), position, glm::vec2(16, 16)), m_projectiles(projectiles)
 {
-	m_texture = m_textureManager->GetTexture("guy");
-	m_shotgun = SpriteEntity(renderer, debugRenderer, m_textureManager->GetTexture("shotgun"), m_position, glm::vec2(16, 8));
+	m_shotgun = SpriteEntity(renderer, debugRenderer, textureManager, m_textureManager->GetTexture("shotgun"), m_position, glm::vec2(16, 8));
 }
 
 void Player::HandleInput(Input* input)
@@ -108,7 +107,7 @@ void Player::Shoot()
 		float angle = aimAngle - shotSpreadRadians / 2.0 + ((float)rand() / RAND_MAX) * shotSpreadRadians;
 
 		glm::vec2 shotDirection = glm::vec2(cos(angle), sin(angle));
-		m_projectiles->push_back(std::make_unique<Projectile>(m_renderer, m_debugRenderer, m_position, m_textureManager->GetTexture("bullet"), shotDirection));
+		m_projectiles->push_back(std::make_unique<Projectile>(m_renderer, m_debugRenderer, m_textureManager, m_position, shotDirection));
 	}
 }
 

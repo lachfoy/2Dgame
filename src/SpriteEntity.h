@@ -12,6 +12,7 @@
 
 class DebugRenderer;
 class Texture;
+class TextureManager;
 
 typedef std::vector<Vertex> tVertexVec;
 typedef std::vector<unsigned int> tIndexVec;
@@ -20,7 +21,7 @@ class SpriteEntity : public Entity
 {
 public:
 	SpriteEntity() = default;
-	SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, glm::vec2 position, glm::vec2 size);
+	SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager, Texture* texture, glm::vec2 position, glm::vec2 size);
 	~SpriteEntity() {}
 
 	glm::vec2 GetSize() const { return m_size; }
@@ -67,9 +68,10 @@ public:
 protected:
 	Renderer* m_renderer;
 	DebugRenderer* m_debugRenderer;
+	TextureManager* m_textureManager;
 	tVertexVec m_vertexVec;
 	tIndexVec m_indexVec;
-	Texture* m_texture;
+	Texture* m_texture = nullptr;
 	glm::vec2 m_size;
 
 	float m_rotation = 0.0f;

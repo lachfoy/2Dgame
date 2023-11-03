@@ -18,12 +18,12 @@ void TextureManager::UnloadResources()
 	std::cout << "--------------------------------------------------------\n\n";
 }
 
-bool TextureManager::LoadTexture(std::string name)
+bool TextureManager::LoadTexture(std::string name, const char* path)
 {
-	std::string path = s_textureDirectoryPath + name + ".png";
+	//std::string path = s_textureDirectoryPath + name + ".png";
 
 	Texture* texture = new Texture();
-	bool ret = texture->LoadFromFile(path.c_str());
+	bool ret = texture->LoadFromFile(path);
 
 	m_textureMap[name] = texture;
 

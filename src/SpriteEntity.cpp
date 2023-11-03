@@ -5,8 +5,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-SpriteEntity::SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, glm::vec2 position, glm::vec2 size)
-	: m_renderer(renderer), m_debugRenderer(debugRenderer), m_texture(texture), m_size(size)
+SpriteEntity::SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager, Texture* texture, glm::vec2 position, glm::vec2 size)
+	: m_renderer(renderer), m_debugRenderer(debugRenderer), m_textureManager(textureManager), m_texture(texture), m_size(size)
 {
 	m_position = position;
 
@@ -48,6 +48,7 @@ void SpriteEntity::SetFlipPolicy(FlipPolicy flipPolicy)
 
 void SpriteEntity::Render()
 {
+	assert(m_texture);
 	RenderObject renderObject = RenderObject(
 		&m_vertexVec,
 		&m_indexVec,

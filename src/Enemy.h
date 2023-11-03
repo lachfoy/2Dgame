@@ -7,22 +7,22 @@
 #include <memory>
 #include <vector>
 #include "Metal.h"
-#include "Player.h"
 
 class Input;
 class TextureManager;
+class Player;
 
 class Enemy : public SpriteEntity
 {
 public:
-	Enemy(Renderer* renderer, DebugRenderer* debugRenderer, glm::vec2 position, Texture* texture, TextureManager* textureManager);
+	Enemy(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager, glm::vec2 position, Player* player);
 	~Enemy() {}
 
 	void Damage(int amount);
 	int GetDamage() const { return rand() % (m_maxDamage - m_minDamage + 1) + m_minDamage; }
 
-	void Think(const Player& player);
-	void Update(float dt, const Player& player);
+	void Think();
+	void Update(float dt);
 
 	void OnRemove(std::vector<std::unique_ptr<Metal>>& metal);
 
@@ -37,12 +37,12 @@ private:
 	float m_thinkTimer = 0.0f;
 	const float kThinkInterval = 0.5f;
 
-	TextureManager* m_textureManager;
-
 	int m_maxHealth = 10;
 	int m_health = m_maxHealth;
 
 	int m_minDamage = 1;
 	int m_maxDamage = 5;
+
+	Player* m_player;
 
 };

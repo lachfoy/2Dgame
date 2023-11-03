@@ -2,9 +2,10 @@
 
 #include "Renderer.h"
 #include "DebugRenderer.h"
+#include "TextureManager.h"
 
-Turret::Turret(Renderer* renderer, DebugRenderer* debugRenderer, glm::vec2 position, Texture* texture, std::vector<std::unique_ptr<Enemy>>* enemies)
-	: SpriteEntity(renderer, debugRenderer, texture, position, glm::vec2(16, 16)), m_enemies(enemies)
+Turret::Turret(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager, glm::vec2 position, std::vector<std::unique_ptr<Enemy>>* enemies)
+	: SpriteEntity(renderer, debugRenderer, textureManager, textureManager->GetTexture("turret"), position, glm::vec2(16, 16)), m_enemies(enemies)
 {
 	//debugRenderer->AddCircle(position, m_detectRadius, glm::vec3(0.0f, 1.0f, 1.0f)); //whar
 }

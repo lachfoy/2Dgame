@@ -3,9 +3,10 @@
 #include "Renderer.h"
 #include "DebugRenderer.h"
 #include "Player.h"
+#include "TextureManager.h"
 
-Metal::Metal(Renderer* renderer, DebugRenderer* debugRenderer, glm::vec2 position, Texture* texture, Player* player)
-	: SpriteEntity(renderer, debugRenderer, texture, position, glm::vec2(8, 8)), m_player(player)
+Metal::Metal(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager, glm::vec2 position, Player* player)
+	: SpriteEntity(renderer, debugRenderer, textureManager, textureManager->GetTexture("diamond"), position, glm::vec2(8, 8)), m_player(player)
 {
 }
 

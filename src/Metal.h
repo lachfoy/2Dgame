@@ -11,7 +11,7 @@ class Player;
 class Metal : public SpriteEntity
 {
 public:
-	Metal(Renderer* renderer, DebugRenderer* debugRenderer, glm::vec2 position, Texture* texture, Player* player);
+	Metal(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager, glm::vec2 position, Player* player);
 	~Metal() {}
 
 	void Think(); // exact same as enemy

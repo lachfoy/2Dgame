@@ -16,7 +16,7 @@ class TextureManager;
 class Player : public SpriteEntity
 {
 public:
-	Player(Renderer* renderer, DebugRenderer* debugRenderer, glm::vec2 position, TextureManager* textureManager, std::vector<std::unique_ptr<Projectile>>* projectiles);
+	Player(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager, glm::vec2 position, std::vector<std::unique_ptr<Projectile>>* projectiles);
 	~Player() {}
 
 	void HandleInput(Input* input);
@@ -39,7 +39,6 @@ private:
 	float kFrictionCoef = 0.5f;
 	float kMaxSpeed = 400.0f;
 
-	TextureManager* m_textureManager;
 	SpriteEntity m_shotgun;
 	int m_metalCount = 0;
 

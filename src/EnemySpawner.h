@@ -18,9 +18,9 @@ public:
 	EnemySpawner(std::vector<std::unique_ptr<Enemy>>* enemies, DebugRenderer* debugRenderer, Player* player);
 	~EnemySpawner() {}
 
-	void Update(float dt, Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, Player* player, TextureManager* textureManager);
+	void Update(float dt, Renderer* renderer, DebugRenderer* debugRenderer, Player* player, TextureManager* textureManager);
 
-	void SpawnEnemyGroup(Renderer* renderer, DebugRenderer* debugRenderer, Texture* texture, Player* player, TextureManager* textureManager);
+	void SpawnEnemyGroup(Renderer* renderer, DebugRenderer* debugRenderer, Player* player, TextureManager* textureManager);
 
 private:
 	float m_spawnTimer = 0.0f;
