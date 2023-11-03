@@ -4,8 +4,11 @@
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
-
+#include <memory>
+#include <vector>
 #include "Projectile.h"
+
+class Projectile;//???? why do i need this forward declare? I dont understand
 
 class Input;
 class TextureManager;

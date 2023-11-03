@@ -30,6 +30,6 @@ void EnemySpawner::SpawnEnemyGroup(Renderer* renderer, DebugRenderer* debugRende
 		float randomAngle = static_cast<float>(rand()) / RAND_MAX * 2.0f * M_PI;
 		glm::vec2 spawnPos = playerPos + glm::vec2(std::cos(randomAngle), std::sin(randomAngle)) * m_spawnRadius;
 
-		m_enemies->push_back(std::make_unique<Enemy>(renderer, debugRenderer, spawnPos, texture, player, textureManager));
+		m_enemies->push_back(std::make_unique<Enemy>(renderer, debugRenderer, spawnPos, texture, textureManager));
 	}
 }

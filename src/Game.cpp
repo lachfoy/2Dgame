@@ -209,12 +209,6 @@ void Game::Create()
 
 	m_player = new Player(m_renderer, m_debugRenderer, glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight), m_textureManager, &m_projectiles);
 
-	//for (int i = 0; i < 10; i++)
-	//{
-	//	Enemy* enemy = new Enemy(m_renderer, m_debugRenderer, glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight), m_textureManager->GetTexture("droid"), m_player, m_textureManager);
-	//	m_enemies.push_back(std::unique_ptr<Enemy>(enemy));
-	//}
-
 	m_enemySpawner = new EnemySpawner(&m_enemies, m_debugRenderer, m_player);
 
 	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, glm::vec2(200, 150), m_textureManager->GetTexture("turret3"), &m_enemies));
@@ -295,7 +289,7 @@ void Game::Update(float dt)
 
 	for (const auto& enemy : m_enemies)
 	{
-		enemy->Update(dt);
+		enemy->Update(dt, *m_player);
 	}
 
 	for (const auto& projectile : m_projectiles)

@@ -13,8 +13,8 @@ void Turret::Think()
 {
 	if (!m_enemies->empty())
 	{
+		// Find enemies within range
 		std::vector<int> enemiesInRangeIndices;
-
 		for (int i = 0; i < m_enemies->size(); i++)
 		{
 			std::unique_ptr<Enemy>& enemy = m_enemies->at(i);
@@ -22,10 +22,11 @@ void Turret::Think()
 			float dist = glm::length(enemy->GetPosition() - m_position);
 			if (dist < m_detectRadius)
 			{
-				enemiesInRangeIndices.push_back(i); // Copy the enemy 
+				enemiesInRangeIndices.push_back(i);
 			}
 		}
 
+		// If enemies are in range, pick one at random as a target
 		if (!enemiesInRangeIndices.empty())
 		{
 			int i = rand() % enemiesInRangeIndices.size();

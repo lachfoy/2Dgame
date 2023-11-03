@@ -3,11 +3,10 @@
 #include "Input.h"
 #include "Renderer.h"
 #include "DebugRenderer.h"
-#include "Player.h"
 #include "TextureManager.h"
 
-Enemy::Enemy(Renderer* renderer, DebugRenderer* debugRenderer, glm::vec2 position, Texture* texture, Player* player, TextureManager* textureManager)
-	: SpriteEntity(renderer, debugRenderer, texture, position, glm::vec2(16, 16)), m_player(player), m_textureManager(textureManager)
+Enemy::Enemy(Renderer* renderer, DebugRenderer* debugRenderer, glm::vec2 position, Texture* texture, TextureManager* textureManager)
+	: SpriteEntity(renderer, debugRenderer, texture, position, glm::vec2(16, 16)), m_textureManager(textureManager)
 {
 }
 
@@ -23,19 +22,19 @@ void Enemy::Damage(int amount)
 	}
 }
 
-void Enemy::Think()
+void Enemy::Think(const Player& player)
 {
 	// set direction to move towards player
-	m_moveDir = glm::normalize(m_player->GetPosition() - m_position);
+	m_moveDir = glm::normalize(player.GetPosition() - m_position);
 }
 
-void Enemy::Update(float dt)
+void Enemy::Update(float dt, const Player& player)
 {
 	m_thinkTimer += dt;
 	if (m_thinkTimer >= kThinkInterval)
 	{
 		m_thinkTimer = 0.0f;
-		Think();
+		Think(player);
 	}
 
 	if (glm::length(m_moveDir) > 0.0f)
@@ -51,5 +50,5 @@ void Enemy::Update(float dt)
 
 void Enemy::OnRemove(std::vector<std::unique_ptr<Metal>>& metal)
 {
-	metal.push_back(std::make_unique<Metal>(m_renderer, m_debugRenderer, m_position, m_textureManager->GetTexture("diamond"), m_player));
+	//metal.push_back(std::make_unique<Metal>(m_renderer, m_debugRenderer, m_position, m_textureManager->GetTexture("diamond"), m_player));
 }
