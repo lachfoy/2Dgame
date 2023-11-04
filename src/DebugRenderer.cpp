@@ -1,18 +1,17 @@
 #include "DebugRenderer.h"
 
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "Common.h"
+
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
-#include <cassert>
 #include <algorithm>
 
 DebugRenderer gDebugRenderer;
 
 static const unsigned int kMaxLines = 1000;
 static const unsigned int kCircleSegments = 32;
-
-#define M_PI 3.14159265358979323846 // uh oh getting messy...
 
 void DebugRenderer::Init()
 {

@@ -22,9 +22,6 @@ enum class FlipPolicy
 class RenderObject
 {
 public:
-	//RenderObject(tVertexVec* vertexVec, tIndexVec* indexVec, glm::vec2* position, Texture* texture)
-	//	: m_vertexVec(vertexVec), m_indexVec(indexVec), m_position(position), m_texture(texture) {}
-
 	RenderObject(tVertexVec* vertexVec, tIndexVec* indexVec, glm::vec2* position, Texture* texture, float rotation = 0.0f, FlipPolicy flipPolicy = FlipPolicy::DoNotFlip)
 		: m_vertexVec(vertexVec), m_indexVec(indexVec), m_position(position), m_texture(texture), m_rotation(rotation), m_flipPolicy(flipPolicy) {}
 

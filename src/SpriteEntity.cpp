@@ -1,5 +1,6 @@
 #include "SpriteEntity.h"
 
+#include "Common.h"
 #include "DebugRenderer.h"
 #include "Texture.h"
 
@@ -48,7 +49,8 @@ void SpriteEntity::SetFlipPolicy(FlipPolicy flipPolicy)
 
 void SpriteEntity::Render(SpriteRenderer* renderer)
 {
-	assert(m_texture && "No texture was set!");
+	ASSERT(m_texture && "No texture was set!");
+
 	RenderObject renderObject = RenderObject(
 		&m_vertexVec,
 		&m_indexVec,

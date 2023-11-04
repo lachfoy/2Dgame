@@ -1,5 +1,6 @@
 #include "Player.h"
 
+#include "Common.h"
 #include "Input.h"
 #include "SpriteRenderer.h"
 #include "DebugRenderer.h"
@@ -100,7 +101,7 @@ void Player::Shoot()
 	glm::vec2 aimDirection = glm::normalize(m_aimTarget - m_position);
 	float aimAngle = atan2(aimDirection.y, aimDirection.x);
 
-	float shotSpreadRadians = m_shotSpread * (M_PI / 180.0);
+	float shotSpreadRadians = DEGTORAD(m_shotSpread);
 
 	for (int i = 0; i < m_numShots; i++)
 	{
@@ -116,4 +117,3 @@ void Player::Render(SpriteRenderer* renderer)
 	SpriteEntity::Render(renderer);
 	m_shotgun.Render(renderer);
 }
-
