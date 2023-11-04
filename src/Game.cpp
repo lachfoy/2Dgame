@@ -1,6 +1,6 @@
 #include "Game.h"
 
-#include "Renderer.h"
+#include "SpriteRenderer.h"
 #include "DebugRenderer.h"
 #include "Input.h"
 #include <iostream>
@@ -115,7 +115,7 @@ bool Game::Init(int width, int height, bool fullscreen, const char* title)
 	SetupGL();
 
 	// Init systems
-	m_renderer = new Renderer();
+	m_renderer = new SpriteRenderer();
 	m_renderer->Init();
 	m_renderer->SetProjection(m_viewportWidth, m_viewportHeight);
 

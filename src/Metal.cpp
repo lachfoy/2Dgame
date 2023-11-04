@@ -1,6 +1,6 @@
 #include "Metal.h"
 
-#include "Renderer.h"
+#include "SpriteRenderer.h"
 #include "DebugRenderer.h"
 #include "Player.h"
 #include "TextureManager.h"

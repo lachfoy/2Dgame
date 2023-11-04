@@ -11,7 +11,7 @@
 #include "Projectile.h"
 #include "Turret.h"
 
-class Renderer;
+class SpriteRenderer;
 
 class Input;
 class Player;
@@ -46,7 +46,7 @@ private:
 	int m_windowHeight;
 	int m_viewportWidth;
 	int m_viewportHeight;
-	Renderer* m_renderer;
+	SpriteRenderer* m_renderer;
 	Input* m_input;
 	GuiRenderer* m_guiRenderer;
 

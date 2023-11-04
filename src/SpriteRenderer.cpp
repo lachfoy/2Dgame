@@ -1,4 +1,4 @@
-#include "Renderer.h"
+#include "SpriteRenderer.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -9,13 +9,13 @@
 
 static const unsigned int kMaxSprites = 2000;
 
-void Renderer::Init()
+void SpriteRenderer::Init()
 {
 	CreateShaderProgram();
 	CreateRenderData();
 }
 
-void Renderer::SetProjection(unsigned int screenWidth, unsigned int screenHeight)
+void SpriteRenderer::SetProjection(unsigned int screenWidth, unsigned int screenHeight)
 {
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f, -1.0f, 1.0f);
 	
@@ -23,7 +23,7 @@ void Renderer::SetProjection(unsigned int screenWidth, unsigned int screenHeight
 	glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, "u_projection"), 1, false, glm::value_ptr(projection));
 }
 
-void Renderer::Dispose()
+void SpriteRenderer::Dispose()
 {
 	glDeleteBuffers(1, &m_ebo);
 	glDeleteBuffers(1, &m_vbo);
@@ -32,12 +32,12 @@ void Renderer::Dispose()
 	glDeleteProgram(m_shaderProgram);
 }
 
-void Renderer::AddRenderObject(const RenderObject& renderObject)
+void SpriteRenderer::AddRenderObject(const RenderObject& renderObject)
 {
 	m_renderObjects.push_back(renderObject);
 }
 
-void Renderer::RenderObjects()
+void SpriteRenderer::RenderObjects()
 {
 	//std::sort(m_renderObjects.begin(), m_renderObjects.end(), RenderObjectCompare());
 
@@ -106,7 +106,7 @@ void Renderer::RenderObjects()
 	m_renderObjects.clear();
 }
 
-void Renderer::FlushBatch()
+void SpriteRenderer::FlushBatch()
 {
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, m_vertexBuffer.size() * sizeof(Vertex), m_vertexBuffer.data());
@@ -120,13 +120,13 @@ void Renderer::FlushBatch()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Renderer::ClearBatch()
+void SpriteRenderer::ClearBatch()
 {
 	m_vertexBuffer.clear();
 	m_indexBuffer.clear();
 }
 
-void Renderer::CreateShaderProgram()
+void SpriteRenderer::CreateShaderProgram()
 {
 	// Create the vertex shader
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -216,7 +216,7 @@ void Renderer::CreateShaderProgram()
 	glUniform1i(textureUniformLocation, 0);
 }
 
-void Renderer::CreateRenderData()
+void SpriteRenderer::CreateRenderData()
 {
 	// VAO
 	glGenVertexArrays(1, &m_vao);
@@ -244,7 +244,7 @@ void Renderer::CreateRenderData()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void Renderer::CheckError()
+void SpriteRenderer::CheckError()
 {
 	GLenum error = glGetError();
 	if (error > 0) {

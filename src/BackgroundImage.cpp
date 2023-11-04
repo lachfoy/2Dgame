@@ -1,8 +1,8 @@
 #include "BackgroundImage.h"
 
-#include "Renderer.h"
+#include "SpriteRenderer.h"
 
-BackgroundImage::BackgroundImage(Renderer* renderer, Texture* texture, int width, int height)
+BackgroundImage::BackgroundImage(SpriteRenderer* renderer, Texture* texture, int width, int height)
 {
 	m_renderer = renderer;
 

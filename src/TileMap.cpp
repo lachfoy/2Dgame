@@ -1,6 +1,6 @@
 #include "TileMap.h"
 
-#include "Renderer.h"
+#include "SpriteRenderer.h"
 
 void TileMap::CreateDebugMap()
 {
@@ -81,7 +81,7 @@ void TileMap::BuildTileMesh()
 	}
 }
 
-void TileMap::Render(Renderer* renderer)
+void TileMap::Render(SpriteRenderer* renderer)
 {
 	// TODO dont use the sprite renderer for this. Add a more efficient tile map renderer
 	RenderObject renderObject = RenderObject(

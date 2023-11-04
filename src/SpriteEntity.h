@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "Vertex.h"
-#include "Renderer.h"
+#include "SpriteRenderer.h"
 
 class Texture;
 
@@ -29,7 +29,7 @@ public:
 
 	void SetFlipPolicy(FlipPolicy flipPolicy); // I don't like this lol
 
-	virtual void Render(Renderer* renderer);
+	virtual void Render(SpriteRenderer* renderer);
 	void RenderDebugQuad();
 	
 	static bool Collision(const SpriteEntity& objA, const SpriteEntity& objB)

@@ -60,11 +60,11 @@ public:
 	}
 };
 
-class Renderer
+class SpriteRenderer
 {
 public:
-	Renderer() = default;
-	~Renderer() {}
+	SpriteRenderer() = default;
+	~SpriteRenderer() {}
 
 	void Init();
 	void SetProjection(unsigned int screenWidth, unsigned int screenHeight);

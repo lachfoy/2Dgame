@@ -1,6 +1,6 @@
 #include "Turret.h"
 
-#include "Renderer.h"
+#include "SpriteRenderer.h"
 #include "DebugRenderer.h"
 #include "TextureManager.h"
 

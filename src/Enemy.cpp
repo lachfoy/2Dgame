@@ -1,7 +1,7 @@
 #include "Enemy.h"
 
 #include "Input.h"
-#include "Renderer.h"
+#include "SpriteRenderer.h"
 #include "DebugRenderer.h"
 #include "TextureManager.h"
 #include "Player.h"

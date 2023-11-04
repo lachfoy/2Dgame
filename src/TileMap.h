@@ -8,7 +8,7 @@
 #include "Vertex.h"
 #include "Texture.h"
 
-class Renderer;
+class SpriteRenderer;
 
 typedef std::vector<Vertex> tVertexVec;
 typedef std::vector<unsigned int> tIndexVec;
@@ -22,7 +22,7 @@ public:
 	void CreateDebugMap();
 	void BuildTileMesh();
 
-	void Render(Renderer* renderer);
+	void Render(SpriteRenderer* renderer);
 	void Destroy();
 
 private:

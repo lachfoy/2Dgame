@@ -46,7 +46,7 @@ void SpriteEntity::SetFlipPolicy(FlipPolicy flipPolicy)
 	m_flipPolicy = flipPolicy;
 }
 
-void SpriteEntity::Render(Renderer* renderer)
+void SpriteEntity::Render(SpriteRenderer* renderer)
 {
 	assert(m_texture && "No texture was set!");
 	RenderObject renderObject = RenderObject(

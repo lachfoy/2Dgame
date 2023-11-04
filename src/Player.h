@@ -21,7 +21,7 @@ public:
 	void HandleInput(Input* input);
 	void Update(float dt);
 
-	void Render(Renderer* renderer) override;
+	void Render(SpriteRenderer* renderer) override;
 
 	void Damage(int amount);
 	bool CanTakeDamage() const { return !m_immune; }

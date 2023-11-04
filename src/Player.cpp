@@ -1,7 +1,7 @@
 #include "Player.h"
 
 #include "Input.h"
-#include "Renderer.h"
+#include "SpriteRenderer.h"
 #include "DebugRenderer.h"
 #include "TextureManager.h"
 
@@ -111,7 +111,7 @@ void Player::Shoot()
 	}
 }
 
-void Player::Render(Renderer* renderer)
+void Player::Render(SpriteRenderer* renderer)
 {
 	SpriteEntity::Render(renderer);
 	m_shotgun.Render(renderer);
