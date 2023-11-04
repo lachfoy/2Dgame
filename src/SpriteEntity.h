@@ -7,13 +7,9 @@
 
 #include <vector>
 
-#include "Vertex.h"
 #include "SpriteRenderer.h"
 
 class Texture;
-
-typedef std::vector<Vertex> tVertexVec;
-typedef std::vector<unsigned int> tIndexVec;
 
 class SpriteEntity : public Entity
 {

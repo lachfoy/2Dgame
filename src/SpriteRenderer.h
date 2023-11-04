@@ -3,12 +3,25 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include "Vertex.h"
 #include "Texture.h"
 
 #include <vector>
 
 class SpriteEntity;
+
+struct Vertex
+{
+	glm::vec2 position;
+	glm::vec2 texCoord;
+
+	inline static Vertex Make(glm::vec2 positon, glm::vec2 texCoord)
+	{
+		Vertex vertex;
+		vertex.position = positon;
+		vertex.texCoord = texCoord;
+		return vertex;
+	}
+};
 
 typedef std::vector<Vertex> tVertexVec;
 typedef std::vector<unsigned int> tIndexVec;

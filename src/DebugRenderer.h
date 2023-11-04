@@ -3,14 +3,10 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include "Vertex.h"
 #include "Texture.h"
 
 #include <vector>
 #include <map>
-
-typedef std::vector<Vertex> tVertexVec;
-typedef std::vector<unsigned int> tIndexVec;
 
 struct DebugLine {
 	glm::vec2 p1;

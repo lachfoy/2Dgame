@@ -11,11 +11,7 @@
 #include <vector>
 #include <list>
 
-#include "Vertex.h"
 #include "Texture.h"
-
-typedef std::vector<Vertex> tVertexVec;
-typedef std::vector<unsigned int> tIndexVec;
 
 class Panel;
 typedef std::list<Panel*> tPanelList;
@@ -67,9 +63,6 @@ protected:
 	GuiRenderer* m_guiRenderer;
 
 	glm::vec4 m_color = glm::vec4(1.f, 1.f, 1.f, 0.f);
-
-	tVertexVec m_vertexVec;
-	tIndexVec m_indexVec;
 
 	float m_scale = 1.0f;
 

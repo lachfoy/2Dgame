@@ -1,7 +1,5 @@
 #include "TileMap.h"
 
-#include "SpriteRenderer.h"
-
 void TileMap::CreateDebugMap()
 {
 	m_width = 32;

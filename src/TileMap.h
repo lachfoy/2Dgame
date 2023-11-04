@@ -5,13 +5,8 @@
 
 #include <vector>
 
-#include "Vertex.h"
 #include "Texture.h"
-
-class SpriteRenderer;
-
-typedef std::vector<Vertex> tVertexVec;
-typedef std::vector<unsigned int> tIndexVec;
+#include "SpriteRenderer.h"
 
 class TileMap
 {
