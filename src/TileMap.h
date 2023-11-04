@@ -16,17 +16,16 @@ typedef std::vector<unsigned int> tIndexVec;
 class TileMap
 {
 public:
-	TileMap(Renderer* renderer, Texture* texture) : m_renderer(renderer), m_texture(texture) {}
+	TileMap(Texture* texture) : m_texture(texture) {}
 	~TileMap() = default;
 	
 	void CreateDebugMap();
 	void BuildTileMesh();
 
-	void Render();
+	void Render(Renderer* renderer);
 	void Destroy();
 
 private:
-	Renderer* m_renderer;
 	tVertexVec m_vertexVec;
 	tIndexVec m_indexVec;
 	Texture* m_texture;

@@ -22,3 +22,5 @@ private:
 	tTextureMap m_textureMap;
 
 };
+
+extern TextureManager gTextureManager;

@@ -9,13 +9,12 @@
 #include "Metal.h"
 
 class Input;
-class TextureManager;
 class Player;
 
 class Enemy : public SpriteEntity
 {
 public:
-	Enemy(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager, glm::vec2 position, Player* player);
+	Enemy(glm::vec2 position, Player* player);
 	~Enemy() {}
 
 	void Damage(int amount);

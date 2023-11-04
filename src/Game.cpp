@@ -119,17 +119,14 @@ bool Game::Init(int width, int height, bool fullscreen, const char* title)
 	m_renderer->Init();
 	m_renderer->SetProjection(m_viewportWidth, m_viewportHeight);
 
-	m_debugRenderer = new DebugRenderer();
-	m_debugRenderer->Init();
-	m_debugRenderer->SetProjection(m_viewportWidth, m_viewportHeight);
+	gDebugRenderer.Init();
+	gDebugRenderer.SetProjection(m_viewportWidth, m_viewportHeight);
 
 	m_guiRenderer = new GuiRenderer();
 	m_guiRenderer->Init();
 	m_guiRenderer->SetProjection(m_viewportWidth, m_viewportHeight);
 
 	m_input = new Input();
-
-	m_textureManager = new TextureManager();
 
 	return true;
 }
@@ -169,13 +166,13 @@ void Game::Run()
 
 		// update
 		Update(dt);
-		m_debugRenderer->Update(dt);
+		gDebugRenderer.Update(dt);
 
 		// render
 		//glClear(GL_COLOR_BUFFER_BIT);
 		Render();
 		m_renderer->RenderObjects();
-		m_debugRenderer->Render();
+		gDebugRenderer.Render();
 		m_guiRenderer->RenderQuads();
 		//m_guiRenderer->Render();
 
@@ -199,25 +196,25 @@ void Game::SetupGL()
 
 void Game::Create()
 {
-	m_textureManager->LoadTexture("guy", "data/images/guy.png");
-	m_textureManager->LoadTexture("diamond", "data/images/diamond.png");
-	m_textureManager->LoadTexture("turret", "data/images/turret3.png");
-	m_textureManager->LoadTexture("enemy", "data/images/droid.png");
-	m_textureManager->LoadTexture("tile", "data/images/tile.png");
-	m_textureManager->LoadTexture("shotgun", "data/images/shotgun.png");
-	m_textureManager->LoadTexture("bullet", "data/images/bullet.png");
+	gTextureManager.LoadTexture("guy", "data/images/guy.png");
+	gTextureManager.LoadTexture("diamond", "data/images/diamond.png");
+	gTextureManager.LoadTexture("turret", "data/images/turret3.png");
+	gTextureManager.LoadTexture("enemy", "data/images/droid.png");
+	gTextureManager.LoadTexture("tile", "data/images/tile.png");
+	gTextureManager.LoadTexture("shotgun", "data/images/shotgun.png");
+	gTextureManager.LoadTexture("bullet", "data/images/bullet.png");
 
-	m_player = new Player(m_renderer, m_debugRenderer, m_textureManager, glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight), &m_projectiles);
+	m_player = new Player(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight), &m_projectiles);
 
-	m_enemySpawner = new EnemySpawner(&m_enemies, m_debugRenderer, m_player);
+	m_enemySpawner = new EnemySpawner(&m_enemies, m_player);
 
-	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, m_textureManager, glm::vec2(200, 150), &m_enemies));
-	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, m_textureManager, glm::vec2(230, 120), &m_enemies));
-	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, m_textureManager, glm::vec2(170, 150), &m_enemies));
-	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, m_textureManager, glm::vec2(200, 120), &m_enemies));
-	m_turrets.push_back(std::make_unique<Turret>(m_renderer, m_debugRenderer, m_textureManager, glm::vec2(230, 170), &m_enemies));
+	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(200, 150), &m_enemies));
+	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(230, 120), &m_enemies));
+	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(170, 150), &m_enemies));
+	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(200, 120), &m_enemies));
+	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(230, 170), &m_enemies));
 
-	m_tileMap = new TileMap(m_renderer, m_textureManager->GetTexture("tile"));
+	m_tileMap = new TileMap(gTextureManager.GetTexture("tile"));
 	m_tileMap->CreateDebugMap();
 	m_tileMap->BuildTileMesh();
 
@@ -280,7 +277,7 @@ void Game::Update(float dt)
 		turret->Update(dt);
 	}
 
-	m_enemySpawner->Update(dt, m_renderer, m_debugRenderer, m_player, m_textureManager);
+	m_enemySpawner->Update(dt);
 
 	for (const auto& metal : m_metal)
 	{
@@ -369,29 +366,29 @@ void Game::Update(float dt)
 
 void Game::Render()
 {
-	m_tileMap->Render();
+	m_tileMap->Render(m_renderer);
 
 	for (const auto& metal : m_metal)
 	{
-		metal->Render();
+		metal->Render(m_renderer);
 	}
 
 	for (const auto& turret : m_turrets)
 	{
-		turret->Render();
+		turret->Render(m_renderer);
 	}
 
 	for (const auto& enemy : m_enemies)
 	{
-		enemy->Render();
+		enemy->Render(m_renderer);
 	}
 
-	m_player->Render();
+	m_player->Render(m_renderer);
 
 
 	for (const auto& projectile : m_projectiles)
 	{
-		projectile->Render();
+		projectile->Render(m_renderer);
 	}
 
 	//RenderChildren(m_rootPanel);
@@ -421,10 +418,6 @@ void Game::Cleanup()
 	delete m_renderer;
 	m_renderer = nullptr;
 
-	m_debugRenderer->Dispose();
-	delete m_debugRenderer;
-	m_debugRenderer = nullptr;
-
 	m_guiRenderer->Dispose();
 	delete m_guiRenderer;
 	m_guiRenderer = nullptr;
@@ -432,9 +425,7 @@ void Game::Cleanup()
 	delete m_input;
 	m_input = nullptr;
 
-	m_textureManager->UnloadResources();
-	delete m_textureManager;
-	m_textureManager = nullptr;
+	gTextureManager.UnloadResources();
 
 	SDL_GL_DeleteContext(m_context);
 	SDL_DestroyWindow(m_window);

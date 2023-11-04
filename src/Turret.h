@@ -11,7 +11,7 @@
 class Turret : public SpriteEntity
 {
 public:
-	Turret(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager, glm::vec2 position, std::vector<std::unique_ptr<Enemy>>* enemies);
+	Turret(glm::vec2 position, std::vector<std::unique_ptr<Enemy>>* enemies);
 	~Turret() {}
 
 	void Think(); // exact same as enemy

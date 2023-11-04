@@ -81,8 +81,9 @@ void TileMap::BuildTileMesh()
 	}
 }
 
-void TileMap::Render()
+void TileMap::Render(Renderer* renderer)
 {
+	// TODO dont use the sprite renderer for this. Add a more efficient tile map renderer
 	RenderObject renderObject = RenderObject(
 		&m_vertexVec,
 		&m_indexVec,
@@ -91,7 +92,7 @@ void TileMap::Render()
 		0.0f
 	);
 
-	m_renderer->AddRenderObject(renderObject);
+	renderer->AddRenderObject(renderObject);
 }
 
 void TileMap::Destroy()

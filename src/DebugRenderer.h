@@ -47,3 +47,5 @@ private:
 	GLuint m_lineVbo;
 
 };
+
+extern DebugRenderer gDebugRenderer;

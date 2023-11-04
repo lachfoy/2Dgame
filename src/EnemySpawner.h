@@ -6,21 +6,17 @@
 #include <vector>
 #include "Enemy.h"
 
-class DebugRenderer;
-class Renderer;
-class Texture;
 class Player;
-class TextureManager;
 
 class EnemySpawner
 {
 public:
-	EnemySpawner(std::vector<std::unique_ptr<Enemy>>* enemies, DebugRenderer* debugRenderer, Player* player);
+	EnemySpawner(std::vector<std::unique_ptr<Enemy>>* enemies, Player* player);
 	~EnemySpawner() {}
 
-	void Update(float dt, Renderer* renderer, DebugRenderer* debugRenderer, Player* player, TextureManager* textureManager);
+	void Update(float dt);
 
-	void SpawnEnemyGroup(Renderer* renderer, DebugRenderer* debugRenderer, Player* player, TextureManager* textureManager);
+	void SpawnEnemyGroup();
 
 private:
 	float m_spawnTimer = 0.0f;
@@ -35,6 +31,5 @@ private:
 	Player* m_player;
 
 	std::vector<std::unique_ptr<Enemy>>* m_enemies;
-	DebugRenderer* m_debugRenderer;
 
 };

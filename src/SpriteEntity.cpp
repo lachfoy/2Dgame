@@ -5,8 +5,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-SpriteEntity::SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager, Texture* texture, glm::vec2 position, glm::vec2 size)
-	: m_renderer(renderer), m_debugRenderer(debugRenderer), m_textureManager(textureManager), m_texture(texture), m_size(size)
+SpriteEntity::SpriteEntity(glm::vec2 position, glm::vec2 size, Texture* texture)
+	: m_size(size), m_texture(texture)
 {
 	m_position = position;
 
@@ -46,9 +46,9 @@ void SpriteEntity::SetFlipPolicy(FlipPolicy flipPolicy)
 	m_flipPolicy = flipPolicy;
 }
 
-void SpriteEntity::Render()
+void SpriteEntity::Render(Renderer* renderer)
 {
-	assert(m_texture);
+	assert(m_texture && "No texture was set!");
 	RenderObject renderObject = RenderObject(
 		&m_vertexVec,
 		&m_indexVec,
@@ -58,7 +58,7 @@ void SpriteEntity::Render()
 		m_flipPolicy
 	);
 
-	m_renderer->AddRenderObject(renderObject);
+	renderer->AddRenderObject(std::move(renderObject));
 }
 
 void SpriteEntity::RenderDebugQuad()
@@ -86,8 +86,8 @@ void SpriteEntity::RenderDebugQuad()
 	glm::vec2 topR = glm::vec2(bottomR.x, topL.y);
 
 	const glm::vec3 color = glm::vec3(1.0f, 0.0f, 0.0f);
-	m_debugRenderer->AddLine(topL, bottomL, color);
-	m_debugRenderer->AddLine(bottomL, bottomR, color);
-	m_debugRenderer->AddLine(bottomR, topR, color);
-	m_debugRenderer->AddLine(topR, topL, color);
+	gDebugRenderer.AddLine(topL, bottomL, color);
+	gDebugRenderer.AddLine(bottomL, bottomR, color);
+	gDebugRenderer.AddLine(bottomR, topR, color);
+	gDebugRenderer.AddLine(topR, topL, color);
 }

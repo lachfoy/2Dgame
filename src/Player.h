@@ -11,18 +11,17 @@
 class Projectile;//???? why do i need this forward declare? I dont understand
 
 class Input;
-class TextureManager;
 
 class Player : public SpriteEntity
 {
 public:
-	Player(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager, glm::vec2 position, std::vector<std::unique_ptr<Projectile>>* projectiles);
+	Player(glm::vec2 position, std::vector<std::unique_ptr<Projectile>>* projectiles);
 	~Player() {}
 
 	void HandleInput(Input* input);
 	void Update(float dt);
 
-	void Render() override;
+	void Render(Renderer* renderer) override;
 
 	void Damage(int amount);
 	bool CanTakeDamage() const { return !m_immune; }

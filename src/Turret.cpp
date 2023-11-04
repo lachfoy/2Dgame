@@ -4,8 +4,8 @@
 #include "DebugRenderer.h"
 #include "TextureManager.h"
 
-Turret::Turret(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager, glm::vec2 position, std::vector<std::unique_ptr<Enemy>>* enemies)
-	: SpriteEntity(renderer, debugRenderer, textureManager, textureManager->GetTexture("turret"), position, glm::vec2(16, 16)), m_enemies(enemies)
+Turret::Turret(glm::vec2 position, std::vector<std::unique_ptr<Enemy>>* enemies)
+	: SpriteEntity(position, glm::vec2(16, 16), gTextureManager.GetTexture("turret")), m_enemies(enemies)
 {
 	//debugRenderer->AddCircle(position, m_detectRadius, glm::vec3(0.0f, 1.0f, 1.0f)); //whar
 }
@@ -37,7 +37,7 @@ void Turret::Think()
 			float angleToEnemy = atan2(directionToEnemy.y, directionToEnemy.x);
 			SetRotation(angleToEnemy);
 
-			m_debugRenderer->AddLine(m_position, enemy->GetPosition(), glm::vec3(0.0f, 1.0f, 0.0f), 0.5f);
+			gDebugRenderer.AddLine(m_position, enemy->GetPosition(), glm::vec3(0.0f, 1.0f, 0.0f), 0.5f);
 			enemy->Damage(rand() % 5);
 		}
 	}

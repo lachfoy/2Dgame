@@ -11,7 +11,7 @@
 class Projectile : public SpriteEntity
 {
 public:
-	Projectile(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* texturemanager, glm::vec2 position, glm::vec2 direction);
+	Projectile(glm::vec2 position, glm::vec2 direction);
 	~Projectile() {}
 
 	void Update(float dt);

@@ -10,9 +10,7 @@
 #include "Vertex.h"
 #include "Renderer.h"
 
-class DebugRenderer;
 class Texture;
-class TextureManager;
 
 typedef std::vector<Vertex> tVertexVec;
 typedef std::vector<unsigned int> tIndexVec;
@@ -21,7 +19,7 @@ class SpriteEntity : public Entity
 {
 public:
 	SpriteEntity() = default;
-	SpriteEntity(Renderer* renderer, DebugRenderer* debugRenderer, TextureManager* textureManager, Texture* texture, glm::vec2 position, glm::vec2 size);
+	SpriteEntity(glm::vec2 position, glm::vec2 size, Texture* texture);
 	~SpriteEntity() {}
 
 	glm::vec2 GetSize() const { return m_size; }
@@ -31,7 +29,7 @@ public:
 
 	void SetFlipPolicy(FlipPolicy flipPolicy); // I don't like this lol
 
-	virtual void Render();
+	virtual void Render(Renderer* renderer);
 	void RenderDebugQuad();
 	
 	static bool Collision(const SpriteEntity& objA, const SpriteEntity& objB)
@@ -66,9 +64,6 @@ public:
 	}
 
 protected:
-	Renderer* m_renderer;
-	DebugRenderer* m_debugRenderer;
-	TextureManager* m_textureManager;
 	tVertexVec m_vertexVec;
 	tIndexVec m_indexVec;
 	Texture* m_texture = nullptr;

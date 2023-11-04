@@ -7,6 +7,8 @@
 #include <cassert>
 #include <algorithm>
 
+DebugRenderer gDebugRenderer;
+
 static const unsigned int kMaxLines = 1000;
 static const unsigned int kCircleSegments = 32;
 

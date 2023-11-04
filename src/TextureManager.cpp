@@ -4,7 +4,7 @@
 
 #include "Texture.h"
 
-static const std::string s_textureDirectoryPath = "data/images/";
+TextureManager gTextureManager;
 
 void TextureManager::UnloadResources()
 {
@@ -20,8 +20,6 @@ void TextureManager::UnloadResources()
 
 bool TextureManager::LoadTexture(std::string name, const char* path)
 {
-	//std::string path = s_textureDirectoryPath + name + ".png";
-
 	Texture* texture = new Texture();
 	bool ret = texture->LoadFromFile(path);
 

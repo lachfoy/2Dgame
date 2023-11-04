@@ -12,12 +12,12 @@
 #include "Turret.h"
 
 class Renderer;
-class DebugRenderer;
+
 class Input;
 class Player;
 class Turret;
 class TileMap;
-class TextureManager;
+
 class EnemySpawner;
 
 class Panel;
@@ -47,10 +47,8 @@ private:
 	int m_viewportWidth;
 	int m_viewportHeight;
 	Renderer* m_renderer;
-	DebugRenderer* m_debugRenderer;
 	Input* m_input;
 	GuiRenderer* m_guiRenderer;
-	TextureManager* m_textureManager;
 
 private:
 	void HandleInput();
