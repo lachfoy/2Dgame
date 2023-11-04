@@ -39,7 +39,8 @@ private:
 	float kMaxSpeed = 400.0f;
 
 	SpriteEntity m_shotgun;
-	int m_metalCount = 0;
+	int m_startingMetalCount = 10;
+	int m_metalCount = m_startingMetalCount;
 
 	int m_maxHealth = 100;
 	int m_health = m_maxHealth;
@@ -48,7 +49,7 @@ private:
 	const float kImmuneInterval = 0.5f;
 	bool m_immune = false;
 
-	float m_shotSpread = 5.0f; // DEGREES!
+	float m_shotSpread = 10.0f; // DEGREES!
 	int m_numShots = 5;
 
 	glm::vec2 m_aimTarget;

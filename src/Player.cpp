@@ -98,6 +98,8 @@ void Player::Damage(int amount)
 
 void Player::Shoot()
 {
+	if (m_metalCount <= 0) return;
+
 	glm::vec2 aimDirection = glm::normalize(m_aimTarget - m_position);
 	float aimAngle = atan2(aimDirection.y, aimDirection.x);
 
@@ -105,10 +107,13 @@ void Player::Shoot()
 
 	for (int i = 0; i < m_numShots; i++)
 	{
+		if (m_metalCount == 0) break;
 		float angle = aimAngle - shotSpreadRadians / 2.0 + ((float)rand() / RAND_MAX) * shotSpreadRadians;
 
 		glm::vec2 shotDirection = glm::vec2(cos(angle), sin(angle));
 		m_projectiles->push_back(std::make_unique<Projectile>(m_position, shotDirection));
+
+		m_metalCount--;
 	}
 }
 

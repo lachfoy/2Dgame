@@ -46,6 +46,8 @@ private:
 	GLuint m_lineVao;
 	GLuint m_lineVbo;
 
+	GLint m_colorUniformLocation;
+
 };
 
 extern DebugRenderer gDebugRenderer;

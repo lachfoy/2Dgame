@@ -26,7 +26,7 @@ void EnemySpawner::SpawnEnemyGroup()
 
 	for (int i = 0; i < m_enemiesPerGroup; i++)
 	{
-		float randomAngle = static_cast<float>(rand()) / RAND_MAX * 2.0f * M_PI;
+		float randomAngle = static_cast<float>(rand()) / RAND_MAX * 2.0f * PI;
 		glm::vec2 spawnPos = playerPos + glm::vec2(std::cos(randomAngle), std::sin(randomAngle)) * m_spawnRadius;
 
 		m_enemies->push_back(std::make_unique<Enemy>(spawnPos, m_player));
