@@ -13,6 +13,8 @@
 #include "TextureManager.h"
 #include "EnemySpawner.h"
 
+//#define DEBUG_DRAW
+
 void RenderChildren(Panel* panel)
 {
 	if (panel)
@@ -20,7 +22,6 @@ void RenderChildren(Panel* panel)
 		//printf("Rendering %s...\n", panel->GetName());
 		
 		panel->Render();
-		panel->DebugRenderBounds();
 
 		for (Panel* child : panel->GetChildren())
 		{
@@ -172,9 +173,10 @@ void Game::Run()
 		//glClear(GL_COLOR_BUFFER_BIT);
 		Render();
 		m_renderer->RenderObjects();
+#ifdef DEBUG_DRAW
 		gDebugRenderer.Render();
+#endif
 		m_guiRenderer->RenderQuads();
-		//m_guiRenderer->Render();
 
 		// swap buffers
 		SDL_GL_SwapWindow(m_window);
@@ -391,7 +393,7 @@ void Game::Render()
 		projectile->Render(m_renderer);
 	}
 
-	//RenderChildren(m_rootPanel);
+	RenderChildren(m_rootPanel);
 }
 
 void Game::Destroy()

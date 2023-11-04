@@ -7,7 +7,7 @@
 #include <cassert>
 #include <algorithm>
 
-static const unsigned int kMaxSprites = 2000;
+static const unsigned int kMaxQuads = 2000;
 
 void SpriteRenderer::Init()
 {
@@ -225,12 +225,12 @@ void SpriteRenderer::CreateRenderData()
 	// VBO
 	glGenBuffers(1, &m_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-	glBufferData(GL_ARRAY_BUFFER, kMaxSprites * 4 * sizeof(Vertex), NULL, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, kMaxQuads * 4 * sizeof(Vertex), NULL, GL_DYNAMIC_DRAW);
 
 	// EBO
 	glGenBuffers(1, &m_ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, kMaxSprites * 6 * sizeof(unsigned int), NULL, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, kMaxQuads * 6 * sizeof(unsigned int), NULL, GL_DYNAMIC_DRAW);
 
 	// Enable the vertex attribute arrays for position and texcoords
 	glEnableVertexAttribArray(0);

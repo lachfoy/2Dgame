@@ -34,7 +34,6 @@ public:
 	virtual bool HandleInput(Input* input);
 
 	virtual void Render();
-	void DebugRenderBounds();
 
 	glm::vec2 GetAbsolutePosition() const;
 	glm::vec2 GetSize() const;

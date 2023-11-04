@@ -72,18 +72,11 @@ public:
 	void Dispose();
 
 	void AddQuadToBatch(glm::vec2 position, glm::vec2 size, glm::vec4 color);
+
+	void AddStringToBatch(glm::vec2 position, glm::vec2 size, glm::vec4 color);
+
 	void RenderQuads();
 
-
-	void AddGuiRenderObject(const GuiRenderObject& renderObject);
-	
-	void RenderObjects();
-
-	void AddDebugLine(const glm::vec2& p1, const glm::vec2& p2);
-	void RenderDebugLines();
-
-	void FlushBatch();
-	void ClearBatch();
 
 private:
 	void CreateShaderProgram();
@@ -93,20 +86,9 @@ private:
 
 	GLuint m_shaderProgram;
 
-	tVertexVec m_vertexBuffer;
-	tIndexVec m_indexBuffer;
-
 	GLuint m_vao;
 	GLuint m_vbo;
 	GLuint m_ebo;
-
-	std::vector<GuiRenderObject> m_guiRenderObjects;
-
-	// Debug lines
-	GLuint m_debugShaderProgram;
-	std::vector<glm::vec2> m_linePoints;
-	GLuint m_lineVao;
-	GLuint m_lineVbo;
 
 	std::vector<QuadEntry> m_quadEntries;
 	std::vector<UIVertex> m_quadVertices;

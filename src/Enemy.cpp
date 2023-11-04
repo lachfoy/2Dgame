@@ -25,6 +25,8 @@ void Enemy::Damage(int amount)
 
 void Enemy::Think()
 {
+	// only move to player if they are within a certain range. otherwise move towards random turret.
+ 
 	// set direction to move towards player
 	m_moveDir = glm::normalize(m_player->GetPosition() - m_position);
 }

@@ -50,17 +50,17 @@ void Panel::Render()
 	m_guiRenderer->AddQuadToBatch(position, size, m_color);
 }
 
-void Panel::DebugRenderBounds()
-{
-	// Render outline
-	glm::vec2 position = GetAbsolutePosition();
-	glm::vec2 size = GetSize();
-
-	m_guiRenderer->AddDebugLine(glm::vec2(position.x, position.y + size.y), position + size); // bl to br
-	m_guiRenderer->AddDebugLine(position + size, glm::vec2(position.x + size.x, position.y)); // br to tr
-	m_guiRenderer->AddDebugLine(glm::vec2(position.x + size.x, position.y), position); // tr to tl
-	m_guiRenderer->AddDebugLine(position, glm::vec2(position.x, position.y + size.y)); // tl to bl
-}
+//void Panel::DebugRenderBounds()
+//{
+//	// Render outline
+//	glm::vec2 position = GetAbsolutePosition();
+//	glm::vec2 size = GetSize();
+//
+//	gDebugRenderer.AddLine(glm::vec2(position.x, position.y + size.y), position + size, glm::vec3(0.0f, 1.0f, 0.0f)); // bl to br
+//	gDebugRenderer.AddLine(position + size, glm::vec2(position.x + size.x, position.y), glm::vec3(0.0f, 1.0f, 0.0f)); // br to tr
+//	gDebugRenderer.AddLine(glm::vec2(position.x + size.x, position.y), position, glm::vec3(0.0f, 1.0f, 0.0f)); // tr to tl
+//	gDebugRenderer.AddLine(position, glm::vec2(position.x, position.y + size.y), glm::vec3(0.0f, 1.0f, 0.0f)); // tl to bl
+//}
 
 glm::vec2 Panel::GetAbsolutePosition() const
 {
