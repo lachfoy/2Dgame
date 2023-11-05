@@ -222,10 +222,11 @@ void Game::Create()
 
 	// GUI test stuff
 	m_rootPanel = new Panel("Root", m_guiRenderer, glm::vec2(0, 0), glm::vec2(m_viewportWidth, m_viewportHeight));
+	m_rootPanel->SetAlpha(0.0f);
 
 	m_testPanel = new Panel("Panel", m_guiRenderer, glm::vec2(0, 0), glm::vec2(150, 170));
 	m_rootPanel->AddChild(m_testPanel);
-	m_testPanel->SetColor(glm::vec4(0.4, 0.4, 0.4, 1));
+	m_testPanel->SetColor(glm::vec3(0.4, 0.4, 0.4));
 	m_testPanel->CenterX();
 	m_testPanel->CenterY();
 

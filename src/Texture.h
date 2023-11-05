@@ -12,6 +12,8 @@ public:
 	bool LoadFromFile(const char* path, bool useMipMaps = false);
 	void Bind() const;
 
+	static Texture* CreateUtilTexture();
+
 	int GetWidth() const { return m_width; }
 	int GetHeight() const { return m_height; }
 

@@ -4,17 +4,17 @@
 
 Button::Button(const char* name, GuiRenderer* guiRenderer) : Panel(name, guiRenderer)
 {
-	m_color = glm::vec4(0.6, 0.6, 0.6, 1.0f);
+	m_color = glm::vec3(0.6, 0.6, 0.6);
 }
 
 Button::Button(const char* name, GuiRenderer* guiRenderer, glm::vec2 position, glm::vec2 size) : Panel(name, guiRenderer, position, size)
 {
-	m_color = glm::vec4(0.6, 0.6, 0.6, 1.0f);
+	m_color = glm::vec3(0.6, 0.6, 0.6);
 }
 
 Button::Button(const char* name, GuiRenderer* guiRenderer, glm::vec2 position, glm::vec2 size, Panel* parent) : Panel(name, guiRenderer, position, size, parent)
 {
-	m_color = glm::vec4(0.6, 0.6, 0.6, 1.0f);
+	m_color = glm::vec3(0.6, 0.6, 0.6);
 }
 
 bool Button::HandleInput(Input* input)
@@ -59,16 +59,23 @@ void Button::Render()
 	switch (m_buttonState)
 	{
 	case ButtonState::NORMAL:
-		m_color = glm::vec4(0.6, 0.6, 0.6, 1.0f);
+		m_color = glm::vec3(0.6, 0.6, 0.6);
+		m_alpha = 1.0f;
+
 		break;
 	case ButtonState::HOVERED:
-		m_color = glm::vec4(0.7, 0.7, 0.7, 1.0f);
+		m_color = glm::vec3(0.7, 0.7, 0.7);
+		m_alpha = 1.0f;
+
 		break;
 	case ButtonState::PRESSED:
-		m_color = glm::vec4(0.55, 0.55, 0.55, 1.0f);
+		m_color = glm::vec3(0.55, 0.55, 0.55);
+		m_alpha = 1.0f;
+
 		break;
 	case ButtonState::DISABLED:
-		m_color = glm::vec4(0.6, 0.6, 0.6, .3f);
+		m_color = glm::vec3(0.6, 0.6, 0.6);
+		m_alpha = 0.3f;
 		break;
 	default:
 		break;

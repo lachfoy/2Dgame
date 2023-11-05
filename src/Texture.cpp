@@ -1,7 +1,6 @@
 #include "Texture.h"
 
-#include <cassert>
-#include <iostream>
+#include "Common.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -25,7 +24,7 @@ bool Texture::LoadFromFile(const char *path, bool useMipMaps)
 	if (data == nullptr)
 	{
 		printf("Error loading texture %s: %s\n", path, stbi_failure_reason());
-		assert(false);
+		ASSERT(false);
 	}
 
 	m_width = width;
@@ -46,7 +45,7 @@ bool Texture::LoadFromFile(const char *path, bool useMipMaps)
 			format = GL_RGBA;
 			break;
 		default:
-			assert(false);
+			ASSERT(false && "Unsupported number of channels");
 	}
 	glTexImage2D(GL_TEXTURE_2D, 0, format, m_width, m_height, 0, format, GL_UNSIGNED_BYTE, data);
 	stbi_image_free(data);
@@ -71,4 +70,30 @@ bool Texture::LoadFromFile(const char *path, bool useMipMaps)
 void Texture::Bind() const
 {
 	glBindTexture(GL_TEXTURE_2D, m_texture);
+}
+
+Texture* Texture::CreateUtilTexture()
+{
+	Texture* utilTexture = new Texture();
+
+	unsigned char data[] = { 255, 255, 255 }; 
+	utilTexture->m_width = 1;
+	utilTexture->m_height = 1;
+
+	// create and bind texture
+	glGenTextures(1, &utilTexture->m_texture);
+	glBindTexture(GL_TEXTURE_2D, utilTexture->m_texture);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, utilTexture->m_width, utilTexture->m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+
+	// set params
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	// unbind
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	return utilTexture;
 }

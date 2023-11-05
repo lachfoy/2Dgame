@@ -6,19 +6,19 @@
 Panel::Panel(const char* name, GuiRenderer* guiRenderer) : m_guiRenderer(guiRenderer)
 {
 	m_name = name;
-	m_color = glm::vec4(0.3, 0.3, 0.3, 0.0f);
+	m_color = glm::vec3(0.3, 0.3, 0.3);
 }
 
 Panel::Panel(const char* name, GuiRenderer* guiRenderer, glm::vec2 position, glm::vec2 size) : m_guiRenderer(guiRenderer), m_relativePosition(position), m_size(size)
 {
 	m_name = name;
-	m_color = glm::vec4(0.3, 0.3, 0.3, 0.0f);
+	m_color = glm::vec3(0.3, 0.3, 0.3);
 }
 
 Panel::Panel(const char* name, GuiRenderer* guiRenderer, glm::vec2 position, glm::vec2 size, Panel* parent) : m_guiRenderer(guiRenderer), m_relativePosition(position), m_size(size), m_parent(parent)
 {
 	m_name = name;
-	m_color = glm::vec4(0.3, 0.3, 0.3, 0.0f);
+	m_color = glm::vec3(0.3, 0.3, 0.3);
 }
 
 bool Panel::HandleInput(Input* input)
@@ -47,7 +47,7 @@ void Panel::Render()
 	glm::vec2 centerDiff = newCenter - center;
 	position -= centerDiff;
 
-	m_guiRenderer->AddQuadToBatch(position, size, m_color);
+	m_guiRenderer->AddQuadToBatch(position.x, position.y, size.x, size.y, m_color, m_alpha);
 }
 
 //void Panel::DebugRenderBounds()
@@ -86,7 +86,12 @@ bool Panel::IsInBounds(glm::vec2 point)
 	return point.x >= position.x && point.x <= bottomRight.x && point.y >= position.y && point.y <= bottomRight.y;
 }
 
-void Panel::SetColor(glm::vec4 color)
+void Panel::SetAlpha(float alpha)
+{
+	m_alpha = alpha;
+}
+
+void Panel::SetColor(glm::vec3 color)
 {
 	m_color = color;
 }
@@ -107,7 +112,6 @@ void Panel::CenterX()
 	{
 		m_relativePosition.x = (m_parent->GetSize().x / 2.0f) - (m_size.x / 2.0f);
 	}
-
 }
 
 void Panel::CenterY()

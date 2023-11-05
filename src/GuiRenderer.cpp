@@ -13,6 +13,8 @@ void GuiRenderer::Init()
 {
 	CreateShaderProgram();
 	CreateRenderData();
+
+	m_utilTexture = Texture::CreateUtilTexture();
 }
 
 void GuiRenderer::SetProjection(unsigned int screenWidth, unsigned int screenHeight)
@@ -25,6 +27,8 @@ void GuiRenderer::SetProjection(unsigned int screenWidth, unsigned int screenHei
 
 void GuiRenderer::Dispose()
 {
+	delete m_utilTexture;
+
 	glDeleteBuffers(1, &m_ebo);
 	glDeleteBuffers(1, &m_vbo);
 	glDeleteVertexArrays(1, &m_vao);
@@ -32,57 +36,53 @@ void GuiRenderer::Dispose()
 	glDeleteProgram(m_shaderProgram);
 }
 
-void GuiRenderer::AddQuadToBatch(glm::vec2 position, glm::vec2 size, glm::vec4 color)
+void GuiRenderer::AddQuadToBatch(float x, float y, float w, float h, glm::vec3 color, float alpha)
+{
+	AddTexturedQuadToBatch(x, y, w, h, m_utilTexture, color, alpha);
+}
+
+void GuiRenderer::AddTexturedQuadToBatch(float x, float y, float w, float h, Texture* texture, glm::vec3 color, float alpha)
 {
 	QuadEntry quadEntry;
-	quadEntry.vertices[0] = UIVertex::Make(position.x, position.y + size.y, 0.0f, 1.0f);
-	quadEntry.vertices[1] = UIVertex::Make(position.x + size.x, position.y + size.y, 1.0f, 1.0f);
-	quadEntry.vertices[2] = UIVertex::Make(position.x, position.y, 0.0f, 0.0f);
-	quadEntry.vertices[3] = UIVertex::Make(position.x + size.x, position.y, 1.0f, 0.0f);
+	quadEntry.vertices[0] = UIVertex::Make(x, y + h, 0.0f, 1.0f);
+	quadEntry.vertices[1] = UIVertex::Make(x + w, y + h, 1.0f, 1.0f);
+	quadEntry.vertices[2] = UIVertex::Make(x, y, 0.0f, 0.0f);
+	quadEntry.vertices[3] = UIVertex::Make(x + w, y, 1.0f, 0.0f);
 	quadEntry.color = color;
+	quadEntry.alpha = alpha;
+	quadEntry.texture = texture;
 
 	m_quadEntries.push_back(quadEntry);
 }
 
 void GuiRenderer::RenderQuads()
 {
-	//std::sort(m_renderObjects.begin(), m_renderObjects.end(), RenderObjectCompare());
-
 	glUseProgram(m_shaderProgram);
 	glBindVertexArray(m_vao);
 
-	// TODO eventually swap this out for a system using map sets so we can compare more than just the current color
-	// Also things like texture, alpha, and Z index
-	glm::vec4 currentColor = {};
+	Texture* currentTexture = nullptr;
+	glm::vec3 currentColor = glm::vec3(1.0f);
+	float currentAlpha = 1.0f;
 
 	for (const QuadEntry& obj : m_quadEntries)
 	{
-		if (obj.color != currentColor)
+		if (obj.texture != currentTexture || obj.color != currentColor || obj.alpha != currentAlpha)
 		{
-			if (!m_quadVertices.empty())
-			{
-				glUniform4f(glGetUniformLocation(m_shaderProgram, "u_color"), currentColor.r, currentColor.g, currentColor.b, currentColor.a);
+			FlushQuads();
 
-				//
-				glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-				glBufferSubData(GL_ARRAY_BUFFER, 0, m_quadVertices.size() * sizeof(UIVertex), m_quadVertices.data());
-
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-				glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_quadIndices.size() * sizeof(unsigned int), m_quadIndices.data());
-
-				glDrawElements(GL_TRIANGLES, m_quadIndices.size(), GL_UNSIGNED_INT, 0);
-
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-				//
-				
-				m_quadVertices.clear();
-				m_quadIndices.clear();
-			}
-
+			// Update the current state
+			currentTexture = obj.texture;
 			currentColor = obj.color;
+			currentAlpha = obj.alpha;
+
+			// Bind the new texture
+			currentTexture->Bind();
+
+			// Update the color and alpha
+			glUniform4fv(m_colorUniformLocation, 1, glm::value_ptr(glm::vec4(currentColor, currentAlpha)));
 		}
 
+		// Add vertices and indices to the batch
 		const UIVertex* vertices = obj.vertices;
 		const unsigned int vertexOffset = m_quadVertices.size();
 		for (int i = 0; i < 4; i++)
@@ -98,11 +98,16 @@ void GuiRenderer::RenderQuads()
 		m_quadIndices.push_back(vertexOffset + 2);
 	}
 
+	FlushQuads();
+
+	glBindVertexArray(0);
+	m_quadEntries.clear();
+}
+
+void GuiRenderer::FlushQuads()
+{
 	if (!m_quadVertices.empty())
 	{
-		glUniform4f(glGetUniformLocation(m_shaderProgram, "u_color"), currentColor.r, currentColor.g, currentColor.b, currentColor.a);
-
-		//
 		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, m_quadVertices.size() * sizeof(UIVertex), m_quadVertices.data());
 
@@ -113,14 +118,10 @@ void GuiRenderer::RenderQuads()
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		//
 
 		m_quadVertices.clear();
 		m_quadIndices.clear();
 	}
-
-	glBindVertexArray(0);
-	m_quadEntries.clear();
 }
 
 void GuiRenderer::CreateShaderProgram()
@@ -167,12 +168,11 @@ void GuiRenderer::CreateShaderProgram()
 			in vec2 v_texcoord;
 
 			uniform vec4 u_color;
-			uniform sampler2D u_sampler;
+			uniform sampler2D u_texture;
 
 			void main()
 			{
-				//out_color = texture(u_sampler, v_texcoord);
-				out_color = u_color;
+				out_color = texture(u_texture, v_texcoord) * u_color;
 			}
 		)";
 		
@@ -202,15 +202,17 @@ void GuiRenderer::CreateShaderProgram()
 		printf("Failed to link shader:\n%s\n", info_log);
 	}
 
+	m_colorUniformLocation = glGetUniformLocation(m_shaderProgram, "u_color");
+	m_textureUniformLocation = glGetUniformLocation(m_shaderProgram, "u_texture");
+
+	// Tell the shader which texture unit to use
+	glActiveTexture(GL_TEXTURE0);
+	glUniform1i(m_textureUniformLocation, 0);
+
 	// No longer need these
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
-	//// Set up sampler ...just one for now
-	//glUseProgram(m_shaderProgram);
-	//GLint textureUniformLocation = glGetUniformLocation(m_shaderProgram, "u_sampler");
-	//assert(textureUniformLocation >= 0 && "Sampler does not exist");
-	//glUniform1i(textureUniformLocation, 0);
 }
 
 void GuiRenderer::CreateRenderData()
@@ -239,26 +241,4 @@ void GuiRenderer::CreateRenderData()
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-}
-
-void GuiRenderer::CheckError()
-{
-	GLenum error = glGetError();
-	if (error > 0) {
-		switch (error)
-		{
-		case GL_INVALID_ENUM:
-			printf("GL_INVALID_ENUM");
-			break;
-		case GL_INVALID_OPERATION:
-			printf("GL_INVALID_OPERATION");
-			break;
-		case GL_INVALID_VALUE:
-			printf("GL_INVALID_VALUE");
-			break;
-		default:
-			break;
-		}
-		//assert(false);
-	}
 }

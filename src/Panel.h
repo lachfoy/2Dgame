@@ -36,7 +36,8 @@ public:
 
 	bool IsInBounds(glm::vec2 position);
 
-	void SetColor(glm::vec4 color);
+	void SetColor(glm::vec3 color);
+	void SetAlpha(float alpha);
 
 	Panel* GetParent() const { return m_parent; }
 	tPanelList GetChildren() const { return m_children; }
@@ -62,7 +63,8 @@ protected:
 
 	GuiRenderer* m_guiRenderer;
 
-	glm::vec4 m_color = glm::vec4(1.f, 1.f, 1.f, 0.f);
+	glm::vec3 m_color = glm::vec3(1.f, 1.f, 1.f);
+	float m_alpha = 1.0f;
 
 	float m_scale = 1.0f;
 

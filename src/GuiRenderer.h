@@ -6,6 +6,8 @@
 #include "Texture.h"
 #include <vector>
 
+#include <string>
+
 struct UIVertex
 {
 	float x;
@@ -28,8 +30,9 @@ struct QuadEntry
 {
 	UIVertex vertices[4];
 	unsigned int indices[6];
-	glm::vec4 color;
-	GLuint textureHandle;
+	glm::vec3 color;
+	float alpha;
+	Texture* texture;
 };
 
 class GuiRenderer
@@ -42,18 +45,19 @@ public:
 	void SetProjection(unsigned int screenWidth, unsigned int screenHeight);
 	void Dispose();
 
-	void AddQuadToBatch(glm::vec2 position, glm::vec2 size, glm::vec4 color);
+	void AddQuadToBatch(float x, float y, float w, float h, glm::vec3 color, float alpha = 1.0f);
+	void AddTexturedQuadToBatch(float x, float y, float w, float h, Texture* texture, glm::vec3 color, float alpha = 1.0f);
 
-	void AddStringToBatch(glm::vec2 position, glm::vec2 size, glm::vec4 color);
+	void AddStringToBatch(std::string string, float x, float y, glm::vec4 color, float alpha = 1.0f);
 
 	void RenderQuads();
 
 
 private:
+	void FlushQuads();
+
 	void CreateShaderProgram();
 	void CreateRenderData();
-
-	void CheckError();
 
 	GLuint m_shaderProgram;
 
@@ -64,5 +68,10 @@ private:
 	std::vector<QuadEntry> m_quadEntries;
 	std::vector<UIVertex> m_quadVertices;
 	std::vector<unsigned int> m_quadIndices;
+
+	GLint m_colorUniformLocation;
+	GLint m_textureUniformLocation;
+
+	Texture* m_utilTexture;
 
 };
