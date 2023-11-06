@@ -32,10 +32,10 @@ public:
 
 private:
 	glm::vec2 m_moveDir{ 0.0f };
-	float m_acceleration = 10000.0f;
+	float m_acceleration = 800.0f;
 
 	glm::vec2 m_velocity{ 0.0f };
-	float kFrictionCoef = 0.5f;
+	float kFrictionAmount = 8.f;
 	float kMaxSpeed = 400.0f;
 
 	SpriteEntity m_shotgun;

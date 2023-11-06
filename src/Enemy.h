@@ -28,10 +28,10 @@ public:
 private:
 	glm::vec2 m_moveDir{ 0.0f };
 	
-	float m_acceleration = 1000.0f;
+	float m_acceleration = 400.0f;
 
 	glm::vec2 m_velocity{ 0.0f };
-	float kFrictionCoef = 0.5f;
+	float kFrictionCoef = 8.f;
 
 	float m_thinkTimer = 0.0f;
 	const float kThinkInterval = 0.5f;

@@ -115,6 +115,7 @@ bool Game::Init(int width, int height, bool fullscreen, const char* title)
 	}
 
 	SetupGL();
+	//SDL_GL_SetSwapInterval(0);
 
 	// Init systems
 	m_renderer = new SpriteRenderer();

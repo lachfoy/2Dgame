@@ -58,8 +58,11 @@ void Player::Update(float dt)
 	m_shotgun.SetRotation(aimAngle);
 
 	// Apply movement
+	//float damping = pow(1.0f - kFrictionAmount, dt); // Calculate the damping factor based on friction coefficient and elapsed time
+	//m_velocity *= damping;
+
+	m_velocity -= m_velocity * kFrictionAmount * dt; // Apply friction first
 	m_velocity += m_acceleration * m_moveDir * dt;
-	m_velocity -= m_velocity * kFrictionCoef;
 
 	m_position += m_velocity * dt;
 	m_shotgun.SetPosition(m_position);

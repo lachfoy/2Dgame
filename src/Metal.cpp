@@ -32,8 +32,9 @@ void Metal::Update(float dt)
 
 	glm::vec2 moveDir = glm::normalize(m_player->GetPosition() - m_position);
 
+	// Apply movement
+	m_velocity -= m_velocity * kFrictionCoef * dt;
 	m_velocity += m_acceleration * moveDir * dt;
-	m_velocity -= m_velocity * kFrictionCoef;
 
 	m_position += m_velocity * dt;
 }

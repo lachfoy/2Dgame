@@ -45,8 +45,9 @@ void Enemy::Update(float dt)
 		m_moveDir = glm::normalize(m_moveDir);
 	}
 
+	// Apply movement
+	m_velocity -= m_velocity * kFrictionCoef * dt;
 	m_velocity += m_acceleration * m_moveDir * dt;
-	m_velocity -= m_velocity * kFrictionCoef;
 
 	m_position += m_velocity * dt;
 }
