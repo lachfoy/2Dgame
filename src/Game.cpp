@@ -12,6 +12,7 @@
 #include "GuiRenderer.h"
 #include "TextureManager.h"
 #include "EnemySpawner.h"
+#include "Font.h"
 
 //#define DEBUG_DRAW
 
@@ -254,6 +255,10 @@ void Game::Create()
 	m_button3->SetPosition(glm::vec2(25, 120));
 	m_button3->SetSize(glm::vec2(100, 30));
 	m_button3->SetEnabled(false);
+
+
+	m_font = new Font();
+	m_font->Load("data/fonts/arial_16px.fnt");
 }
 
 void Game::HandleInput()
@@ -395,6 +400,8 @@ void Game::Render()
 	}
 
 	RenderChildren(m_rootPanel);
+
+	m_guiRenderer->AddStringToBatch("Hello World", 0.0f, 0.0f, glm::vec3(1.0f), m_font);
 }
 
 void Game::Destroy()

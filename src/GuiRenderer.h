@@ -35,6 +35,7 @@ struct QuadEntry
 	Texture* texture;
 };
 
+class Font;
 class GuiRenderer
 {
 public:
@@ -48,7 +49,7 @@ public:
 	void AddQuadToBatch(float x, float y, float w, float h, glm::vec3 color, float alpha = 1.0f);
 	void AddTexturedQuadToBatch(float x, float y, float w, float h, Texture* texture, glm::vec3 color, float alpha = 1.0f);
 
-	void AddStringToBatch(std::string string, float x, float y, glm::vec4 color, float alpha = 1.0f);
+	void AddStringToBatch(std::string string, float x, float y, glm::vec3 color, Font* font, float alpha = 1.0f);
 
 	void RenderQuads();
 

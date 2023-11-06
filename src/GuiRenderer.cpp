@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cassert>
 #include <algorithm>
+#include "Font.h"
 
 static const unsigned int kMaxQuads = 1000;
 
@@ -53,6 +54,42 @@ void GuiRenderer::AddTexturedQuadToBatch(float x, float y, float w, float h, Tex
 	quadEntry.texture = texture;
 
 	m_quadEntries.push_back(quadEntry);
+}
+
+void GuiRenderer::AddStringToBatch(std::string string, float x, float y, glm::vec3 color, Font* font, float alpha)
+{
+	// iterate through all characters
+	float startX = x;
+	std::string::const_iterator c;
+	for (c = string.begin(); c != string.end(); c++)
+	{
+		CharInfo charInfo = font->GetInfo(*c);
+
+		float textureW = static_cast<float>(font->GetTexture()->GetWidth());
+		float textureH = static_cast<float>(font->GetTexture()->GetHeight());
+
+		float posx = x + charInfo.xoffset;
+		float posy = y + charInfo.yoffset;
+		float w = charInfo.width;
+		float h = charInfo.height;
+
+
+		QuadEntry quadEntry;
+		quadEntry.vertices[0] = UIVertex::Make(posx, posy + h, 0.0f, 1.0f);
+		quadEntry.vertices[1] = UIVertex::Make(posx + w, posy + h, 1.0f, 1.0f);
+		quadEntry.vertices[2] = UIVertex::Make(posx, posy, 0.0f, 0.0f);
+		quadEntry.vertices[3] = UIVertex::Make(posx + w, posy, 1.0f, 0.0f);
+		quadEntry.color = color;
+		quadEntry.alpha = alpha;
+		quadEntry.texture = font->GetTexture();
+
+		m_quadEntries.push_back(quadEntry);
+
+
+		x += charInfo.xadvance;
+	}
+
+
 }
 
 void GuiRenderer::RenderQuads()
