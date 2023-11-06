@@ -155,6 +155,7 @@
     <ClCompile Include="src\Projectile.cpp" />
     <ClCompile Include="src\SpriteRenderer.cpp" />
     <ClCompile Include="src\SpriteEntity.cpp" />
+    <ClCompile Include="src\TextRenderer.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\TileMap.cpp" />
@@ -178,11 +179,13 @@
     <ClInclude Include="src\SpriteRenderer.h" />
     <ClInclude Include="src\SpriteEntity.h" />
     <ClInclude Include="src\stb_image.h" />
+    <ClInclude Include="src\TextRenderer.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\TextureManager.h" />
     <ClInclude Include="src\TileMap.h" />
     <ClInclude Include="src\GuiRenderer.h" />
     <ClInclude Include="src\Turret.h" />
+    <ClInclude Include="src\UIVertex.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="idea.txt" />

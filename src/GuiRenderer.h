@@ -8,23 +8,7 @@
 
 #include <string>
 
-struct UIVertex
-{
-	float x;
-	float y;
-	float u;
-	float v;
-
-	static UIVertex Make(float x, float y, float u, float v)
-	{
-		UIVertex vertex;
-		vertex.x = x;
-		vertex.y = y;
-		vertex.u = u;
-		vertex.v = v;
-		return vertex;
-	}
-};
+#include "UIVertex.h"
 
 struct QuadEntry
 {
@@ -35,7 +19,6 @@ struct QuadEntry
 	Texture* texture;
 };
 
-class Font;
 class GuiRenderer
 {
 public:
@@ -48,8 +31,6 @@ public:
 
 	void AddQuadToBatch(float x, float y, float w, float h, glm::vec3 color, float alpha = 1.0f);
 	void AddTexturedQuadToBatch(float x, float y, float w, float h, Texture* texture, glm::vec3 color, float alpha = 1.0f);
-
-	void AddStringToBatch(std::string string, float x, float y, glm::vec3 color, Font* font, float alpha = 1.0f);
 
 	void RenderQuads();
 

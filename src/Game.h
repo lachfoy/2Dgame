@@ -24,8 +24,6 @@ class Panel;
 class Button;
 class GuiRenderer;
 
-class Font;
-
 typedef std::vector<std::unique_ptr<Enemy>> tEnemiesVec;
 typedef std::vector<std::unique_ptr<Metal>> tMetalVec;
 typedef std::vector<std::unique_ptr<Projectile>> tProjectilesVec;
@@ -74,7 +72,5 @@ private:
 	Button* m_button1;
 	Button* m_button2;
 	Button* m_button3;
-
-	Font* m_font;
 
 };

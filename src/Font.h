@@ -29,22 +29,24 @@ struct KerningPair
 
 class Font
 {
+friend class TextRenderer;
 public:
 	Font() = default;
 	~Font();
 
-	CharInfo GetInfo(const char c) { return m_charInfos[c]; }
+	CharInfo GetInfo(unsigned int c) { return m_charInfos[c]; }
 
 	Texture* GetTexture() { return m_texture; }
+
+	short GetKerningAmount(unsigned int first, unsigned int second);
 
 	void Load(const char* path);
 
 private:
-	Texture* m_texture;
+	Texture* m_texture; // temp, when we do proper font rendering 
 
 	int m_lineHeight;
-	std::unordered_map<unsigned int, CharInfo> m_charInfos;
-
+	std::unordered_map<unsigned int, CharInfo> m_charInfos; // index by char id
 	std::vector<KerningPair> m_kerningPairs;
 
 };

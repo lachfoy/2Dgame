@@ -8,6 +8,17 @@ Font::~Font()
 	delete m_texture;
 }
 
+short Font::GetKerningAmount(unsigned int first, unsigned int second)
+{
+	for (const KerningPair& pair : m_kerningPairs) {
+		if (pair.first == first && pair.second == second) {
+			return pair.amount;
+		}
+	}
+
+	return 0;
+}
+
 void Font::Load(const char* path)
 {
 	std::ifstream myfile(path, std::ios::binary | std::ios::ate);

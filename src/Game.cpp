@@ -12,7 +12,9 @@
 #include "GuiRenderer.h"
 #include "TextureManager.h"
 #include "EnemySpawner.h"
-#include "Font.h"
+#include "TextRenderer.h"
+
+#include <deque>
 
 //#define DEBUG_DRAW
 
@@ -129,6 +131,9 @@ bool Game::Init(int width, int height, bool fullscreen, const char* title)
 	m_guiRenderer->Init();
 	m_guiRenderer->SetProjection(m_viewportWidth, m_viewportHeight);
 
+	gTextRenderer.Init();
+	gTextRenderer.SetProjection(m_viewportWidth, m_viewportHeight);
+
 	m_input = new Input();
 
 	return true;
@@ -138,11 +143,10 @@ void Game::Run()
 {
 	Create();
 
-	Uint32 last_time = 0;
-
-	int fps = 0;
-	int fps_count = 0;
-	float fps_interval = 0.0f;
+	Uint32 last_time = SDL_GetTicks();
+	std::deque<float> frameTimes;
+	const size_t maxFrameSamples = 100;
+	float frameTimeAccumulator = 0.0f;
 
 	// main loop
 	bool running = true;
@@ -157,19 +161,24 @@ void Game::Run()
 		float dt = (current_time - last_time) / 1000.0f;
 		last_time = current_time;
 
-		// calculate fps
-		fps_count++;
-		fps_interval += dt;
-		if (fps_interval > 1.0f)
+		// maintain a fixed-size deque of frame times
+		frameTimeAccumulator += dt;
+		frameTimes.push_back(dt);
+		if (frameTimes.size() > maxFrameSamples)
 		{
-			fps = fps_count;
-			fps_count = 0;
-			fps_interval = 0.0f;
+			frameTimeAccumulator -= frameTimes.front();
+			frameTimes.pop_front();
 		}
+
+		// calculate average frame time and FPS over the sliding window
+		float averageFrameTime = frameTimeAccumulator / frameTimes.size();
+		float fps = 1.0f / averageFrameTime;
 
 		// update
 		Update(dt);
 		gDebugRenderer.Update(dt);
+
+		gTextRenderer.AddStringToBatch(std::to_string(fps), 0.0f, 0.0f, glm::vec3(1.0f));
 
 		// render
 		//glClear(GL_COLOR_BUFFER_BIT);
@@ -179,6 +188,7 @@ void Game::Run()
 		gDebugRenderer.Render();
 #endif
 		m_guiRenderer->RenderQuads();
+		gTextRenderer.RenderQuads();
 
 		// swap buffers
 		SDL_GL_SwapWindow(m_window);
@@ -256,10 +266,6 @@ void Game::Create()
 	m_button3->SetPosition(glm::vec2(25, 120));
 	m_button3->SetSize(glm::vec2(100, 30));
 	m_button3->SetEnabled(false);
-
-
-	m_font = new Font();
-	m_font->Load("data/fonts/arial_16px.fnt");
 }
 
 void Game::HandleInput()
@@ -400,9 +406,9 @@ void Game::Render()
 		projectile->Render(m_renderer);
 	}
 
-	RenderChildren(m_rootPanel);
+	//RenderChildren(m_rootPanel);
 
-	m_guiRenderer->AddStringToBatch("Hello World", 0.0f, 0.0f, glm::vec3(1.0f), m_font);
+	//gTextRenderer.AddStringToBatch("Hello World!!", 0.0f, 0.0f, glm::vec3(1.0f));
 }
 
 void Game::Destroy()
