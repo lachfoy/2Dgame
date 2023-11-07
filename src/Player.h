@@ -26,7 +26,7 @@ public:
 	void Damage(int amount);
 	bool CanTakeDamage() const { return !m_immune; }
 
-	void IncMetalCount() { m_metalCount++; }
+	void AddMetal(int amount) { m_metalCount += amount; }
 
 	void Shoot();
 
@@ -39,7 +39,7 @@ private:
 	float kMaxSpeed = 400.0f;
 
 	SpriteEntity m_shotgun;
-	int m_startingMetalCount = 10;
+	int m_startingMetalCount = 50;
 	int m_metalCount = m_startingMetalCount;
 
 	int m_maxHealth = 100;

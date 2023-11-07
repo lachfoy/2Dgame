@@ -17,10 +17,8 @@ void TextRenderer::Init()
 	CreateShaderProgram();
 	CreateRenderData();
 
-	m_utilTexture = Texture::CreateUtilTexture();
-
 	m_font = new Font();
-	m_font->Load("data/fonts/arial_16px.fnt");
+	m_font->Load("data/fonts/smallfonts_10px.fnt");
 }
 
 void TextRenderer::SetProjection(unsigned int screenWidth, unsigned int screenHeight)
@@ -33,7 +31,7 @@ void TextRenderer::SetProjection(unsigned int screenWidth, unsigned int screenHe
 
 void TextRenderer::Dispose()
 {
-	delete m_utilTexture;
+	delete m_font;
 
 	glDeleteBuffers(1, &m_ebo);
 	glDeleteBuffers(1, &m_vbo);
@@ -52,8 +50,8 @@ void TextRenderer::AddStringToBatch(std::string string, float x, float y, glm::v
 	{
 		CharInfo charInfo = m_font->GetInfo(c);
 
-		float textureW = static_cast<float>(m_font->GetTexture()->GetWidth());
-		float textureH = static_cast<float>(m_font->GetTexture()->GetHeight());
+		float textureW = static_cast<float>(m_font->m_texture->GetWidth());
+		float textureH = static_cast<float>(m_font->m_texture->GetHeight());
 
 		// If we had a previous character, look up the kerning pair and adjust x
 		if (lastChar != UINT_MAX) {
@@ -69,24 +67,26 @@ void TextRenderer::AddStringToBatch(std::string string, float x, float y, glm::v
 
 		// Calculate positions
 		float posx = x + charInfo.xoffset;
-		float posy = y + charInfo.yoffset; // Notice the direction might be inverted depending on your coordinate system
+		float posy = y + charInfo.yoffset;
 		float w = charInfo.width;
 		float h = charInfo.height;
 
+		// todo actually have a batch of text render data so I can change fonts/color
+
 		// Define the vertex offset for indexing
-		const unsigned int vertexOffset = m_quadVertices.size();
+		const unsigned int vertexOffset = m_textVertices.size();
 
-		m_quadVertices.push_back(UIVertex::Make(posx, posy, tx, ty));// Lower left vertex
-		m_quadVertices.push_back(UIVertex::Make(posx + w, posy, tx + tw, ty));// Lower right vertex
-		m_quadVertices.push_back(UIVertex::Make(posx, posy + h, tx, ty + th));// Upper left vertex
-		m_quadVertices.push_back(UIVertex::Make(posx + w, posy + h, tx + tw, ty + th));// Upper right vertex
+		m_textVertices.push_back(UIVertex::Make(posx, posy, tx, ty));// Lower left vertex
+		m_textVertices.push_back(UIVertex::Make(posx + w, posy, tx + tw, ty));// Lower right vertex
+		m_textVertices.push_back(UIVertex::Make(posx, posy + h, tx, ty + th));// Upper left vertex
+		m_textVertices.push_back(UIVertex::Make(posx + w, posy + h, tx + tw, ty + th));// Upper right vertex
 
-		m_quadIndices.push_back(vertexOffset);
-		m_quadIndices.push_back(vertexOffset + 1);
-		m_quadIndices.push_back(vertexOffset + 2);
-		m_quadIndices.push_back(vertexOffset + 1);
-		m_quadIndices.push_back(vertexOffset + 3);
-		m_quadIndices.push_back(vertexOffset + 2);
+		m_textIndices.push_back(vertexOffset);
+		m_textIndices.push_back(vertexOffset + 1);
+		m_textIndices.push_back(vertexOffset + 2);
+		m_textIndices.push_back(vertexOffset + 1);
+		m_textIndices.push_back(vertexOffset + 3);
+		m_textIndices.push_back(vertexOffset + 2);
 
 		x += charInfo.xadvance;
 
@@ -112,21 +112,21 @@ void TextRenderer::RenderQuads()
 
 void TextRenderer::FlushQuads()
 {
-	if (!m_quadVertices.empty())
+	if (!m_textVertices.empty())
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, m_quadVertices.size() * sizeof(UIVertex), m_quadVertices.data());
+		glBufferSubData(GL_ARRAY_BUFFER, 0, m_textVertices.size() * sizeof(UIVertex), m_textVertices.data());
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_quadIndices.size() * sizeof(unsigned int), m_quadIndices.data());
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_textIndices.size() * sizeof(unsigned int), m_textIndices.data());
 
-		glDrawElements(GL_TRIANGLES, m_quadIndices.size(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, m_textIndices.size(), GL_UNSIGNED_INT, 0);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		m_quadVertices.clear();
-		m_quadIndices.clear();
+		m_textVertices.clear();
+		m_textIndices.clear();
 	}
 }
 

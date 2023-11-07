@@ -16,7 +16,7 @@
 
 #include <deque>
 
-//#define DEBUG_DRAW
+#define DEBUG_DRAW 1
 
 void RenderChildren(Panel* panel)
 {
@@ -349,7 +349,7 @@ void Game::Update(float dt)
 		if (SpriteEntity::Collision(*m_player, *metal))
 		{
 			metal->Remove();
-			m_player->IncMetalCount();
+			m_player->AddMetal(3);
 			printf("picked up metal!\n");
 		}
 	}

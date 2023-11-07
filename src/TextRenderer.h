@@ -25,7 +25,6 @@ public:
 
 	void RenderQuads();
 
-
 private:
 	void FlushQuads();
 
@@ -38,13 +37,11 @@ private:
 	GLuint m_vbo;
 	GLuint m_ebo;
 
-	std::vector<UIVertex> m_quadVertices;
-	std::vector<unsigned int> m_quadIndices;
+	std::vector<UIVertex> m_textVertices;
+	std::vector<unsigned int> m_textIndices;
 
 	GLint m_colorUniformLocation;
 	GLint m_textureUniformLocation;
-
-	Texture* m_utilTexture;
 
 	Font* m_font;
 

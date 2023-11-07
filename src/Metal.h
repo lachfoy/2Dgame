@@ -29,6 +29,6 @@ private:
 	const float kThinkInterval = 0.5f;
 
 	bool m_active = false;
-	float m_activationRadius = 60.0f;
+	float m_activationRadius = 80.0f; // this really shouldnt be on metal, but should be on the player
 
 };

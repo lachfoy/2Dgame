@@ -6,6 +6,8 @@
 #include "DebugRenderer.h"
 #include "TextureManager.h"
 
+#include "TextRenderer.h"
+
 Player::Player(glm::vec2 position, std::vector<std::unique_ptr<Projectile>>* projectiles)
 	: SpriteEntity(position, glm::vec2(16, 16), gTextureManager.GetTexture("guy")), m_projectiles(projectiles)
 {
@@ -124,4 +126,6 @@ void Player::Render(SpriteRenderer* renderer)
 {
 	SpriteEntity::Render(renderer);
 	m_shotgun.Render(renderer);
+
+	gTextRenderer.AddStringToBatch(std::to_string(m_metalCount), m_position.x, m_position.y, glm::vec3(0.5f));
 }
