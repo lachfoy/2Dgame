@@ -116,7 +116,7 @@ void Player::Shoot()
 		float angle = aimAngle - shotSpreadRadians / 2.0 + ((float)rand() / RAND_MAX) * shotSpreadRadians;
 
 		glm::vec2 shotDirection = glm::vec2(cos(angle), sin(angle));
-		m_projectiles->push_back(std::make_unique<Projectile>(m_position, shotDirection));
+		m_projectiles->push_back(std::make_unique<Projectile>(m_position, shotDirection, ProjectileType::REPAIR_CLAW));
 
 		m_metalCount--;
 	}

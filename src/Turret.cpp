@@ -4,42 +4,44 @@
 #include "DebugRenderer.h"
 #include "TextureManager.h"
 
-Turret::Turret(glm::vec2 position, std::vector<std::unique_ptr<Enemy>>* enemies)
-	: SpriteEntity(position, glm::vec2(16, 16), gTextureManager.GetTexture("turret")), m_enemies(enemies)
+Turret::Turret(glm::vec2 position, std::vector<std::unique_ptr<Enemy>>* enemies, std::vector<std::unique_ptr<Projectile>>* projectiles)
+	: SpriteEntity(position, glm::vec2(16, 16), gTextureManager.GetTexture("turret")), m_enemies(enemies), m_projectiles(projectiles)
 {
 	gDebugRenderer.AddCircle(position, m_detectRadius, glm::vec3(1.0f, 0.0f, 1.0f)); //whar
 }
 
 void Turret::Think()
 {
+	if (m_targetEnemyIndex != -1) return; // dont bother picking a new target if the current one is still being tracked
+
 	if (!m_enemies->empty())
 	{
-		// Find enemies within range
 		std::vector<int> enemiesInRangeIndices;
-		for (int i = 0; i < m_enemies->size(); i++)
+		for (size_t i = 0; i < m_enemies->size(); ++i)
 		{
-			std::unique_ptr<Enemy>& enemy = m_enemies->at(i);
-
-			float dist = glm::length(enemy->GetPosition() - m_position);
-			if (dist < m_detectRadius)
+			if ((*m_enemies)[i] && !(*m_enemies)[i]->GetRemove())
 			{
-				enemiesInRangeIndices.push_back(i);
+				float dist = glm::length((*m_enemies)[i]->GetPosition() - m_position);
+				if (dist < m_detectRadius)
+				{
+					enemiesInRangeIndices.push_back(i);
+				}
 			}
 		}
 
-		// If enemies are in range, pick one at random as a target
 		if (!enemiesInRangeIndices.empty())
 		{
-			int i = rand() % enemiesInRangeIndices.size();
-			std::unique_ptr<Enemy>& enemy = m_enemies->at(enemiesInRangeIndices.at(i));
-
-			glm::vec2 directionToEnemy = glm::normalize(enemy->GetPosition() - m_position);
-			float angleToEnemy = atan2(directionToEnemy.y, directionToEnemy.x);
-			SetRotation(angleToEnemy);
-
-			gDebugRenderer.AddLine(m_position, enemy->GetPosition(), glm::vec3(0.0f, 1.0f, 0.0f), 0.5f);
-			enemy->Damage(rand() % 10);
+			int randomIndex = rand() % enemiesInRangeIndices.size();
+			m_targetEnemyIndex = enemiesInRangeIndices[randomIndex];
 		}
+		else
+		{
+			m_targetEnemyIndex = -1;
+		}
+	}
+	else
+	{
+		m_targetEnemyIndex = -1;
 	}
 }
 
@@ -50,5 +52,46 @@ void Turret::Update(float dt)
 	{
 		m_thinkTimer = 0.0f;
 		Think();
+	}
+
+	if (!m_canShoot)
+		m_shotTimer += dt;
+
+	if (m_shotTimer >= kShotInterval)
+	{
+		m_shotTimer = 0.0f;
+		m_canShoot = true;
+	}
+
+	if (m_targetEnemyIndex != -1)
+	{
+		if (m_targetEnemyIndex >= m_enemies->size() || (*m_enemies)[m_targetEnemyIndex] == nullptr || (*m_enemies)[m_targetEnemyIndex]->GetRemove())
+		{
+			// Target is dead, reset target index
+			m_targetEnemyIndex = -1;
+			return;
+		}
+
+		std::unique_ptr<Enemy>& enemy = (*m_enemies)[m_targetEnemyIndex];
+		glm::vec2 vecToEnemy = enemy->GetPosition() - m_position;
+		float dist = glm::length(vecToEnemy);
+
+		if (dist > m_detectRadius)
+		{
+			// Target went out of range, reset target index
+			m_targetEnemyIndex = -1;
+			return;
+		}
+
+		glm::vec2 directionToEnemy = glm::normalize(vecToEnemy);
+		float angleToEnemy = atan2(directionToEnemy.y, directionToEnemy.x);
+		SetRotation(angleToEnemy);
+
+		if (m_canShoot)
+		{
+			gDebugRenderer.AddLine(m_position, enemy->GetPosition(), glm::vec3(0.0f, 1.0f, 0.0f), 0.1f);
+			m_projectiles->push_back(std::make_unique<Projectile>(m_position, directionToEnemy, ProjectileType::SHOT));
+			m_canShoot = false;
+		}
 	}
 }

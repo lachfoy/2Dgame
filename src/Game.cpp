@@ -184,11 +184,11 @@ void Game::Run()
 		//glClear(GL_COLOR_BUFFER_BIT);
 		Render();
 		m_renderer->RenderObjects();
-#ifdef DEBUG_DRAW
-		gDebugRenderer.Render();
-#endif
 		m_guiRenderer->RenderQuads();
 		gTextRenderer.RenderQuads();
+
+		if (DEBUG_DRAW)
+			gDebugRenderer.Render();
 
 		// swap buffers
 		SDL_GL_SwapWindow(m_window);
@@ -216,17 +216,18 @@ void Game::Create()
 	gTextureManager.LoadTexture("enemy", "data/images/droid.png");
 	gTextureManager.LoadTexture("tile", "data/images/tile.png");
 	gTextureManager.LoadTexture("shotgun", "data/images/shotgun.png");
-	gTextureManager.LoadTexture("bullet", "data/images/bullet.png");
+	gTextureManager.LoadTexture("repairclaw", "data/images/repairclaw2.png");
+	gTextureManager.LoadTexture("shot", "data/images/shot.png");
 
 	m_player = new Player(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight), &m_projectiles);
 
 	m_enemySpawner = new EnemySpawner(&m_enemies, m_player);
 
-	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(200, 150), &m_enemies));
-	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(230, 120), &m_enemies));
-	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(170, 150), &m_enemies));
-	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(200, 120), &m_enemies));
-	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(230, 170), &m_enemies));
+	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(200, 150), &m_enemies, &m_projectiles));
+	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(230, 120), &m_enemies, &m_projectiles));
+	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(170, 150), &m_enemies, &m_projectiles));
+	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(200, 120), &m_enemies, &m_projectiles));
+	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(230, 170), &m_enemies, &m_projectiles));
 
 	m_tileMap = new TileMap(gTextureManager.GetTexture("tile"));
 	m_tileMap->CreateDebugMap();
