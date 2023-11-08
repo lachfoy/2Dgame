@@ -221,7 +221,7 @@ void Game::Create()
 
 	m_player = new Player(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight), &m_projectiles);
 
-	m_enemySpawner = new EnemySpawner(&m_enemies, m_player);
+	m_enemySpawner = new EnemySpawner(&m_enemies, m_player, &m_turrets);
 
 	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(200, 150), &m_enemies, &m_projectiles));
 	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(230, 120), &m_enemies, &m_projectiles));

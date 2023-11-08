@@ -6,8 +6,8 @@
 #include "TextureManager.h"
 #include "Player.h"
 
-Enemy::Enemy(glm::vec2 position, Player* player)
-	: SpriteEntity(position, glm::vec2(16, 16), gTextureManager.GetTexture("enemy")), m_player(player)
+Enemy::Enemy(glm::vec2 position, Player* player, std::vector<std::unique_ptr<Turret>>* turrets)
+	: SpriteEntity(position, glm::vec2(16, 16), gTextureManager.GetTexture("enemy")), m_player(player), m_turrets(turrets)
 {
 }
 
@@ -25,10 +25,15 @@ void Enemy::Damage(int amount)
 
 void Enemy::Think()
 {
-	// only move to player if they are within a certain range. otherwise move towards random turret.
- 
-	// set direction to move towards player
-	m_moveDir = glm::normalize(m_player->GetPosition() - m_position);
+	// todo just redo this... 
+	if (m_hasTarget) return;
+	
+	int targetIndex = rand() % m_turrets->size() + 1;
+
+	// select random turret or player
+	m_targetPos = (targetIndex == m_turrets->size()) ? m_player->GetPosition() : (*m_turrets)[targetIndex]->GetPosition();
+
+	m_hasTarget = true;
 }
 
 void Enemy::Update(float dt)
@@ -40,10 +45,8 @@ void Enemy::Update(float dt)
 		Think();
 	}
 
-	if (glm::length(m_moveDir) > 0.0f)
-	{
-		m_moveDir = glm::normalize(m_moveDir);
-	}
+	// set direction to move towards target
+	m_moveDir = glm::normalize(m_targetPos - m_position);
 
 	// Apply movement
 	m_velocity -= m_velocity * kFrictionCoef * dt;

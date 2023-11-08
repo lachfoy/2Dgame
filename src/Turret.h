@@ -9,6 +9,8 @@
 #include "Enemy.h"
 #include "Projectile.h"
 
+class Enemy;
+
 class Turret : public SpriteEntity
 {
 public:

@@ -3,8 +3,8 @@
 #include "Common.h"
 #include "Player.h"
 
-EnemySpawner::EnemySpawner(std::vector<std::unique_ptr<Enemy>>* enemies, Player* player)
-	: m_enemies(enemies), m_player(player)
+EnemySpawner::EnemySpawner(std::vector<std::unique_ptr<Enemy>>* enemies, Player* player, std::vector<std::unique_ptr<Turret>>* turrets)
+	: m_enemies(enemies), m_player(player), m_turrets(turrets)
 {
 }
 
@@ -29,6 +29,6 @@ void EnemySpawner::SpawnEnemyGroup()
 		float randomAngle = static_cast<float>(rand()) / RAND_MAX * 2.0f * PI;
 		glm::vec2 spawnPos = playerPos + glm::vec2(std::cos(randomAngle), std::sin(randomAngle)) * m_spawnRadius;
 
-		m_enemies->push_back(std::make_unique<Enemy>(spawnPos, m_player));
+		m_enemies->push_back(std::make_unique<Enemy>(spawnPos, m_player, m_turrets));
 	}
 }

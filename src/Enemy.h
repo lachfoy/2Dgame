@@ -7,14 +7,17 @@
 #include <memory>
 #include <vector>
 #include "Metal.h"
+#include "Turret.h"
 
 class Input;
 class Player;
 
+class Turret;
+
 class Enemy : public SpriteEntity
 {
 public:
-	Enemy(glm::vec2 position, Player* player);
+	Enemy(glm::vec2 position, Player* player, std::vector<std::unique_ptr<Turret>>* turrets);
 	~Enemy() {}
 
 	void Damage(int amount);
@@ -43,5 +46,10 @@ private:
 	int m_maxDamage = 5;
 
 	Player* m_player;
+
+	std::vector<std::unique_ptr<Turret>>* m_turrets;
+
+	glm::vec2 m_targetPos;
+	bool m_hasTarget = false;
 
 };

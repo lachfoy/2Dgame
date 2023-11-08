@@ -16,7 +16,7 @@ void Turret::Think()
 
 	if (!m_enemies->empty())
 	{
-		std::vector<int> enemiesInRangeIndices;
+		std::vector<size_t> enemiesInRangeIndices;
 		for (size_t i = 0; i < m_enemies->size(); ++i)
 		{
 			if ((*m_enemies)[i] && !(*m_enemies)[i]->GetRemove())
