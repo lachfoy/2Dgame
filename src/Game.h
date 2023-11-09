@@ -24,10 +24,10 @@ class Panel;
 class Button;
 class GuiRenderer;
 
-typedef std::vector<std::unique_ptr<Enemy>> tEnemiesVec;
+typedef std::vector<Enemy*> tEnemiesVec;
 typedef std::vector<std::unique_ptr<Metal>> tMetalVec;
 typedef std::vector<std::unique_ptr<Projectile>> tProjectilesVec;
-typedef std::vector<std::unique_ptr<Turret>> tTurretVec;
+typedef std::vector<Turret*> tTurretVec;
 
 class Game
 {
@@ -35,6 +35,8 @@ public:
 	Game() {}
 	bool Init(int width, int height, bool fullscreen, const char* title);
 	void Run();
+
+	const tEnemiesVec& GetEnemies() const { return m_enemies; }
 
 private:
 	void SetupGL();

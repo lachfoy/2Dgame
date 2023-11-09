@@ -221,13 +221,13 @@ void Game::Create()
 
 	m_player = new Player(glm::vec2(rand() % m_viewportWidth, rand() % m_viewportHeight), &m_projectiles);
 
-	m_enemySpawner = new EnemySpawner(&m_enemies, m_player, &m_turrets);
+	m_enemySpawner = new EnemySpawner(m_enemies, m_player, m_turrets);
 
-	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(200, 150), &m_enemies, &m_projectiles));
-	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(230, 120), &m_enemies, &m_projectiles));
-	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(170, 150), &m_enemies, &m_projectiles));
-	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(200, 120), &m_enemies, &m_projectiles));
-	m_turrets.push_back(std::make_unique<Turret>(glm::vec2(230, 170), &m_enemies, &m_projectiles));
+	m_turrets.push_back(new Turret(glm::vec2(200, 150), m_enemies, &m_projectiles));
+	m_turrets.push_back(new Turret(glm::vec2(230, 120), m_enemies, &m_projectiles));
+	m_turrets.push_back(new Turret(glm::vec2(170, 150), m_enemies, &m_projectiles));
+	m_turrets.push_back(new Turret(glm::vec2(200, 120), m_enemies, &m_projectiles));
+	m_turrets.push_back(new Turret(glm::vec2(230, 170), m_enemies, &m_projectiles));
 
 	m_tileMap = new TileMap(gTextureManager.GetTexture("tile"));
 	m_tileMap->CreateDebugMap();
@@ -323,6 +323,15 @@ void Game::Update(float dt)
 		//SpriteEntity::ResolveCollision(*enemy, *m_player);
 		//SpriteEntity::ResolveCollision(*enemy, *m_turret);
 
+		for (const auto& turret : m_turrets)
+		{
+			if (SpriteEntity::Collision(*turret, *enemy))
+			{
+				turret->Damage(enemy->GetDamage());
+				enemy->Remove();
+			}
+		}
+
 		if (SpriteEntity::Collision(*m_player, *enemy))
 		{
 			if (m_player->CanTakeDamage())
@@ -357,13 +366,17 @@ void Game::Update(float dt)
 
 	// Clean up entities
 	m_enemies.erase(std::remove_if(m_enemies.begin(), m_enemies.end(),
-		[&](const std::unique_ptr<Enemy>& enemy) {
-			bool remove = enemy->GetRemove();
-			if (remove)
+		[&](Enemy* enemy) {
+			bool shouldRemove = enemy->GetRemove();
+			if (shouldRemove)
 			{
 				enemy->OnRemove(m_metal);
+
+				delete enemy;
+				enemy = nullptr;
 			}
-			return remove;
+
+			return shouldRemove;
 		}),
 		m_enemies.end());
 

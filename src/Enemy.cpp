@@ -6,7 +6,7 @@
 #include "TextureManager.h"
 #include "Player.h"
 
-Enemy::Enemy(glm::vec2 position, Player* player, std::vector<std::unique_ptr<Turret>>* turrets)
+Enemy::Enemy(glm::vec2 position, Player* player, std::vector<Turret*>& turrets)
 	: SpriteEntity(position, glm::vec2(16, 16), gTextureManager.GetTexture("enemy")), m_player(player), m_turrets(turrets)
 {
 }
@@ -28,10 +28,10 @@ void Enemy::Think()
 	// todo just redo this... 
 	if (m_hasTarget) return;
 	
-	int targetIndex = rand() % m_turrets->size() + 1;
+	int targetIndex = rand() % m_turrets.size() + 1;
 
 	// select random turret or player
-	m_targetPos = (targetIndex == m_turrets->size()) ? m_player->GetPosition() : (*m_turrets)[targetIndex]->GetPosition();
+	m_targetPos = (targetIndex == m_turrets.size()) ? m_player->GetPosition() : m_turrets[targetIndex]->GetPosition();
 
 	m_hasTarget = true;
 }

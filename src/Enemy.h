@@ -17,7 +17,7 @@ class Turret;
 class Enemy : public SpriteEntity
 {
 public:
-	Enemy(glm::vec2 position, Player* player, std::vector<std::unique_ptr<Turret>>* turrets);
+	Enemy(glm::vec2 position, Player* player, std::vector<Turret*>& turrets);
 	~Enemy() {}
 
 	void Damage(int amount);
@@ -47,7 +47,7 @@ private:
 
 	Player* m_player;
 
-	std::vector<std::unique_ptr<Turret>>* m_turrets;
+	std::vector<Turret*>& m_turrets;
 
 	glm::vec2 m_targetPos;
 	bool m_hasTarget = false;

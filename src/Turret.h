@@ -14,14 +14,18 @@ class Enemy;
 class Turret : public SpriteEntity
 {
 public:
-	Turret(glm::vec2 position, std::vector<std::unique_ptr<Enemy>>* enemies, std::vector<std::unique_ptr<Projectile>>* projectiles);
+	Turret(glm::vec2 position, std::vector<Enemy*>& enemies, std::vector<std::unique_ptr<Projectile>>* projectiles);
 	~Turret() {}
 
 	void Think(); // exact same as enemy
 	void Update(float dt);
 
+	void Damage(int amount);
+
+	void Render(SpriteRenderer* renderer) override;
+
 private:
-	std::vector<std::unique_ptr<Enemy>>* m_enemies;
+	std::vector<Enemy*>& m_enemies;
 
 	float m_thinkTimer = 0.0f;
 	const float kThinkInterval = 0.5f;
@@ -35,5 +39,8 @@ private:
 	float m_shotTimer = 0.0f;
 	const float kShotInterval = 0.2f;
 	bool m_canShoot = true;
+
+	int m_maxHealth = 10;
+	int m_health = m_maxHealth;
 
 };

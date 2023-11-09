@@ -11,7 +11,7 @@ class Player;
 class EnemySpawner
 {
 public:
-	EnemySpawner(std::vector<std::unique_ptr<Enemy>>* enemies, Player* player, std::vector<std::unique_ptr<Turret>>* turrets);
+	EnemySpawner(std::vector<Enemy*>& enemies, Player* player, std::vector<Turret*>& turrets);
 	~EnemySpawner() {}
 
 	void Update(float dt);
@@ -30,8 +30,8 @@ private:
 
 	Player* m_player;
 
-	std::vector<std::unique_ptr<Enemy>>* m_enemies;
+	std::vector<Enemy*>& m_enemies;
 
-	std::vector<std::unique_ptr<Turret>>* m_turrets;
+	std::vector<Turret*>& m_turrets;
 
 };
