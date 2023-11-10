@@ -14,6 +14,8 @@
 #include "EnemySpawner.h"
 #include "TextRenderer.h"
 
+#include "World.h"
+
 #include <deque>
 
 #define DEBUG_DRAW 1
